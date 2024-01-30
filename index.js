@@ -49,6 +49,7 @@ app.use(
 
 //พนักงานห้องปฏิบัติการ เเผนกตรวจสอบ
 app.use(prefix + "/EmployeeCheck", require("./router/employee/employee.check"));
+
 //พนักงานห้องปฏิบัติการ เเผนกจัดส่งเอกสาร
 app.use(
   prefix + "/EmployeeDocument",

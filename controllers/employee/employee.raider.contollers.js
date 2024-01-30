@@ -6,6 +6,9 @@ const { default: axios } = require("axios");
 const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const QRCode = require("qrcode");
+const path = require("path");
 const {
   Employee,
   validateEmployee,
@@ -33,12 +36,10 @@ exports.GetAllEmploeRaider = async (req, res) => {
         data: employee,
       });
     } else {
-      return res
-        .status(404)
-        .send({
-          message: "ไม่พบข้อมูลพนักงานเเผนกจัดเก็บตัวอย่างไรเดอร์",
-          status: false,
-        });
+      return res.status(404).send({
+        message: "ไม่พบข้อมูลพนักงานเเผนกจัดเก็บตัวอย่างไรเดอร์",
+        status: false,
+      });
     }
   } catch (error) {
     res.status(500).send({
@@ -111,5 +112,49 @@ exports.EditEmployeeRaider = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
+  }
+};
+
+exports.GetqrCode = async (req, res) => {
+  try {
+    // ดึงข้อมูลพนักงานจากฐานข้อมูล
+    const id = req.params.id;
+    const employee = await Employee.findOne({ _id: id });
+
+    if (employee) {
+      // สร้าง Object ใหม่ที่ไม่รวม username และ password
+      const employeeInfo = {
+        employee_number: employee.employee_number,
+        card_number: employee.card_number,
+        name: employee.name,
+        tel: employee.tel,
+        employee_position: employee.employee_position,
+        employee_sub_department: employee.employee_sub_department,
+      };
+
+      const qrData = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${JSON.stringify(
+        employeeInfo
+      )}`;
+      QRCode.toFile(path.join(__dirname, "qrcode.png"), qrData, (err) => {
+        if (err) throw err;
+        res
+          .status(200)
+          .download(path.join(__dirname, "qrcode.png"), "qrcode.png", (err) => {
+            if (err) throw err;
+            fs.unlinkSync(path.join(__dirname, "qrcode.png"));
+          });
+      });
+    } else {
+      return res.status(404).send({
+        message: "ไม่พบข้อมูลพนักงาน",
+        status: false,
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: "มีบางอย่างผิดพลาด",
+      status: false,
+      error: error.message,
+    });
   }
 };
