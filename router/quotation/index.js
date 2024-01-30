@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const quotation = require("../../controllers/sale/quotation.controllers")
+const authSale = require("../../lib/auth-sale");
+const quotation = require("../../controllers/sale/quotation.controllers");
 
-
-router.post("/CreateVat",quotation.Quotation)
-router.delete("/deleteQtBy/:id",quotation.deleteQtByid)
-router.delete("/deleteAllQt",quotation.deleteAllQt)
-router.get("/GetAllQuotation",quotation.GetAllQuotation)
-router.get("/GetSaleBy/:id",quotation.GetSaleByIds)
+router.post("/CreateVat", authSale, quotation.Quotation);
+router.delete("/deleteQtBy/:id", authSale, quotation.deleteQtByid);
+router.delete("/deleteAllQt", authSale, quotation.deleteAllQt);
+router.get("/GetAllQuotation", authSale, quotation.GetAllQuotation);
+router.get("/GetSaleBy/:id", authSale, quotation.GetSaleByIds);
 module.exports = router;
