@@ -67,6 +67,11 @@ const QuotationSchema = new mongoose.Schema({
               ],
             },
           ],
+          name_work2: { type: String, required: false }, //ระบบบำบัดน้ำเสียของโครงการ
+          name_work3: { type: String, required: false }, //ระบบบำบัดน้ำเสียบ้านพักโครงการนอกพื้นที่โครงการ
+          name_work4: { type: String, required: false }, //
+          name_work5: { type: String, required: false }, //
+          name_work6: { type: String, required: false }, //
         },
       ],
       work_total: { type: Number, required: false }, //ราคารวมสินค้นของงานชุดเเรก
