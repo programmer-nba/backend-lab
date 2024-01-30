@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authEmployee = require("../../lib/auth-employee");
 const employee = require("../../controllers/employee/employee.controller");
 
-//พนักงานเเต่ละเเผนก
+//สร้างพนักงานเเต่ละเเผนก
 router.post("/create", employee.create);
 router.put("/EditEmployee/:id", employee.EditEmployee);
 router.delete("/deleteEmployee/:id", employee.deleteEmployee);
