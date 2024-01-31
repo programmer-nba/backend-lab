@@ -3,6 +3,7 @@ const dayjs = require("dayjs");
 const Joi = require("joi");
 const { google } = require("googleapis");
 const axios = require("axios");
+const apiUrl = "https://api.qrserver.com/v1/create-qr-code/";
 const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
@@ -119,7 +120,6 @@ exports.GetqrCode = async (req, res) => {
   try {
     const id = req.params.id;
     const employee = await Employee.findOne({ _id: id });
-
     if (employee) {
       const employeeInfo = {
         employee_number: employee.employee_number,
@@ -129,13 +129,9 @@ exports.GetqrCode = async (req, res) => {
         employee_position: employee.employee_position,
         employee_sub_department: employee.employee_sub_department,
       };
-
-      // ส่งข้อมูล JSON ไปยัง API ที่สร้าง QR code
-      const apiUrl = 'https://api.qrserver.com/v1/create-qr-code/';
       const response = await axios.post(apiUrl, {
-        data: JSON.stringify(employeeInfo),
+        body: JSON.stringify(employeeInfo),
       });
-
       // ตรวจสอบว่า API สร้าง QR code สำเร็จหรือไม่
       if (response.data && response.data.uri) {
         // ส่ง URI ของ QR code กลับไปให้ผู้ใช้

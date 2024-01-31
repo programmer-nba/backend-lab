@@ -70,36 +70,38 @@ router.get("/me", authMe, async (req, res) => {
     }
     if (decoded && decoded.row === "employee") {
       const id = decoded._id;
-      const emp = await Employee.findOne({ _id: id });
-      if (!emp) {
+      const employee = await Employee.findOne({ _id: id });
+      if (!employee) {
         return res
           .status(400)
           .send({ message: "มีบางอย่างผิดพลาด", status: false });
       } else {
         return res.status(200).send({
-          name: emp.name,
-          username: emp.username,
+          name: employee.name,
+          username: employee.username,
           position: "employee",
-          level: emp.employee_position,
-          department: emp.employee_sub_department,
+          level: employee.employee_position,
+          department: employee.employee_sub_department,
         });
       }
+      employee;
     }
     if (decoded && decoded.row === "sale") {
       const id = decoded._id;
-      const sal = await Sale.findOne({ _id: id });
-      if (!sal) {
+      const sale = await Sale.findOne({ _id: id });
+      if (!sale) {
         return res
           .status(400)
           .send({ message: "มีบางอย่างผิดพลาด", status: false });
       } else {
         return res.status(200).send({
-          name: sal.sale_name,
-          username: sal.sale_username,
+          name: sale.sale_name,
+          username: sale.sale_username,
           position: "sale",
-          level: sal.sale__position,
+          level: sale.sale__position,
         });
       }
+      sale;
     }
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error", status: false });
@@ -176,7 +178,7 @@ const checkSale = async (req, res) => {
         token: token,
         message: "เข้าสู่ระบบสำเร็จ",
         result: ResponesData,
-        level: "employee",
+        level: "sale",
         position: sale.sale_position,
       });
     }

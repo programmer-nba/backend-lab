@@ -40,7 +40,7 @@ SaleSchema.methods.generateAuthToken = function () {
     {
       _id: this._id,
       name: this.name,
-      row: "employee",
+      row: "sale",
       sale_position: this.sale_position,
     },
     process.env.JWTPRIVATEKEY,

@@ -7,6 +7,6 @@ router.get("/GetAllEmploeRaider", employee.GetAllEmploeRaider);
 router.put("/EditEmployeeRaider/:id",employee.EditEmployeeRaider)
 
 //QR CODE เเสดงข้อมูลพนักงาน BY ID
-router.get("/getQRcode/:id",employee.GetqrCode)
+router.post("/getQRcode/:id",employee.GetqrCode)
 
 module.exports = router;
