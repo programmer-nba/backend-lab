@@ -3,7 +3,6 @@ const dayjs = require("dayjs");
 const Joi = require("joi");
 const { google } = require("googleapis");
 const axios = require("axios");
-const apiUrl = "https://api.qrserver.com/v1/create-qr-code/";
 const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
@@ -116,47 +115,3 @@ exports.EditEmployeeRaider = async (req, res) => {
   }
 };
 
-exports.GetqrCode = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const employee = await Employee.findOne({ _id: id });
-    if (employee) {
-      const employeeInfo = {
-        employee_number: employee.employee_number,
-        card_number: employee.card_number,
-        name: employee.name,
-        tel: employee.tel,
-        employee_position: employee.employee_position,
-        employee_sub_department: employee.employee_sub_department,
-      };
-      const response = await axios.post(apiUrl, {
-        body: JSON.stringify(employeeInfo),
-      });
-      // ตรวจสอบว่า API สร้าง QR code สำเร็จหรือไม่
-      if (response.data && response.data.uri) {
-        // ส่ง URI ของ QR code กลับไปให้ผู้ใช้
-        res.status(200).json({
-          message: "Success",
-          status: true,
-          qrCodeUri: response.data.uri,
-        });
-      } else {
-        res.status(500).json({
-          message: "มีบางอย่างผิดพลาดในการสร้าง QR code",
-          status: false,
-        });
-      }
-    } else {
-      res.status(404).json({
-        message: "ไม่พบข้อมูลพนักงาน",
-        status: false,
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: "มีบางอย่างผิดพลาด",
-      status: false,
-      error: error.message,
-    });
-  }
-};

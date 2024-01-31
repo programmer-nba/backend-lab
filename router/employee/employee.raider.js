@@ -6,7 +6,6 @@ const employee = require("../../controllers/employee/employee.raider.contollers"
 router.get("/GetAllEmploeRaider", employee.GetAllEmploeRaider);
 router.put("/EditEmployeeRaider/:id",employee.EditEmployeeRaider)
 
-//QR CODE เเสดงข้อมูลพนักงาน BY ID
-router.post("/getQRcode/:id",employee.GetqrCode)
+
 
 module.exports = router;

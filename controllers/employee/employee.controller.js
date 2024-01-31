@@ -6,6 +6,8 @@ const { default: axios } = require("axios");
 const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
+const { Admins, validateAdmin } = require("../../models/Admin/admin.model");
+const { Sale, validateSale } = require("../../models/sale/sale.models");
 const {
   Employee,
   validateEmployee,
@@ -167,23 +169,26 @@ exports.deleteEmployee = async (req, res) => {
 };
 exports.GetAllEmploees = async (req, res) => {
   try {
-    const employee = await Employee.find();
-    if (employee.length > 0) {
-      return res.status(200).send({
-        status: true,
-        message: "ดึงข้อมูลพนักงานสำเร็จ",
-        data: employee,
-      });
-    } else {
+    const employees = await Employee.find();
+    const sales = await Sale.find();
+
+    if (!employees || !sales) {
       return res
         .status(404)
-        .send({ message: "ไม่พบข้อมุลสมาชิก", status: false });
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงาน" });
+    } else {
+      const combinedData = {
+        status: true,
+        message: "ดึงข้อมูลพนักงานสำเร็จ",
+        employees: employees,
+        sales: sales,
+      };
+      return res.status(200).send(combinedData);
     }
-  } catch (error) {
-    res.status(500).send({
-      message: "มีบางอย่างผิดพลาด",
-      status: false,
-    });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
 exports.GetEmployeeByIds = async (req, res) => {

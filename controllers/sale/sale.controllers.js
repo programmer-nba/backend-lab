@@ -3,6 +3,7 @@ const dayjs = require("dayjs");
 const Joi = require("joi");
 const { google } = require("googleapis");
 const { default: axios } = require("axios");
+const nodemailer = require("nodemailer");
 const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
@@ -196,6 +197,53 @@ exports.GetSaleByIds = async (req, res) => {
       message: "มีบางอย่างผิดพลาด",
       status: false,
     });
+  }
+};
+
+//ส่ง gmail
+const upload = multer({ storage: storage }).array("imgCollection", 20);
+exports.SendGmail = async (req, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'warunyoo084@gmail.com',
+        pass: 'pley sttn wwpj eupi',
+      },
+    });
+
+    upload(req, res, async function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+
+      const reqFiles = req.files;
+      const { to, subject, text } = req.body;
+
+      if (!to) {
+        throw new Error('ไม่ได้กำหนดผู้รับอีเมล');
+      }
+
+      const attachments = reqFiles.map((file) => ({
+        filename: file.originalname,
+        content: file.buffer,
+      }));
+
+      const mailOptions = {
+        from: 'warunyoo084@gmail.com',
+        to,
+        subject,
+        text,
+        attachments,
+      };
+
+      const info = await transporter.sendMail(mailOptions);
+      console.log('ส่งอีเมลสำเร็จ: ' + info.response);
+      res.status(200).send('ส่งอีเมลสำเร็จ');
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('ไม่สามารถส่งได้: ' + error.message);
   }
 };
 
