@@ -152,7 +152,9 @@ exports.deleteSale = async (req, res) => {
         .status(404)
         .send({ status: false, message: "ไม่พบข้อมูลพนักงาน" });
     } else {
-      return res.status(200).send({ status: true, message: "ลบข้อมูลพนักงานสำเร็จ" });
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลพนักงานสำเร็จ" });
     }
   } catch (err) {
     return res
@@ -168,7 +170,9 @@ exports.deleteAllSale = async (req, res) => {
         .status(404)
         .send({ status: false, message: "ไม่พบข้อมูลพนักงาน" });
     } else {
-      return res.status(200).send({ status: true, message: "ลบข้อมูลพนักงานทั้งหมดสำเร็จ" });
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลพนักงานทั้งหมดสำเร็จ" });
     }
   } catch (err) {
     return res
@@ -220,48 +224,46 @@ exports.GetSaleByIds = async (req, res) => {
   }
 };
 
-
 //ยังไม่สมบูรณ์
 exports.GenQrCode = async (req, res) => {
   try {
     const sale_number = req.params.id;
-    const sale = await Sale.findOne({ sale_number: sale_number });
+    let upload = multer({ storage: storage }).single("imgCollection");
+    upload(req, res, async function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      const sale = await Sale.findOne({ sale_number: sale_number });
+      const addressString = {
+        house_number: sale.address.house_number,
+        moo_number: sale.address.moo_number,
+        soi: sale.address.soi,
+        name_road: sale.address.name_road,
+        tumbol: sale.address.tumbol,
+        district: sale.address.district,
+        province: sale.address.province,
+        zip_code: sale.address.zip_code,
+      };
 
-    const addressString = {
-      house_number: sale.address.house_number,
-      moo_number: sale.address.moo_number,
-      soi: sale.address.soi,
-      name_road: sale.address.name_road,
-      tumbol: sale.address.tumbol,
-      district: sale.address.district,
-      province: sale.address.province,
-      zip_code: sale.address.zip_code,
-    };
-    const dataToEncode = {
-      sale_number: sale.sale_number,
-      profile_image: sale.profile_image,
-      card_number: sale.card_number,
-      address: addressString, 
-      sale_position: sale.sale_position,
-      sale_name: sale.sale_name,
-      sale_tel: sale.sale_tel,
-      sale_username: sale.sale_username,
-      sale_address: sale.sale_address,
-    };
-    const qrCodeImageUrl = await generateQrCode(dataToEncode);
-    const formData = querystring.stringify(dataToEncode);
-    // const apiResponse = await axios.post("YOUR_API_ENDPOINT", formData, {
-    //   headers: {
-    //     "Content-Type": "application/x-www-form-urlencoded",
-    //   },
-    // });
-    return res.status(200).send({
-      status: true,
-      qrCodeImageUrl,
-      // apiResponseData: apiResponse.data,
+      const dataToEncode = {
+        sale_number: sale.sale_number,
+        profile_image: sale.profile_image,
+        card_number: sale.card_number,
+        address: addressString,
+        sale_position: sale.sale_position,
+        sale_name: sale.sale_name,
+        sale_tel: sale.sale_tel,
+        sale_username: sale.sale_username,
+        sale_address: sale.sale_address,
+      };
+      const qrCodeImageUrl = await generateQrCode(dataToEncode, "uploads");
+      return res.status(200).send({
+        status: true,
+        qrCodeImageUrl,
+      });
     });
   } catch (error) {
-    // console.error("Error:", error);
+    console.error("Error:", error);
     return res.status(500).send({ status: false, error: error.message });
   }
 };
@@ -334,9 +336,8 @@ async function Salenumber(date) {
   }
   return sale_number;
 }
-
-async function generateQrCode(data) {
-  const imageUrl = `${Date.now()}.png`;
+async function generateQrCode(data, outputPath) {
+  const imageUrl = `${outputPath || "uploads"}/${Date.now()}.png`;
   await qrcode.toFile(imageUrl, JSON.stringify(data));
   return imageUrl;
 }
