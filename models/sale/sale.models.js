@@ -22,7 +22,7 @@ const SaleSchema = new mongoose.Schema({
   sale_password: { type: String, required: false }, //รหัสผ่าน
   sale_address: { type: String, required: false }, //ที่อยู่
   address: {
-    house_umber: { type: String, required: false }, //เลขที่บ้าน
+    house_number: { type: String, required: false }, //เลขที่บ้าน
     moo_number: { type: String, required: false }, //เลขที่ หมู่
     soi: { type: String, required: false }, //ซอย
     name_road: { type: String, required: false }, //ชื่อถนน

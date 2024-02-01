@@ -6,6 +6,9 @@ const cors = require("cors");
 const connection = require("./config/db");
 connection();
 
+app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.json());
 app.use(cors());
 

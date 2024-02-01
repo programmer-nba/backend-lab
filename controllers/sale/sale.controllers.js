@@ -1,8 +1,10 @@
 const bcrypt = require("bcrypt");
 const dayjs = require("dayjs");
 const Joi = require("joi");
+const axios = require("axios");
+const querystring = require("querystring");
 const { google } = require("googleapis");
-const { default: axios } = require("axios");
+const qrcode = require("qrcode");
 const nodemailer = require("nodemailer");
 const req = require("express/lib/request.js");
 const multer = require("multer");
@@ -18,6 +20,7 @@ const {
   uploadFileCreate,
   deleteFile,
 } = require("../../funtions/uploadfilecreate");
+const { stack } = require("../../router");
 
 exports.create = async (req, res) => {
   try {
@@ -38,7 +41,6 @@ exports.create = async (req, res) => {
         }
         profile_image = reqFiles[0];
       }
-
       const user = await Sale.findOne({
         sale_username: req.body.sale_username,
       });
@@ -57,8 +59,8 @@ exports.create = async (req, res) => {
         profile_image: profile_image,
         card_number: req.body.card_number,
         address: {
-          house_number: req.body.house_number,
           moo_number: req.body.moo_number,
+          house_number: req.body.house_number,
           soi: req.body.soi,
           name_road: req.body.name_road,
           tumbol: req.body.tumbol,
@@ -150,7 +152,23 @@ exports.deleteSale = async (req, res) => {
         .status(404)
         .send({ status: false, message: "ไม่พบข้อมูลพนักงาน" });
     } else {
-      return res.status(200).send({ status: true, message: "ลบข้อมูลพนักงาน" });
+      return res.status(200).send({ status: true, message: "ลบข้อมูลพนักงานสำเร็จ" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};
+exports.deleteAllSale = async (req, res) => {
+  try {
+    const sale = await Sale.deleteMany();
+    if (!sale) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงาน" });
+    } else {
+      return res.status(200).send({ status: true, message: "ลบข้อมูลพนักงานทั้งหมดสำเร็จ" });
     }
   } catch (err) {
     return res
@@ -199,6 +217,52 @@ exports.GetSaleByIds = async (req, res) => {
       message: "มีบางอย่างผิดพลาด",
       status: false,
     });
+  }
+};
+
+
+//ยังไม่สมบูรณ์
+exports.GenQrCode = async (req, res) => {
+  try {
+    const sale_number = req.params.id;
+    const sale = await Sale.findOne({ sale_number: sale_number });
+
+    const addressString = {
+      house_number: sale.address.house_number,
+      moo_number: sale.address.moo_number,
+      soi: sale.address.soi,
+      name_road: sale.address.name_road,
+      tumbol: sale.address.tumbol,
+      district: sale.address.district,
+      province: sale.address.province,
+      zip_code: sale.address.zip_code,
+    };
+    const dataToEncode = {
+      sale_number: sale.sale_number,
+      profile_image: sale.profile_image,
+      card_number: sale.card_number,
+      address: addressString, 
+      sale_position: sale.sale_position,
+      sale_name: sale.sale_name,
+      sale_tel: sale.sale_tel,
+      sale_username: sale.sale_username,
+      sale_address: sale.sale_address,
+    };
+    const qrCodeImageUrl = await generateQrCode(dataToEncode);
+    const formData = querystring.stringify(dataToEncode);
+    // const apiResponse = await axios.post("YOUR_API_ENDPOINT", formData, {
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   },
+    // });
+    return res.status(200).send({
+      status: true,
+      qrCodeImageUrl,
+      // apiResponseData: apiResponse.data,
+    });
+  } catch (error) {
+    // console.error("Error:", error);
+    return res.status(500).send({ status: false, error: error.message });
   }
 };
 
@@ -269,4 +333,10 @@ async function Salenumber(date) {
     sale_number = `EMP${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + "1";
   }
   return sale_number;
+}
+
+async function generateQrCode(data) {
+  const imageUrl = `${Date.now()}.png`;
+  await qrcode.toFile(imageUrl, JSON.stringify(data));
+  return imageUrl;
 }
