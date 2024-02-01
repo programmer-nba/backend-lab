@@ -38,6 +38,7 @@ exports.create = async (req, res) => {
         }
         profile_image = reqFiles[0];
       }
+
       const user = await Sale.findOne({
         sale_username: req.body.sale_username,
       });
@@ -50,6 +51,7 @@ exports.create = async (req, res) => {
       const sale_number = await Salenumber();
       const salt = await bcrypt.genSalt(Number(process.env.SALT));
       const hashPassword = await bcrypt.hash(req.body.sale_password, salt);
+
       const sale = new Sale({
         sale_number: sale_number,
         profile_image: profile_image,
@@ -201,51 +203,51 @@ exports.GetSaleByIds = async (req, res) => {
 };
 
 //ส่ง gmail
-const upload = multer({ storage: storage }).array("imgCollection", 20);
-exports.SendGmail = async (req, res) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'warunyoo084@gmail.com',
-        pass: 'pley sttn wwpj eupi',
-      },
-    });
+// const upload = multer({ storage: storage }).array("imgCollection", 20);
+// exports.SendGmail = async (req, res) => {
+//   try {
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: "warunyoo084@gmail.com",
+//         pass: "pley sttn wwpj eupi",
+//       },
+//     });
 
-    upload(req, res, async function (err) {
-      if (err) {
-        return res.status(500).send(err);
-      }
+//     upload(req, res, async function (err) {
+//       if (err) {
+//         return res.status(500).send(err);
+//       }
 
-      const reqFiles = req.files;
-      const { to, subject, text } = req.body;
+//       const reqFiles = req.files;
+//       const { to, subject, text } = req.body;
 
-      if (!to) {
-        throw new Error('ไม่ได้กำหนดผู้รับอีเมล');
-      }
+//       if (!to) {
+//         throw new Error("ไม่ได้กำหนดผู้รับอีเมล");
+//       }
 
-      const attachments = reqFiles.map((file) => ({
-        filename: file.originalname,
-        content: file.buffer,
-      }));
+//       const attachments = reqFiles.map((file) => ({
+//         filename: file.originalname,
+//         content: file.buffer,
+//       }));
 
-      const mailOptions = {
-        from: 'warunyoo084@gmail.com',
-        to,
-        subject,
-        text,
-        attachments,
-      };
+//       const mailOptions = {
+//         from: "warunyoo084@gmail.com",
+//         to,
+//         subject,
+//         text,
+//         attachments,
+//       };
 
-      const info = await transporter.sendMail(mailOptions);
-      console.log('ส่งอีเมลสำเร็จ: ' + info.response);
-      res.status(200).send('ส่งอีเมลสำเร็จ');
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('ไม่สามารถส่งได้: ' + error.message);
-  }
-};
+//       const info = await transporter.sendMail(mailOptions);
+//       console.log("ส่งอีเมลสำเร็จ: " + info.response);
+//       res.status(200).send("ส่งอีเมลสำเร็จ");
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("ไม่สามารถส่งได้: " + error.message);
+//   }
+// };
 
 async function Salenumber(date) {
   const sal = await Sale.find();

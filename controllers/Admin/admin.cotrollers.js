@@ -64,7 +64,7 @@ exports.create = async (req, res) => {
         admin_tel: req.body.admin_tel,
         admin_password: hashPassword,
         admin_position: req.body.admin_position,
-        admin_email:req.body.admin_email
+        admin_email: req.body.admin_email,
       });
       const add = await admin.save();
       return res.status(200).send({

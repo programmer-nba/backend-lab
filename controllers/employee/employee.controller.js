@@ -180,6 +180,9 @@ exports.GetAllEmploees = async (req, res) => {
       const combinedData = {
         status: true,
         message: "ดึงข้อมูลพนักงานสำเร็จ",
+
+
+        
         employees: employees,
         sales: sales,
       };
