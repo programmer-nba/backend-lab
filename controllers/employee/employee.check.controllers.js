@@ -110,3 +110,52 @@ exports.EditEmployeeCheck = async (req, res) => {
     return res.status(500).send({ status: false, error: error.message });
   }
 };
+exports.deleteCheckByDepartment = async (req,res) =>{
+  try {
+    const id = req.params.id;
+    const employee = await Employee.findById(id);
+    if (!employee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานแผนกตรวจสอบ" });
+    }
+    if (employee.employee_sub_department !== "เเผนกตรวจสอบ") {
+      return res.status(400).send({
+        status: false,
+        message: "ไม่สามารถลบพนักงานที่ไม่ใช่แผนกตรวจสอบได้",
+      });
+    }
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+    if (!deletedEmployee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานแผนกตรวจสอบ" });
+    }
+    return res
+      .status(200)
+      .send({ status: true, message: "ลบข้อมูลพนักงานแผนกตรวจสอบสำเร็จ" });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+}
+exports.deleteCheckBy = async (req,res) =>{
+  try {
+    const id = req.params.id;
+    const employee = await Employee.findByIdAndDelete(id);
+    if (!employee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานเเผนกตรวจสอบ" });
+    } else {
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลพนักงานเเผนกตรวจสอบสำเร็จ" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+}

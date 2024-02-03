@@ -114,4 +114,52 @@ exports.EditEmployeeRaider = async (req, res) => {
     return res.status(500).send({ status: false, error: error.message });
   }
 };
-
+exports.deleteEmployeeRaider = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const employee = await Employee.findByIdAndDelete(id);
+    if (!employee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานเเผนกเก็บตัวอย่าง" });
+    } else {
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลพนักงานเเผนกเก็บตัวอย่างสำเร็จ" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};
+exports.deleteRaiderByDepartment = async (req,res) =>{
+  try {
+    const id = req.params.id;
+    const employee = await Employee.findById(id);
+    if (!employee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานแผนกเก็บตัวอย่าง" });
+    }
+    if (employee.employee_sub_department !== "เเผนกไรเดอร์") {
+      return res.status(400).send({
+        status: false,
+        message: "ไม่สามารถลบพนักงานที่ไม่ใช่แผนกเก็บตัวอย่างได้",
+      });
+    }
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+    if (!deletedEmployee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานแผนกเก็บตัวอย่าง" });
+    }
+    return res
+      .status(200)
+      .send({ status: true, message: "ลบข้อมูลพนักงานแผนกเก็บตัวอย่างสำเร็จ" });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+}

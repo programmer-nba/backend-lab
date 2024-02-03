@@ -4,5 +4,8 @@ const employee = require("../../controllers/employee/employee.samples.controller
 
 //พนักงานเเผนกเก็บตัวอย่าง
 router.get("/GetAllEmploeSamples", employee.GetAllEmploeSamples);
-router.put("/EditEmployeeSamples/:id",employee.EditEmployeeSamples)
+router.put("/EditEmployeeSamples/:id", employee.EditEmployeeSamples);
+router.delete("/deleteSamplesByDepartment/:id", employee.deleteSamplesByDepartment)
+router.delete("/deleteSamplesBy/:id", employee.deleteSamplesBy);
+
 module.exports = router;

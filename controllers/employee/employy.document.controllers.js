@@ -110,3 +110,33 @@ exports.EditEmployeeDocoment = async (req, res) => {
     return res.status(500).send({ status: false, error: error.message });
   }
 };
+exports.deleteDocomentByDepartment = async (req,res) =>{
+  try {
+    const id = req.params.id;
+    const employee = await Employee.findById(id);
+    if (!employee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานแผนกจัดส่งเอกสาร" });
+    }
+    if (employee.employee_sub_department !== "เเผนกจัดส่งเอกสาร") {
+      return res.status(400).send({
+        status: false,
+        message: "ไม่สามารถลบพนักงานที่ไม่ใช่แผนกจัดส่งเอกสารได้",
+      });
+    }
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+    if (!deletedEmployee) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานแผนกจัดส่งเอกสาร" });
+    }
+    return res
+      .status(200)
+      .send({ status: true, message: "ลบข้อมูลพนักงานแผนกจัดส่งเอกสารสำเร็จ" });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+}
