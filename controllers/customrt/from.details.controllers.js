@@ -196,6 +196,7 @@ exports.deleteAllDetails = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+
 async function customernumber(date) {
   const customer = await FromDetails.find();
   let customer_number = null;
