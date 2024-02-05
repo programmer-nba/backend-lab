@@ -3,8 +3,10 @@ const router = require("express").Router();
 const authEmployee = require("../../lib/auth-employee");
 const authSale = require("../../lib/auth-sale");
 const employee = require("../../controllers/sale/sale.controllers");
+const authSaleLeader = require("../../lib/auth-saleLeader")
 
-router.post("/create", employee.create);
+
+router.post("/create", authSaleLeader, employee.create);
 router.put("/EditSale/:id", authSale, employee.EditSale);
 router.get("/GetSaleBy/:id", authSale, employee.GetSaleByIds);
 router.delete("/deleteSale/:id", authSale, employee.deleteSale);

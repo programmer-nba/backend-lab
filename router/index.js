@@ -9,6 +9,10 @@ const {
   validateEmployee,
 } = require("../models/employee/employee.model");
 const { Sale, validateSale } = require("../models/sale/sale.models");
+const {
+  SaleLeader,
+  validateSaleLeader,
+} = require("../models/sale/sale.Leader.models");
 const authMember = require("../lib/auth-employee");
 
 router.post("/login", async (req, res) => {
@@ -103,6 +107,23 @@ router.get("/me", authMe, async (req, res) => {
       }
       sale;
     }
+    if (decoded && decoded.row === "saleLeader") {
+      const id = decoded._id;
+      const sale = await SaleLeader.findOne({ _id: id });
+      if (!sale) {
+        return res
+          .status(400)
+          .send({ message: "มีบางอย่างผิดพลาด", status: false });
+      } else {
+        return res.status(200).send({
+          name: sale.sale_name,
+          username: sale.sale_username,
+          position: "sale Leader",
+          level: sale.sale__position,
+        });
+      }
+      sale;
+    }
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error", status: false });
   }
@@ -152,11 +173,7 @@ const checkSale = async (req, res) => {
     const sale = await Sale.findOne({
       sale_username: req.body.username,
     });
-    // if (!sale) return await checkAccountant(req, res);
-    // if (!manager) {
-    //   // await checkEmployee(req, res);
-    //   console.log("123456");
-    // }
+    if (!sale) return await checkSaleLeader(req, res);
     const validPasswordSale = await bcrypt.compare(
       req.body.password,
       sale.sale_password
@@ -186,4 +203,40 @@ const checkSale = async (req, res) => {
     return res.status(500).send({ message: error.message, status: false });
   }
 };
+const checkSaleLeader = async (req, res) => {
+  try {
+    const sale = await SaleLeader.findOne({
+      sale_username: req.body.username,
+    });
+    // if (!sale) return await checkAccountant(req, res);
+    const validPasswordSaleLeader = await bcrypt.compare(
+      req.body.password,
+      sale.sale_password
+    );
+    if (!validPasswordSaleLeader) {
+      // รหัสไม่ตรง
+      return res.status(401).send({
+        message: "password is not find",
+        status: false,
+      });
+    } else {
+      const token = sale.generateAuthToken();
+      const ResponesData = {
+        name: sale.sale_username,
+        username: sale.sale_password,
+      };
+      return res.status(200).send({
+        status: true,
+        token: token,
+        message: "เข้าสู่ระบบสำเร็จ",
+        result: ResponesData,
+        level: "sale Leader",
+        position: sale.sale_position,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: error.message, status: false });
+  }
+};
+
 module.exports = router;

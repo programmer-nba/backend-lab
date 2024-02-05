@@ -15,8 +15,13 @@ app.use(cors());
 const prefix = "/LAB";
 
 app.use(prefix + "/", require("./router/index"));
+
+//เเอดมิน
 app.use(prefix + "/admin", require("./router/admin/index"));
-app.use(prefix + "/employee", require("./router/employee/index")); //พนักงานเเต่ละเเผนก
+app.use(prefix + "/admin/quotation", require("./router/admin/quotaion"));
+
+//พนักงานเเต่ละเเผนก
+app.use(prefix + "/employee", require("./router/employee/index"));
 
 //บริษัทตัวเอง
 app.use(prefix + "/companny", require("./router/companny/index")); //เพิ่มข้อมูลบริษัท
@@ -28,6 +33,7 @@ app.use(
 ); //เพิ่มข้อมูลบริษัท
 
 //พนักงาน เซลล์
+app.use(prefix + "/sale/maneger", require("./router/admin/saleManager"));//หัวหน้าเซลล์
 app.use(prefix + "/sale", require("./router/sale/index")); //เพิ่มลบเเก้ไขข้อมูลของพนักงาน
 app.use(prefix + "/fromtDetails", require("./router/customer/index")); //กรอกข้อมูลของลูกค้า
 app.use(prefix + "/quotation", require("./router/quotation/index")); //.ใบเสนอราคา
