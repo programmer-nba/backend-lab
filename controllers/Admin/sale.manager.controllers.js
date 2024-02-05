@@ -127,64 +127,82 @@ exports.getSaleLeaderBY = async (req, res) => {
   }
 };
 exports.EditSaleLeader = async (req, res) => {
-    try {
-      let upload = multer({ storage: storage }).array("imgCollection", 20);
-      upload(req, res, async function (err) {
-        const reqFiles = [];
-        const result = [];
-        if (err) {
-          return res.status(500).send(err);
+  try {
+    let upload = multer({ storage: storage }).array("imgCollection", 20);
+    upload(req, res, async function (err) {
+      const reqFiles = [];
+      const result = [];
+      if (err) {
+        return res.status(500).send(err);
+      }
+      let profile_image = ""; // ตั้งตัวแปรรูป
+      if (req.files) {
+        const url = req.protocol + "://" + req.get("host");
+        for (var i = 0; i < req.files.length; i++) {
+          const src = await uploadFileCreate(req.files, res, { i, reqFiles });
+          result.push(src);
         }
-        let profile_image = ""; // ตั้งตัวแปรรูป
-        if (req.files) {
-          const url = req.protocol + "://" + req.get("host");
-          for (var i = 0; i < req.files.length; i++) {
-            const src = await uploadFileCreate(req.files, res, { i, reqFiles });
-            result.push(src);
-          }
-          profile_image = reqFiles[0];
-        }
-        const user = await SaleLeader.findOne({
-          sale_username: req.body.sale_username,
-        });
-        if (user) {
-          return res
-            .status(409)
-            .send({ status: false, message: "username นี้มีคนใช้แล้ว" });
-        }
-        const id = req.params.id;
-        if (!req.body.password) {
-          await SaleLeader.findByIdAndUpdate(id, {
-            profile_image: profile_image,
-            "address.moo_number": req.body.moo_number,
-            "address.soi": req.body.soi,
-            "address.name_road": req.body.name_road,
-            "address.tumbol": req.body.tumbol,
-            "address.district": req.body.district,
-            "address.province": req.body.province,
-            "address.zip_code": req.body.zip_code,
-          });
-        }
-        if (!req.body.sale_password) {
-          await SaleLeader.findByIdAndUpdate(id, req.body);
-        } else {
-          const salt = await bcrypt.genSalt(Number(process.env.SALT));
-          const hashPassword = await bcrypt.hash(req.body.sale_password, salt);
-          await SaleLeader.findByIdAndUpdate(id, {
-            ...req.body,
-            sale_password: hashPassword,
-          });
-        }
-  
-        return res
-          .status(200)
-          .send({ message: "แก้ไขผู้ใช้งานนี้เรียบร้อยแล้ว", status: true });
+        profile_image = reqFiles[0];
+      }
+      const user = await SaleLeader.findOne({
+        sale_username: req.body.sale_username,
       });
-    } catch (error) {
-      return res.status(500).send({ status: false, error: error.message });
+      if (user) {
+        return res
+          .status(409)
+          .send({ status: false, message: "username นี้มีคนใช้แล้ว" });
+      }
+      const id = req.params.id;
+      if (!req.body.password) {
+        await SaleLeader.findByIdAndUpdate(id, {
+          profile_image: profile_image,
+          "address.moo_number": req.body.moo_number,
+          "address.soi": req.body.soi,
+          "address.name_road": req.body.name_road,
+          "address.tumbol": req.body.tumbol,
+          "address.district": req.body.district,
+          "address.province": req.body.province,
+          "address.zip_code": req.body.zip_code,
+        });
+      }
+      if (!req.body.sale_password) {
+        await SaleLeader.findByIdAndUpdate(id, req.body);
+      } else {
+        const salt = await bcrypt.genSalt(Number(process.env.SALT));
+        const hashPassword = await bcrypt.hash(req.body.sale_password, salt);
+        await SaleLeader.findByIdAndUpdate(id, {
+          ...req.body,
+          sale_password: hashPassword,
+        });
+      }
+
+      return res
+        .status(200)
+        .send({ message: "แก้ไขผู้ใช้งานนี้เรียบร้อยแล้ว", status: true });
+    });
+  } catch (error) {
+    return res.status(500).send({ status: false, error: error.message });
+  }
+};
+exports.deleteSaleLeader = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const qt = await SaleLeader.findByIdAndDelete(id);
+    if (!qt) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลพนักงานเซลล์" });
+    } else {
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลพนักงานเซลล์สำเร็จ" });
     }
-  };
-  
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};
 
 async function Salenumber(date) {
   const sal = await SaleLeader.find();

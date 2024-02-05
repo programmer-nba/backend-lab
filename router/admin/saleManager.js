@@ -6,4 +6,5 @@ router.post("/create",authAdmin,sale.create)
 router.get("/getSaleLeaderAll",authAdmin,sale.getSaleLeaderAll)
 router.get("/getSaleLeaderBY/:id",authAdmin,sale.getSaleLeaderBY)
 router.put("/EditSaleLeader/:id",authAdmin,sale.EditSaleLeader)
+router.delete("/deleteSaleLeader/:id",authAdmin,sale.deleteSaleLeader)
 module.exports = router; 
