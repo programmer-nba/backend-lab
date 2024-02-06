@@ -101,7 +101,7 @@ exports.Quotation = async (req, res) => {
       net + processing_fee + report_preparation_fee + community_economic_survey;
 
     const status = {
-      name: "รอยืนยัน",
+      name: "รออนุมัติ",
       timestamps: dayjs(Date.now()).format(""),
     };
 
