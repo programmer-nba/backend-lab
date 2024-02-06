@@ -8,7 +8,7 @@ const CompanySchema = new mongoose.Schema({
   company_number: { type: String, required: false, default: "ไม่มี" }, //เลขที่บริษัท
   company_address: { type: String, required: false }, //ที่อยู่
   company_subdistrict: { type: String, required: false }, //ที่อยู่ เเขวน ตำบล
-  company_district: { type: String, required: false }, //เขต
+  company_district: { type: String, required: false }, //อำเภอ
   company_province: { type: String, required: false }, //จังหวัด
   company_postcode: { type: String, required: false }, //รหัสไปรษณีย์
   company_tel: { type: String, required: false }, //เบอร์โทรศัพท์
