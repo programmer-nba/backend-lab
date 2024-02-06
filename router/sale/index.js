@@ -16,6 +16,6 @@ router.get("/GetAllSale", authSale, employee.GetAllSale);
 //สร้าง qrcode
 router.post("/GenQrcode/:id", employee.GenQrCode);
 
-//ส่งเเจ้งเตือนผ่าน gmail
+// // ส่งเเจ้งเตือนผ่าน gmail
 // router.post("/SendGmail",employee.SendGmail)
 module.exports = router;
