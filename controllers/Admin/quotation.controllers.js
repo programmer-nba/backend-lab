@@ -6,6 +6,7 @@ const { default: axios } = require("axios");
 const req = require("express/lib/request.js");
 const { Admins, validateAdmin } = require("../../models/Admin/admin.model");
 const { Quotation } = require("../../models/sale/quotation.models");
+const { Chain } = require("../../models/Chain/chain.models");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const storage = multer.diskStorage({
@@ -23,29 +24,39 @@ const { admin } = require("googleapis/build/src/apis/admin");
 exports.ApproveQuotation = async (req, res) => {
   try {
     const id = req.params.id;
-    const updateStatus = await Quotation.findOne({ _id: id });
-
-    if (updateStatus) {
-      updateStatus.status.push({
-        name: "Approved",
-        timestamps: dayjs(Date.now()).format(""),
-      });
-      updateStatus.save();
+    const chain = await Quotation.findById(id);
+    const chackStatus = chain.status.some((item) => item.name === "Approved");
+        if (chackStatus) {
+          return res.status(400).send({
+            message: "รายการนี้ได้ดำเนินการไปแล้ว",
+            status: false,
+          });
+            }
+        chain.status.push({
+          name: "Approved",
+          timestamps: dayjs(Date.now()).format(""),
+        });
+    const updatedQuotation = await chain.save();
+    const newChain = new Chain({
+      ...chain.toObject(),
+      status: [
+        ...chain.status,
+        {
+          name: "Approved",
+          timestamps: dayjs(Date.now()).format(""),
+        },
+      ],
+    });
+    const savedChain = await newChain.save();
       return res.status(200).send({
         status: true,
         message: "Approved Successful",
-        data: updateStatus,
+        data: savedChain,
       });
-    } else {
-      return res.status(500).send({
-        message: "มีบางอย่างผิดพลาด",
-        status: false,
-      });
-    }
   } catch (error) {
-    return res
-      .status(500)
-      .send({ message: "มีบางอย่างผิดพลาด", status: false });
+      return res
+        .status(500)
+        .send({ message: "มีบางอย่างผิดพลาด", status: false });
   }
 };
 exports.RejectQuotation = async (req, res) => {
