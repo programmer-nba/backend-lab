@@ -60,7 +60,9 @@ const QuotationSchema = new mongoose.Schema({
                   sub_name: { type: String, required: true },
                   name_analysis: { type: String, required: true }, //วิธีการวิเคระห์
                   amount: { type: Number, required: false }, //จำนวน
+                  type_amount: { type: String, required: false }, //ประเภทของจำนวน
                   frequency: { type: Number, required: false }, //ความถี่
+                  type_frequency: { type: String, required: false }, //ประเภทความถี่
                   price_umit: { type: Number, required: false }, //ราคาต่อหน่วย
                   price: { type: Number, required: false }, //ราคารวม
                 },
