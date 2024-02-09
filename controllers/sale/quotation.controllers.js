@@ -43,10 +43,10 @@ exports.Quotation = async (req, res) => {
     } = req.body;
     let total = 0;
     let discounts = 0;
-
+    console.log(detail)
     const updatedData = detail.map((work) => {
-      let workTotal = 0;
 
+      let workTotal = 0;
       const updatedWork = {
         ...work,
         work_details: work.work_details.map((project) => {
