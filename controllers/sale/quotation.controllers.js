@@ -33,7 +33,6 @@ exports.Quotation = async (req, res) => {
       start_date,
       discount = 0,
       work_discount = 0,
-      processing_fee = 0,
       report_preparation_fee = 0,
       community_economic_survey = 0,
       compannyID,
@@ -43,9 +42,9 @@ exports.Quotation = async (req, res) => {
     } = req.body;
     let total = 0;
     let discounts = 0;
-    console.log(detail)
-    const updatedData = detail.map((work) => {
+    let processing_fee = 0;
 
+    const updatedData = detail.map((work) => {
       let workTotal = 0;
       const updatedWork = {
         ...work,
@@ -93,6 +92,7 @@ exports.Quotation = async (req, res) => {
           (workTotal - work.work_discount + work.work_processing_fee) * 0.07
         ).toFixed(2),
       };
+      processing_fee += work.work_processing_fee;
       discounts += parseFloat(work.work_discount);
       return updatedWork;
     });
