@@ -67,13 +67,13 @@ const QuotationSchema = new mongoose.Schema({
                   price: { type: Number, required: false }, //ราคารวม
                 },
               ],
+              name_work2: { type: String, required: false }, //ระบบบำบัดน้ำเสียของโครงการ
+              name_work3: { type: String, required: false }, //ระบบบำบัดน้ำเสียบ้านพักโครงการนอกพื้นที่โครงการ
+              name_work4: { type: String, required: false }, //
+              name_work5: { type: String, required: false }, //
+              name_work6: { type: String, required: false }, //
             },
           ],
-          name_work2: { type: String, required: false }, //ระบบบำบัดน้ำเสียของโครงการ
-          name_work3: { type: String, required: false }, //ระบบบำบัดน้ำเสียบ้านพักโครงการนอกพื้นที่โครงการ
-          name_work4: { type: String, required: false }, //
-          name_work5: { type: String, required: false }, //
-          name_work6: { type: String, required: false }, //
         },
       ],
       work_total: { type: Number, required: false }, //ราคารวมสินค้นของงานชุดเเรก
@@ -125,8 +125,8 @@ const QuotationSchema = new mongoose.Schema({
         {
           approve_name: { type: String, required: false }, //ลายเซ็น
           date_time: { type: String, required: false }, //เวลา
-          thank: { type: String, required: false },//จึงเรียนมาเพื่อพิจารณาและขอขอบพระคุณมา ณ โอกาสนี้						
-          name_manager: { type: String, required: false },//ชื่อผู้จัดการ
+          thank: { type: String, required: false }, //จึงเรียนมาเพื่อพิจารณาและขอขอบพระคุณมา ณ โอกาสนี้
+          name_manager: { type: String, required: false }, //ชื่อผู้จัดการ
         },
       ],
       name_end: { type: String, required: false }, //จึงเรียนมาเพื่อพิจารณาและขอขอบพระคุณมา ณ โอกาสนี้
