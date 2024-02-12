@@ -58,7 +58,7 @@ const QuotationSchema = new mongoose.Schema({
               sub_detail: [
                 {
                   sub_name: { type: String, required: true },
-                  name_analysis: { type: String, required: true }, //วิธีการวิเคระห์
+                  name_analysis: { type: String, required: false }, //วิธีการวิเคระห์
                   amount: { type: Number, required: false }, //จำนวน
                   type_amount: { type: String, required: false }, //ประเภทของจำนวน
                   frequency: { type: Number, required: false }, //ความถี่
@@ -67,11 +67,6 @@ const QuotationSchema = new mongoose.Schema({
                   price: { type: Number, required: false }, //ราคารวม
                 },
               ],
-              name_work2: { type: String, required: false }, //ระบบบำบัดน้ำเสียของโครงการ
-              name_work3: { type: String, required: false }, //ระบบบำบัดน้ำเสียบ้านพักโครงการนอกพื้นที่โครงการ
-              name_work4: { type: String, required: false }, //
-              name_work5: { type: String, required: false }, //
-              name_work6: { type: String, required: false }, //
             },
           ],
         },
