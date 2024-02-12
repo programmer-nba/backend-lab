@@ -26,37 +26,31 @@ exports.ApproveQuotation = async (req, res) => {
     const id = req.params.id;
     const chain = await Quotation.findById(id);
     const chackStatus = chain.status.some((item) => item.name === "อนุมัติ");
-        if (chackStatus) {
-          return res.status(400).send({
-            message: "รายการนี้ได้ดำเนินการไปแล้ว",
-            status: false,
-          });
-            }
-        chain.status.push({
-          name: "อนุมัติ",
-          timestamps: dayjs(Date.now()).format(""),
-        });
+    if (chackStatus) {
+      return res.status(400).send({
+        message: "รายการนี้ได้ดำเนินการไปแล้ว",
+        status: false,
+      });
+    }
+    chain.status.push({
+      name: "อนุมัติ",
+      timestamps: dayjs(Date.now()).format(""),
+    });
     const updatedQuotation = await chain.save();
     const newChain = new Chain({
       ...chain.toObject(),
-      status: [
-        ...chain.status,
-        {
-          name: "อนุมัติ",
-          timestamps: dayjs(Date.now()).format(""),
-        },
-      ],
+      status: [...chain.status],
     });
     const savedChain = await newChain.save();
-      return res.status(200).send({
-        status: true,
-        message: "อนุมัติ สำเร็จ",
-        data: savedChain,
-      });
+    return res.status(200).send({
+      status: true,
+      message: "อนุมัติ สำเร็จ",
+      data: savedChain,
+    });
   } catch (error) {
-      return res
-        .status(500)
-        .send({ message: "มีบางอย่างผิดพลาด", status: false });
+    return res
+      .status(500)
+      .send({ message: "มีบางอย่างผิดพลาด", status: false });
   }
 };
 exports.RejectQuotation = async (req, res) => {

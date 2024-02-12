@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const { Sale, validateSale } = require("../../models/sale/sale.models");
 const { Quotation } = require("../../models/sale/quotation.models");
 const { Company } = require("../../models/companny/companny.models");
+const {Chain} = require("../../models/Chain/chain.models")
 const {
   CompanyCustomer,
 } = require("../../models/companny_customer/companny_customer.models");
