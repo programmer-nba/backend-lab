@@ -20,6 +20,9 @@ app.use(prefix + "/", require("./router/index"));
 app.use(prefix + "/admin", require("./router/admin/index"));
 app.use(prefix + "/admin/quotation", require("./router/admin/quotaion"));
 
+//chain
+app.use(prefix + "/chain", require("./router/chain/index"))
+
 //พนักงานเเต่ละเเผนก
 app.use(prefix + "/employee", require("./router/employee/index"));
 
