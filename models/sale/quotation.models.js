@@ -118,9 +118,9 @@ const QuotationSchema = new mongoose.Schema({
       payment_nine: { type: String, required: false }, //เงือนไข 9
       approve_details: [
         {
-          head:{ type: String, required: false }, //อนุมัติสั่งซื้อ/สั่งจ้างตามรายการข้างต้น
+          head: { type: String, required: false }, //อนุมัติสั่งซื้อ/สั่งจ้างตามรายการข้างต้น
           approve_name: { type: String, required: false }, //ลายเซ็น
-          date_time: { type: String, required: false }, //เวลา
+          date_time: { type: Date, required: false, default: Date.now()}, //เวลา
           thank: { type: String, required: false }, //จึงเรียนมาเพื่อพิจารณาและขอขอบพระคุณมา ณ โอกาสนี้
           name_manager: { type: String, required: false }, //ชื่อผู้จัดการ
         },
