@@ -31,6 +31,7 @@ exports.Quotation = async (req, res) => {
       customer_detail,
       customer_number,
       employee_name,
+      tax_id_company,
       end_date,
       discount = 0,
       work_discount = 0,
@@ -116,7 +117,6 @@ exports.Quotation = async (req, res) => {
         _id: compannyCustomerID,
       });
     }
-
     const quotationNumber = await Quotationnumber();
     const quotation = await new Quotation({
       quotation: quotationNumber,
@@ -158,6 +158,7 @@ exports.Quotation = async (req, res) => {
       total_detail,
       terms_payment,
       customer_detail,
+      tax_id_company,
       customer_number,
       start_date :req.body.start_date,
       end_date:req.body.end_date,
