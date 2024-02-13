@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const QuotationSchema = new mongoose.Schema({
   quotation: { type: String, required: false }, //เลขที่ใบเสนอราคา
   employee_name: { type: String, required: false }, //คนทำรายการ หรือผุ้เสนอราคา
+  start_date: { type: String, required: false }, //วันที่ออกบิล
+  end_date: { type: String, required: false }, //วันที่ต้องจ่ายเงิน
   tax_id_company: { type: String, required: false }, //เลขประจำตัวผู้เสียภาษี
   company: {
     taxnumber: { type: String, required: false, default: true }, //เลขที่การเสียภาษี
@@ -17,8 +19,10 @@ const QuotationSchema = new mongoose.Schema({
     company_tel: { type: String, required: false }, //เบอร์โทรศัพท์
     companuy_fax: { type: String, required: false }, //เบอร์โทรสาร
   }, //ข้อมูลบริษัทตัวเอง
-  customer_company: {
+  customer_company1: {
+    dear_users: { type: String, required: false, default: "ไม่มี" }, //เรียน
     company_customer_name: { type: String, required: false, default: "ไม่มี" }, //ชื่อบริษัท
+    company_customer_address: { type: String, required: false, default: "ไม่มี" }, //ที่อยู่บริษัท
     company_customer_number: {
       type: String,
       required: false,
@@ -129,8 +133,6 @@ const QuotationSchema = new mongoose.Schema({
     },
   ],
   status: { type: Array, required: false },
-  start_date: { type: String, required: false }, //วันที่ออกบิล
-  end_date: { type: String, required: false }, //วันที่ต้องจ่ายเงิน
   timestamps: { type: Date, required: false, default: Date.now() },
 });
 

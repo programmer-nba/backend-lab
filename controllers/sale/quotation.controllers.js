@@ -147,6 +147,12 @@ exports.Quotation = async (req, res) => {
         company_tcompany_customer_telel:
           compannyCustomerData.company_tcompany_customer_telel,
       },
+      customer_company1:{
+        dear_users:req.body.customer_company1.dear_users,
+        company_customer_name:req.body.customer_company1.company_customer_name,
+        company_customer_address:req.body.customer_company1.company_customer_address,
+        company_customer_number:req.body.customer_company1.company_customer_number,
+      },
       employee_name,
       detail: updatedData,
       total_detail,
