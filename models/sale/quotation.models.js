@@ -120,7 +120,7 @@ const QuotationSchema = new mongoose.Schema({
         {
           head: { type: String, required: false }, //อนุมัติสั่งซื้อ/สั่งจ้างตามรายการข้างต้น
           approve_name: { type: String, required: false }, //ลายเซ็น
-          date_time: { type: Date, required: false, default: Date.now()}, //เวลา
+          date_time:{ type: String, required: false }, //เวลา
           thank: { type: String, required: false }, //จึงเรียนมาเพื่อพิจารณาและขอขอบพระคุณมา ณ โอกาสนี้
           name_manager: { type: String, required: false }, //ชื่อผู้จัดการ
         },

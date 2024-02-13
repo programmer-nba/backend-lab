@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const { Sale, validateSale } = require("../../models/sale/sale.models");
 const { Quotation } = require("../../models/sale/quotation.models");
 const { Company } = require("../../models/companny/companny.models");
-const {Chain} = require("../../models/Chain/chain.models")
+const { Chain } = require("../../models/Chain/chain.models");
 const {
   CompanyCustomer,
 } = require("../../models/companny_customer/companny_customer.models");
@@ -31,7 +31,7 @@ exports.Quotation = async (req, res) => {
       customer_detail,
       customer_number,
       employee_name,
-      start_date,
+      end_date,
       discount = 0,
       work_discount = 0,
       report_preparation_fee = 0,
@@ -153,7 +153,8 @@ exports.Quotation = async (req, res) => {
       terms_payment,
       customer_detail,
       customer_number,
-      start_date,
+      start_date :req.body.start_date,
+      end_date:req.body.end_date,
       status: status,
       discount: discounts,
       total,
