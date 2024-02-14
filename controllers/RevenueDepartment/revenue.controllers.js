@@ -19,11 +19,12 @@ const {
 
 exports.login = async (req, res) => {
   try {
-    const { username, password, nonce } = req.body;
-
-    if (!username || !password || !nonce) {
+    let data = {
+      taxNo: req.body.taxNo,
+    };
+    if (!data.taxNo) {
       return res.status(400).send({
-        message: "กรุณาระบุ username, password, และ nonce",
+        message: "กรุณาระบุ เลขประตัวผู้เสียภาษี",
         status: false,
       });
     }
@@ -31,25 +32,26 @@ exports.login = async (req, res) => {
       method: "post",
       url: `${process.env.API_REVENUE}`,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
       },
-      data: new URLSearchParams({
-        username,
-        password,
-        nonce,
-      }).toString(),
+      data: data,
     };
+
     console.log(config);
-    await axios(config)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
+
+    const response = await axios(config);
+    if (response.status === 200) {
+      console.log(response.data);
+      return res.status(200).send(response.data);
+    } else {
+      console.log(response.statusText);
+      return res.status(response.status).send({
+        message: response.statusText,
+        status: false,
       });
+    }
   } catch (err) {
-    console.log(err);
-    return res.status(500).send({ message: "มีบางอย่างผิดพลาด" });
+    console.error(err);
+    return res.status(500).send({ message: err.message });
   }
 };
