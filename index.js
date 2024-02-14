@@ -21,7 +21,7 @@ app.use(prefix + "/admin", require("./router/admin/index"));
 app.use(prefix + "/admin/quotation", require("./router/admin/quotaion"));
 
 //chain
-app.use(prefix + "/chain", require("./router/chain/index"))
+app.use(prefix + "/chain", require("./router/chain/index"));
 
 //พนักงานเเต่ละเเผนก
 app.use(prefix + "/employee", require("./router/employee/index"));
@@ -36,7 +36,7 @@ app.use(
 ); //เพิ่มข้อมูลบริษัท
 
 //พนักงาน เซลล์
-app.use(prefix + "/sale/maneger", require("./router/admin/saleManager"));//หัวหน้าเซลล์
+app.use(prefix + "/sale/maneger", require("./router/admin/saleManager")); //หัวหน้าเซลล์
 app.use(prefix + "/sale", require("./router/sale/index")); //เพิ่มลบเเก้ไขข้อมูลของพนักงาน
 app.use(prefix + "/fromtDetails", require("./router/customer/index")); //กรอกข้อมูลของลูกค้า
 app.use(prefix + "/quotation", require("./router/quotation/index")); //.ใบเสนอราคา
@@ -66,6 +66,12 @@ app.use(prefix + "/EmployeeCheck", require("./router/employee/employee.check"));
 app.use(
   prefix + "/EmployeeDocument",
   require("./router/employee/employee.documents")
+);
+
+//กรมสรรพากร
+app.use(
+  prefix + "/RevenueDepartment",
+  require("./router/RevenueDepartment/Revenue")
 );
 
 const port = process.env.PORT || 4681;
