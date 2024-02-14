@@ -22,7 +22,6 @@ const FromDetailsSchema = new mongoose.Schema({
   customer_birthday: { type: String, required: true }, //วันเกิด
   customer_email: { type: String, required: false },
   customer_phone: { type: String, required: true },
-  customer_position: { type: String, required: true },
   customer_role: { type: String, required: false },
   customer_contact: {
     type: String,

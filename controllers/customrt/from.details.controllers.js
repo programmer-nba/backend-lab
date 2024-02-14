@@ -55,7 +55,6 @@ exports.create = async (req, res) => {
           customer_birthday: req.body.customer_birthday,
           customer_email: req.body.customer_email,
           customer_phone: req.body.customer_phone,
-          customer_position: req.body.customer_position,
           customer_contact: req.body.customer_contact,
           customer_note: req.body.customer_note,
         };
