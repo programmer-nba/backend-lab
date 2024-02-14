@@ -18,6 +18,10 @@ const FromDetailsSchema = new mongoose.Schema({
   customer_prefix: { type: String, required: false }, //คำนำหน้า
   customer_name: { type: String, required: false },//ชื่อ
   customer_lastname: { type: String, required: true },
+  district: { type: String, required: false },//ตำบล
+  amphur: { type: String, required: false },//อำเภอ
+  province: { type: String, required: false },//จังหวัด
+  postagecode: { type: String, required: false },//รหัสไปรษณีย์
   customer_idcard: { type: String, required: true }, //รหัสบัตรประชาชน
   customer_birthday: { type: String, required: true }, //วันเกิด
   customer_email: { type: String, required: false },

@@ -57,6 +57,10 @@ exports.create = async (req, res) => {
           customer_phone: req.body.customer_phone,
           customer_contact: req.body.customer_contact,
           customer_note: req.body.customer_note,
+          district: req.body.district,
+          amphur:  req.body.amphur,
+          province:  req.body.province,
+          postagecode:  req.body.postagecode,
         };
         const details = await FromDetails.create(data);
         if (details) {
