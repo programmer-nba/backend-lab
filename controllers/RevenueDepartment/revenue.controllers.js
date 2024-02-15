@@ -17,7 +17,7 @@ const {
   deleteFile,
 } = require("../../funtions/uploadfilecreate");
 
-exports.login = async (req, res) => {
+exports.Chack = async (req, res) => {
   try {
     let data = {
       taxNo: req.body.taxNo,
