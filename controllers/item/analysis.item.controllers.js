@@ -48,3 +48,46 @@ exports.EditItem = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+exports.GetAllIem = async (req, res) => {
+  try {
+    const item = await ItemAnalysis.find();
+    if (item.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "ดึงข้อมูลรายละเอียดโครงการสำเร็จ",
+        data: item,
+      });
+    } else {
+      return res
+        .status(404)
+        .send({ message: "ไม่พบข้อมูลรายละเอียดโครงการ", status: false });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: "มีบางอย่างผิดพลาด",
+      status: false,
+    });
+  }
+};
+exports.GetAllIemByid = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const item = await ItemAnalysis.findById(id);
+    if (item) {
+      return res.status(200).send({
+        status: true,
+        message: "ดึงข้อมูลรายละเอียดโครงการสำเร็จ",
+        data: item,
+      });
+    } else {
+      return res
+        .status(404)
+        .send({ message: "ไม่พบข้อมูลรายละเอียดโครงการ", status: false });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: "มีบางอย่างผิดพลาด",
+      status: false,
+    });
+  }
+};
