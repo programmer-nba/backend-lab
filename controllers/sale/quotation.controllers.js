@@ -10,6 +10,8 @@ const { Sale, validateSale } = require("../../models/sale/sale.models");
 const { Quotation } = require("../../models/sale/quotation.models");
 const { Company } = require("../../models/companny/companny.models");
 const { Chain } = require("../../models/Chain/chain.models");
+const { Item } = require("../../models/item/item.models");
+const { ItemAnalysis } = require("../../models/item/analysis.item.models");
 const {
   CompanyCustomer,
 } = require("../../models/companny_customer/companny_customer.models");
@@ -27,6 +29,7 @@ const {
 exports.Quotation = async (req, res) => {
   try {
     const {
+      _id,
       detail,
       customer_detail,
       customer_number,
@@ -45,59 +48,77 @@ exports.Quotation = async (req, res) => {
     let total = 0;
     let discounts = 0;
     let processing_fee = 0;
+    
+    const updatedData = await Promise.all(
+      detail.map(async (work) => {
+        let workTotal = 0;
+        const updatedWork = {
+          ...work,
+          work_details: await Promise.all(
+            work.work_details.map(async (project) => {
+              let projectTotal = 0;
+              let work_net = 0;
 
-    const updatedData = detail.map((work) => {
-      let workTotal = 0;
-      const updatedWork = {
-        ...work,
-        work_details: work.work_details.map((project) => {
-          let projectTotal = 0;
-          let work_net = 0;
+              const updatedProject = {
+                ...project,
+                project_details: await Promise.all(
+                  project.project_details.map(async (mainDetail) => {
+                    let mainDetailTotal = 0;
+                    const updatedMainDetail = {
+                      ...mainDetail,
+                      sub_detail: await Promise.all(
+                        mainDetail.sub_detail.map(async (subDetail) => {
+                          const itemInfo = await Item.findOne({
+                            _id: subDetail.sub_name,
+                          });
+                          const itemInfo1 = await ItemAnalysis.findOne({
+                            _id: subDetail.name_analysis,
+                          });
+                          
+                          const price =
+                            subDetail.frequency * subDetail.price_umit;
+                          mainDetailTotal += price;
+                          total += price;
 
-          const updatedProject = {
-            ...project,
-            project_details: project.project_details.map((mainDetail) => {
-              let mainDetailTotal = 0;
-
-              const updatedMainDetail = {
-                ...mainDetail,
-                sub_detail: mainDetail.sub_detail.map((subDetail) => {
-                  const price = subDetail.frequency * subDetail.price_umit;
-                  mainDetailTotal += price;
-                  total += price;
-                  return {
-                    ...subDetail,
-                    price,
-                  };
-                }),
+                          return {
+                            ...subDetail,
+                            sub_name: itemInfo ? itemInfo.name : "",
+                            name_analysis: itemInfo1 ? itemInfo1.name : "",
+                            price,
+                          };
+                        })
+                      ),
+                    };
+                    projectTotal += mainDetailTotal;
+                    return updatedMainDetail;
+                  })
+                ),
               };
-              projectTotal += mainDetailTotal;
-              return updatedMainDetail;
-            }),
-          };
-          workTotal += projectTotal;
-          return updatedProject;
-        }),
-        work_total: workTotal.toFixed(2),
-        work_discount: work.work_discount,
-        work_net: workTotal - work.work_discount.toFixed(2),
-        work_processing_total:
-          workTotal - work.work_discount + work.work_processing_fee,
-        work_vat: (
-          (workTotal - work.work_discount + work.work_processing_fee) *
-          0.07
-        ).toFixed(2),
-        work_totalvat: (
-          workTotal -
-          work.work_discount +
-          work.work_processing_fee +
-          (workTotal - work.work_discount + work.work_processing_fee) * 0.07
-        ).toFixed(2),
-      };
-      processing_fee += work.work_processing_fee;
-      discounts += parseFloat(work.work_discount);
-      return updatedWork;
-    });
+              workTotal += projectTotal;
+              return updatedProject;
+            })
+          ),
+          work_total: workTotal.toFixed(2),
+          work_discount: work.work_discount,
+          work_net: workTotal - work.work_discount.toFixed(2),
+          work_processing_total:
+            workTotal - work.work_discount + work.work_processing_fee,
+          work_vat: (
+            (workTotal - work.work_discount + work.work_processing_fee) *
+            0.07
+          ).toFixed(2),
+          work_totalvat: (
+            workTotal -
+            work.work_discount +
+            work.work_processing_fee +
+            (workTotal - work.work_discount + work.work_processing_fee) * 0.07
+          ).toFixed(2),
+        };
+        processing_fee += work.work_processing_fee;
+        discounts += parseFloat(work.work_discount);
+        return updatedWork;
+      })
+    );
     const net = total - discounts;
     const total_after =
       net + processing_fee + report_preparation_fee + community_economic_survey;
@@ -147,11 +168,13 @@ exports.Quotation = async (req, res) => {
         company_tcompany_customer_telel:
           compannyCustomerData.company_tcompany_customer_telel,
       },
-      customer_company1:{
-        dear_users:req.body.customer_company1.dear_users,
-        company_customer_name:req.body.customer_company1.company_customer_name,
-        company_customer_address:req.body.customer_company1.company_customer_address,
-        company_customer_number:req.body.customer_company1.company_customer_number,
+      customer_company1: {
+        dear_users: req.body.customer_company1.dear_users,
+        company_customer_name: req.body.customer_company1.company_customer_name,
+        company_customer_address:
+          req.body.customer_company1.company_customer_address,
+        company_customer_number:
+          req.body.customer_company1.company_customer_number,
       },
       employee_name,
       detail: updatedData,
@@ -160,8 +183,8 @@ exports.Quotation = async (req, res) => {
       customer_detail,
       tax_id_company,
       customer_number,
-      start_date :req.body.start_date,
-      end_date:req.body.end_date,
+      start_date: req.body.start_date,
+      end_date: req.body.end_date,
       status: status,
       discount: discounts,
       total,

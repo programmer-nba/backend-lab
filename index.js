@@ -68,6 +68,12 @@ app.use(
   require("./router/employee/employee.documents")
 );
 
+//สร้างประเภทของรายละเอียดงาน
+app.use(prefix + "/type", require("./router/item/index"));
+
+//สร้างวิธีการวิเคราะห์
+app.use(prefix + "/type/Analysis", require("./router/item/AnalysisMethods"));
+
 //กรมสรรพากร
 app.use(
   prefix + "/RevenueDepartment",

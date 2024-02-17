@@ -22,7 +22,11 @@ const QuotationSchema = new mongoose.Schema({
   customer_company1: {
     dear_users: { type: String, required: false, default: "ไม่มี" }, //เรียน
     company_customer_name: { type: String, required: false, default: "ไม่มี" }, //ชื่อบริษัท
-    company_customer_address: { type: String, required: false, default: "ไม่มี" }, //ที่อยู่บริษัท
+    company_customer_address: {
+      type: String,
+      required: false,
+      default: "ไม่มี",
+    }, //ที่อยู่บริษัท
     company_customer_number: {
       type: String,
       required: false,
@@ -61,8 +65,8 @@ const QuotationSchema = new mongoose.Schema({
               detail_name: { type: String, required: true }, //รายละเอียดโครงการ
               sub_detail: [
                 {
-                  sub_name: { type: String, required: true },
-                  name_analysis: { type: String, required: false }, //วิธีการวิเคระห์
+                  sub_name: { type: String, required: false, default: "" },
+                  name_analysis: { type: String, required: false, default: "" }, //วิธีการวิเคระห์
                   amount: { type: Number, required: false }, //จำนวน
                   type_amount: { type: String, required: false }, //ประเภทของจำนวน
                   frequency: { type: Number, required: false }, //ความถี่
@@ -124,7 +128,7 @@ const QuotationSchema = new mongoose.Schema({
         {
           head: { type: String, required: false }, //อนุมัติสั่งซื้อ/สั่งจ้างตามรายการข้างต้น
           approve_name: { type: String, required: false }, //ลายเซ็น
-          date_time:{ type: String, required: false }, //เวลา
+          date_time: { type: String, required: false }, //เวลา
           thank: { type: String, required: false }, //จึงเรียนมาเพื่อพิจารณาและขอขอบพระคุณมา ณ โอกาสนี้
           name_manager: { type: String, required: false }, //ชื่อผู้จัดการ
         },
