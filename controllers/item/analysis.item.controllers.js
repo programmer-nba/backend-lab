@@ -91,3 +91,22 @@ exports.GetAllIemByid = async (req, res) => {
     });
   }
 };
+exports.deleteItemAnalysis = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const item = await ItemAnalysis.findByIdAndDelete(id);
+    if (!item) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลวิธีการวิเคราะห์ร" });
+    } else {
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลวิธีการวิเคราะห์รสำเร็จ" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};
