@@ -8,7 +8,7 @@ exports.create = async (req, res) => {
     if (item)
       return res.status(409).send({
         status: false,
-        message: "มีชื่องานนี้อยู่ในระบบเเล้ว",
+        message: "มีชื่อรายละเอียดโครงการนี้อยู่ในระบบเเล้ว",
       });
     await new Item({
       ...req.body,
@@ -89,5 +89,24 @@ exports.GetAllIemByid = async (req, res) => {
       message: "มีบางอย่างผิดพลาด",
       status: false,
     });
+  }
+};
+exports.deleteItem = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const item = await Item.findByIdAndDelete(id);
+    if (!item) {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลรายละเอียดโครงการ" });
+    } else {
+      return res
+        .status(200)
+        .send({ status: true, message: "ลบข้อมูลรายละเอียดโครงการสำเร็จ" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
