@@ -72,7 +72,7 @@ app.use(
 app.use(prefix + "/type", require("./router/item/index"));
 
 //สร้างวิธีการวิเคราะห์
-app.use(prefix + "/type/Analysis", require("./router/item/AnalysisMethods"));
+app.use(prefix + "/type/.", require("./router/item/AnalysisMethods"));
 
 //กรมสรรพากร
 app.use(
