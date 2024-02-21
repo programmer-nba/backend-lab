@@ -65,6 +65,10 @@ const ChainSchema = new mongoose.Schema({
                   type_frequency: { type: String, required: false }, //ประเภทความถี่
                   price_umit: { type: Number, required: false }, //ราคาต่อหน่วย
                   price: { type: Number, required: false }, //ราคารวม
+                  status: {
+                    detail: { type: String, required: false },
+                    name: { type: String, required: false },
+                  },
                 },
               ],
             },

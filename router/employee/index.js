@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const authEmployee = require("../../lib/auth-employee");
+const authAdmin = require("../../lib/auth-admin");
 const employee = require("../../controllers/employee/employee.controller");
 
 //สร้างพนักงานเเต่ละเเผนก
-router.post("/create", employee.create);
-router.put("/EditEmployee/:id", employee.EditEmployee);
-router.delete("/deleteEmployee/:id", employee.deleteEmployee);
-router.get("/GetAllEmploee", employee.GetAllEmploees);
-router.get("/GetMemberBy/:id", employee.GetEmployeeByIds);
+router.post("/create",authAdmin, employee.create);
+router.put("/EditEmployee/:id",authAdmin, employee.EditEmployee);
+router.delete("/deleteEmployee/:id",authAdmin, employee.deleteEmployee);
+router.get("/GetAllEmploee",authAdmin, employee.GetAllEmploees);
+router.get("/GetMemberBy/:id",authAdmin, employee.GetEmployeeByIds);
 
 module.exports = router;
