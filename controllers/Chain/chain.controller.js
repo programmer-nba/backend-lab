@@ -69,10 +69,11 @@ exports.getChainByEmployee = async (req, res) => {
       },
       {
         $set: {
-          "detail.$[].work_details.$[].project_details.$[].sub_detail.$[sub].status": {
-            detail: "รับงานแล้ว",
-            name: name,
-          },
+          "detail.$[].work_details.$[].project_details.$[].sub_detail.$[sub].status":
+            {
+              detail: "รับงานแล้ว",
+              name: name,
+            },
         },
       },
       {
@@ -94,7 +95,6 @@ exports.getChainByEmployee = async (req, res) => {
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message });
   }
-
 };
 exports.deleteChain = async (req, res) => {
   try {
