@@ -3,6 +3,7 @@ const dayjs = require("dayjs");
 const Joi = require("joi");
 const qr = require("qrcode");
 const path = require("path");
+const fs = require("fs");
 const axios = require("axios");
 const querystring = require("querystring");
 const { google } = require("googleapis");
@@ -12,6 +13,7 @@ const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const { Sale, validateSale } = require("../../models/sale/sale.models");
+const { Employee } = require("../../models/employee/employee.model");
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -252,53 +254,91 @@ const generateQrCodeUrl = async (url) => {
     throw error;
   }
 };
+exports.GetEmployee = async (req, res) => {
+  try {
+    const nuumber = req.params.nuumber;
+    console.log(nuumber);
+    const emp = await Employee.findOne({ employee_number: nuumber });
 
-//ส่ง gmail
-// const upload = multer({ storage: storage }).array("imgCollection", 20);
-// exports.SendGmail = async (req, res) => {
-//   try {
-//     const transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: "warunyoo084@gmail.com",
-//         pass: "pley sttn wwpj eupi",
-//       },
-//     });
+    if (emp) {
+      return res.status(200).send({
+        status: true,
+        message: "ดึงข้อมูลพนักงานสำเร็จ",
+        data: emp,
+      });
+    } else {
+      return res
+        .status(404)
+        .send({ message: "ไม่พบข้อมูลพนักงาน", status: false });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: "มีบางอย่างผิดพลาด",
+      status: false,
+    });
+  }
+};
+//----------------------------------------------------//
 
-//     upload(req, res, async function (err) {
-//       if (err) {
-//         return res.status(500).send(err);
-//       }
+//ส่งเเจ้งเตือนผ่าน gmail
 
-//       const reqFiles = req.files;
-//       const { to, subject, text } = req.body;
+const myStorage = multer.memoryStorage();
+const upload = multer({ storage: myStorage }).array("imgCollection", 20);
+exports.SendGmail = async (req, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "warunyoo084@gmail.com",
+        pass: "obgi ehtx humt gpgm",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
 
-//       if (!to) {
-//         throw new Error("ไม่ได้กำหนดผู้รับอีเมล");
-//       }
+    upload(req, res, async function (err) {
+      if (err) {
+        return res.status(500).send(err);
+      }
 
-//       const attachments = reqFiles.map((file) => ({
-//         filename: file.originalname,
-//         content: file.buffer,
-//       }));
+      const reqFiles = req.files;
 
-//       const mailOptions = {
-//         from: "warunyoo084@gmail.com",
-//         to,
-//         subject,
-//         text,
-//         attachments,
-//       };
+      if (!reqFiles || reqFiles.length === 0) {
+        return res.status(400).send("ไม่มีไฟล์ที่อัปโหลด");
+      }
+      const { to, subject, text } = req.body;
+      if (!to) {
+        return res.status(400).send("ไม่ได้กำหนดผู้รับอีเมล");
+      }
+      
+      const attachments = reqFiles.map((file) => {
+        if (!file.buffer || !file.mimetype) {
+          return res.status(400).send("Invalid file format or buffer is undefined");
+        }
+        return {
+          filename: file.originalname,
+          content: file.buffer.toString("base64"),
+          encoding: "base64",
+        };
+      });
+      const mailOptions = {
+        from: "warunyoo084@gmail.com",
+        to,
+        subject,
+        text,
+        attachments,
+      };
+      const info = await transporter.sendMail(mailOptions);
+      console.log("ส่งอีเมลสำเร็จ: " + info.response);
 
-//       const info = await transporter.sendMail(mailOptions);
-//       console.log("ส่งอีเมลสำเร็จ: " + info.response);
-//       res.status(200).send("ส่งอีเมลสำเร็จ");
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("ไม่สามารถส่งได้: " + error.message);
-//   }
-// };
+      res.status(200).send("ส่งอีเมลสำเร็จ");
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("ไม่สามารถส่งได้: " + error.message);
+  }
+};
 
 async function Salenumber(date) {
   const sal = await Sale.find();
