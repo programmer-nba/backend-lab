@@ -226,11 +226,13 @@ exports.GetSaleByIds = async (req, res) => {
   }
 };
 
-//ยังไม่สมบูรณ์
+//สร้างurl เพื่อเป็น qrCode ในการเเสดงข้อมูล โดยจะส่งรหัสลูกค้า
 exports.GenQrCode = async (req, res) => {
   try {
     const sale_number = req.params.id;
-    const url = `https://www.example.com/qr-code?data=${encodeURIComponent(sale_number)}`;
+    const url = `https://www.example.com/qr-code?data=${encodeURIComponent(
+      sale_number
+    )}`;
     const qrCodeImageUrl = await generateQrCodeUrl(url);
     return res.status(200).send({
       status: true,
@@ -241,7 +243,6 @@ exports.GenQrCode = async (req, res) => {
     return res.status(500).send({ status: false, error: error.message });
   }
 };
-
 const generateQrCodeUrl = async (url) => {
   try {
     const qrCodeDataUrl = await qr.toDataURL(url);
@@ -251,7 +252,6 @@ const generateQrCodeUrl = async (url) => {
     throw error;
   }
 };
-
 
 //ส่ง gmail
 // const upload = multer({ storage: storage }).array("imgCollection", 20);
