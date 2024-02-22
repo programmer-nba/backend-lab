@@ -110,7 +110,7 @@ exports.EditEmployeeDocoment = async (req, res) => {
     return res.status(500).send({ status: false, error: error.message });
   }
 };
-exports.deleteDocomentByDepartment = async (req,res) =>{
+exports.deleteDocomentByDepartment = async (req, res) => {
   try {
     const id = req.params.id;
     const employee = await Employee.findById(id);
@@ -139,4 +139,4 @@ exports.deleteDocomentByDepartment = async (req,res) =>{
       .status(500)
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
-}
+};

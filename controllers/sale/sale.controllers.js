@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const dayjs = require("dayjs");
 const Joi = require("joi");
+const qr = require("qrcode");
+const path = require("path");
 const axios = require("axios");
 const querystring = require("querystring");
 const { google } = require("googleapis");
@@ -228,45 +230,28 @@ exports.GetSaleByIds = async (req, res) => {
 exports.GenQrCode = async (req, res) => {
   try {
     const sale_number = req.params.id;
-    let upload = multer({ storage: storage }).single("imgCollection");
-    upload(req, res, async function (err) {
-      if (err) {
-        return res.status(500).send(err);
-      }
-      const sale = await Sale.findOne({ sale_number: sale_number });
-      const addressString = {
-        house_number: sale.address.house_number,
-        moo_number: sale.address.moo_number,
-        soi: sale.address.soi,
-        name_road: sale.address.name_road,
-        tumbol: sale.address.tumbol,
-        district: sale.address.district,
-        province: sale.address.province,
-        zip_code: sale.address.zip_code,
-      };
-
-      const dataToEncode = {
-        sale_number: sale.sale_number,
-        profile_image: sale.profile_image,
-        card_number: sale.card_number,
-        address: addressString,
-        sale_position: sale.sale_position,
-        sale_name: sale.sale_name,
-        sale_tel: sale.sale_tel,
-        sale_username: sale.sale_username,
-        sale_address: sale.sale_address,
-      };
-      const qrCodeImageUrl = await generateQrCode(dataToEncode, "uploads");
-      return res.status(200).send({
-        status: true,
-        qrCodeImageUrl,
-      });
+    const url = `https://www.example.com/qr-code?data=${encodeURIComponent(sale_number)}`;
+    const qrCodeImageUrl = await generateQrCodeUrl(url);
+    return res.status(200).send({
+      status: true,
+      qrCodeImageUrl,
     });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).send({ status: false, error: error.message });
   }
 };
+
+const generateQrCodeUrl = async (url) => {
+  try {
+    const qrCodeDataUrl = await qr.toDataURL(url);
+    return qrCodeDataUrl;
+  } catch (error) {
+    console.error("Error generating QR Code URL:", error);
+    throw error;
+  }
+};
+
 
 //ส่ง gmail
 // const upload = multer({ storage: storage }).array("imgCollection", 20);
