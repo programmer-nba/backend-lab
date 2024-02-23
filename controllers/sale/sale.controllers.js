@@ -281,48 +281,52 @@ exports.GetEmployee = async (req, res) => {
 //----------------------------------------------------//
 
 //ส่งเเจ้งเตือนผ่าน gmail
-const myStorage = multer.memoryStorage();
-const upload = multer({ storage: myStorage }).array("imgCollection", 20);
 exports.SendGmail = async (req, res) => {
+  const myStorage = multer.memoryStorage();
+  const upload = multer({ storage: myStorage }).array("imgCollection", 20);
   try {
     const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: "warunyoo084@gmail.com",
-            pass: "obgi ehtx humt gpgm",
-          },
-          tls: {
-            rejectUnauthorized: false,
-          },
+      service: "gmail",
+      auth: {
+        user: "warunyoo084@gmail.com",
+        pass: "obgi ehtx humt gpgm",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
 
     upload(req, res, async function (err) {
-          if (err) {
-            return res.status(500).send(err);
-          }
+      if (err) {
+        return res.status(500).send(err);
+      }
 
       const reqFiles = req.files;
-
-          if (!reqFiles || reqFiles.length === 0) {
-            return res.status(400).send("ไม่มีไฟล์ที่อัปโหลด");
-          }
-          const { to, subject, text } = req.body;
-          if (!to) {
-            return res.status(400).send("ไม่ได้กำหนดผู้รับอีเมล");
-          }
+      if (!reqFiles || reqFiles.length === 0) {
+        return res
+          .status(400)
+          .send({ status: false, message: "ไม่มีไฟล์รูปภาพที่อัปโหลด" });
+      }
+      const { to, subject, text } = req.body;
+      if (!to) {
+        return res
+          .status(400)
+          .send({ status: false, message: "ไม่ได้กำหนดผู้รับอีเมล" });
+      }
 
       const attachments = reqFiles.map((file) => {
-          if (!file.buffer || !file.mimetype) {
-            return res
-              .status(400)
-              .send("Invalid file format or buffer is undefined");
-          }
-          return {
-            filename: file.originalname,
-            content: file.buffer.toString("base64"),
-            encoding: "base64",
-          };
-        });
+        if (!file.buffer || !file.mimetype) {
+          return res.status(400).send({
+            status: false,
+            message: "Invalid file format or buffer is undefined",
+          });
+        }
+        return {
+          filename: file.originalname,
+          content: file.buffer.toString("base64"),
+          encoding: "base64",
+        };
+      });
       const mailOptions = {
         from: "warunyoo084@gmail.com",
         to,
@@ -333,13 +337,16 @@ exports.SendGmail = async (req, res) => {
       const info = await transporter.sendMail(mailOptions);
       console.log("ส่งอีเมลสำเร็จ: " + info.response);
 
-      res.status(200).send("ส่งอีเมลสำเร็จ");
+      res.status(200).send({ status: true, message: "ส่งอีเมล์สำเร็จ" });
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("ไม่สามารถส่งได้: " + error.message);
+    res
+      .status(500)
+      .send({ error: "ไม่สามารถส่งได้: " + error.message, status: false });
   }
 };
+//------------------------------------------------------//
 
 async function Salenumber(date) {
   const sal = await Sale.find();
