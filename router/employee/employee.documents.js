@@ -5,6 +5,6 @@ const QRCode = require('qrcode');
 
 //ผนักงานเเผนกจัดส่งเอกสาร
 router.get("/GetAllEmploeDocoment", employee.GetAllEmploeDocoment);
-router.put("/EditEmployeeDocoment/:id", employee.EditEmployeeDocoment);
+router.put("/EditEmployeeDocoment/:id", employee.EditEmployeeDocoment);//เเก้ไขข้อมูลพนักงาน
 router.delete("/deleteDocomentByDepartment/:id", employee.deleteDocomentByDepartment)
 module.exports = router;

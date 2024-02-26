@@ -110,3 +110,25 @@ exports.deleteItemAnalysis = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+exports.deleteAll = async (req, res) => {
+  try {
+    const result = await ItemAnalysis.deleteMany({});
+
+    if (result.deletedCount > 0) {
+      return res
+        .status(200)
+        .send({
+          status: true,
+          message: "ลบข้อมูลวิธีการวิเคราะห์ทั้งหมดสำเร็จ",
+        });
+    } else {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลวิธีการวิเคราะห์" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};

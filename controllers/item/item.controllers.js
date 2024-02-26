@@ -110,3 +110,23 @@ exports.deleteItem = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+exports.deleteAll = async (req, res) => {
+  try {
+    const result = await Item.deleteMany({});
+
+    if (result.deletedCount > 0) {
+      return res.status(200).send({
+        status: true,
+        message: "ลบรายละเอียดโครงการทั้งหมดสำเร็จ",
+      });
+    } else {
+      return res
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลรายละเอียดโครงการ" });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};
