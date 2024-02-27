@@ -7,6 +7,7 @@ const fs = require("fs");
 const axios = require("axios");
 const querystring = require("querystring");
 const { google } = require("googleapis");
+const { linenotify } = require("../../lib/line");
 const qrcode = require("qrcode");
 const nodemailer = require("nodemailer");
 const req = require("express/lib/request.js");
@@ -261,11 +262,13 @@ exports.GetEmployee = async (req, res) => {
     const emp = await Employee.findOne({ employee_number: nuumber });
 
     if (emp) {
-      return res.status(200).send({
+      res.status(200).send({
         status: true,
         message: "ดึงข้อมูลพนักงานสำเร็จ",
         data: emp,
       });
+      const lineNotifyMessage = `ดึงข้อมูลพนักงานสำเร็จ - รหัสพนักงาน: ${emp.employee_number}, ชื่อ: ${emp.name} , เบอร์โทร: ${emp.tel}`;
+      await linenotify(lineNotifyMessage);
     } else {
       return res
         .status(404)
@@ -280,7 +283,7 @@ exports.GetEmployee = async (req, res) => {
 };
 //----------------------------------------------------//
 
-//ส่งเเจ้งเตือนผ่าน gmail
+//ส่งเเจ้งเตือนผ่าน gmail  user:"ใส่ gmail" pass:"ต้องใส่ passkeys"
 exports.SendGmail = async (req, res) => {
   const myStorage = multer.memoryStorage();
   const upload = multer({ storage: myStorage }).array("imgCollection", 20);
