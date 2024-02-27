@@ -267,8 +267,8 @@ exports.GetEmployee = async (req, res) => {
         message: "ดึงข้อมูลพนักงานสำเร็จ",
         data: emp,
       });
-      const lineNotifyMessage = `ดึงข้อมูลพนักงานสำเร็จ - รหัสพนักงาน: ${emp.employee_number}, ชื่อ: ${emp.name} , เบอร์โทร: ${emp.tel}`;
-      await linenotify(lineNotifyMessage);
+      // const lineNotifyMessage = `ดึงข้อมูลพนักงานสำเร็จ - รหัสพนักงาน: ${emp.employee_number}, ชื่อ: ${emp.name} , เบอร์โทร: ${emp.tel}`;
+      // await linenotify(lineNotifyMessage);
     } else {
       return res
         .status(404)
