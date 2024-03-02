@@ -24,7 +24,7 @@ const {
 exports.create = async (req, res) => {
   try {
     const company = await CompanyCustomer.findOne({
-      company_customer_tname: req.body.company_customer_tname,
+      company_customer_tname: req.body.company_customer_tname, 
     });
     if (company)
       return res.status(409).send({

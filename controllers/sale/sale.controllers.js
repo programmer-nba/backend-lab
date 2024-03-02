@@ -152,6 +152,7 @@ exports.deleteSale = async (req, res) => {
   try {
     const id = req.params.id;
     const employee = await Sale.findByIdAndDelete(id);
+    console.log(employee);
     if (!employee) {
       return res
         .status(404)
