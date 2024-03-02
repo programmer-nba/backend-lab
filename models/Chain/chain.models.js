@@ -72,6 +72,13 @@ const ChainSchema = new mongoose.Schema({
                   },
                 },
               ],
+              final_details: [
+                {
+                  type: String,
+                  required: false,
+                  default: "",
+                },
+              ],
             },
           ],
         },
