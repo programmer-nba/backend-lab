@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const ChainSchema = new mongoose.Schema({
   quotation: { type: String, required: false }, //เลขที่ใบเสนอราคา
+  jobnumber: { type: String, required: false }, //เลขที่บ้าน
   employee_name: { type: String, required: false }, //คนทำรายการ หรือผุ้เสนอราคา
   tax_id_company: { type: String, required: false }, //เลขประจำตัวผู้เสียภาษี
   company: {
@@ -93,6 +94,8 @@ const ChainSchema = new mongoose.Schema({
   total_after: { type: Number, required: false }, //รวมเป็นเงินทั้งสิน
   vat: { type: Number, required: false }, //vat 7 %
   totalvat: { type: Number, required: false }, //ราคารวมหลัง vat
+  Survey_fee: [{ type: String, required: false }], //ค่าสำรวจสภาพเศรษกิจ-สังคม
+  Prepare_report: [{ type: String, required: false }], //จัดทำรายงานผลการปฏิบัติตามมาตรการป้องกันและแก้ไข
   total_detail: [
     {
       name_datail: { type: String, required: false }, //ยอดรวมระยะงาน

@@ -32,14 +32,17 @@ exports.ApproveQuotation = async (req, res) => {
         status: false,
       });
     }
+   
     chain.status.push({
       name: "อนุมัติ",
       timestamps: dayjs(Date.now()).format(""),
     });
+    const job_number = await jobnumber();
     const updatedQuotation = await chain.save();
     const newChain = new Chain({
       ...chain.toObject(),
       status: [...chain.status],
+      jobnumber: job_number,
     });
     const savedChain = await newChain.save();
     return res.status(200).send({
@@ -48,9 +51,7 @@ exports.ApproveQuotation = async (req, res) => {
       data: savedChain,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .send({ message: "มีบางอย่างผิดพลาด", status: false });
+    return res.status(500).send({ message: error.message, status: false });
   }
 };
 exports.RejectQuotation = async (req, res) => {
@@ -137,3 +138,25 @@ exports.deleteQT = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+
+async function jobnumber(date) {
+  const sal = await Chain.find();
+  let jobnumber = null;
+  if (sal.length !== 0) {
+    let data = "";
+    let num = 0;
+    let check = null;
+    do {
+      num = num + 1;
+      data = `JOB${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + num;
+      check = await Chain.find({ jobnumber: data });
+      if (check.length === 0) {
+        jobnumber =
+          `JOB${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + num;
+      }
+    } while (check.length !== 0);
+  } else {
+    jobnumber = `JOB${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + "1";
+  }
+  return jobnumber;
+}

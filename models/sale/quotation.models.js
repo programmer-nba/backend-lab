@@ -75,6 +75,13 @@ const QuotationSchema = new mongoose.Schema({
                   price: { type: Number, required: false }, //ราคารวม
                 },
               ],
+              final_details: [
+                {
+                  type: String,
+                  required: false,
+                  default: "",
+                },
+              ],
             },
           ],
         },
@@ -97,6 +104,8 @@ const QuotationSchema = new mongoose.Schema({
   total_after: { type: Number, required: false }, //รวมเป็นเงินทั้งสิน
   vat: { type: Number, required: false }, //vat 7 %
   totalvat: { type: Number, required: false }, //ราคารวมหลัง vat
+  Survey_fee: [{ type: String, required: false }], //ค่าสำรวจสภาพเศรษกิจ-สังคม 
+  Prepare_report: [{ type: String, required: false }], //จัดทำรายงานผลการปฏิบัติตามมาตรการป้องกันและแก้ไข
   total_detail: [
     {
       name_datail: { type: String, required: false }, //ยอดรวมระยะงาน

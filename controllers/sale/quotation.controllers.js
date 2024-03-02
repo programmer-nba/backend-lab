@@ -48,7 +48,7 @@ exports.Quotation = async (req, res) => {
     let total = 0;
     let discounts = 0;
     let processing_fee = 0;
-    
+
     const updatedData = await Promise.all(
       detail.map(async (work) => {
         let workTotal = 0;
@@ -74,7 +74,7 @@ exports.Quotation = async (req, res) => {
                           const itemInfo1 = await ItemAnalysis.findOne({
                             _id: subDetail.name_analysis,
                           });
-                          
+
                           const price =
                             subDetail.frequency * subDetail.price_umit;
                           mainDetailTotal += price;
@@ -195,6 +195,8 @@ exports.Quotation = async (req, res) => {
       total_after: total_after,
       vat: (total_after * 0.07).toFixed(2),
       totalvat: (total_after + total_after * 0.07).toFixed(2),
+      Survey_fee: req.body.Survey_fee,
+      Prepare_report: req.body.Prepare_report,
     }).save();
 
     if (quotation) {
