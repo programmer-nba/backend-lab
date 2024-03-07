@@ -16,227 +16,101 @@ const {
 const authMember = require("../lib/auth-employee");
 
 router.post("/login", async (req, res) => {
-  try {
+  try{
     const admin = await Admins.findOne({
       admin_username: req.body.username,
     });
-    if (!admin) return await checkEmployee(req, res);
-    const validateAdmin = await bcrypt.compare(
-      req.body.password,
-      admin.admin_password
-    );
-    if (!validateAdmin) {
-      return res.status(401).send({
-        status: false,
-        message: "รหัสผ่านไม่ถูกต้อง",
-      });
-    }
-    const token = admin.generateAuthToken();
-    console.log(token);
-    const responseData = {
-      id: admin.adminnumber,
-      name: admin.admin_name,
-      admin_tel: admin.admin_tel,
-    };
-    return res.status(200).send({
-      status: true,
-      token: token,
-      message: "เข้าสู่ระบบสำเร็จ",
-      result: responseData,
-      level: "admin",
+    const sale = await Sale.findOne({
+      sale_username: req.body.username,
     });
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .send({ status: false, message: "Internal Server Error" });
-  }
-});
 
-router.get("/me", authMe, async (req, res) => {
-  try {
-    const { decoded } = req;
-    if (decoded && decoded.row === "admin") {
-      const id = decoded._id;
-      const admin = await Admins.findOne({ _id: id });
-      if (!admin) {
-        return res
-          .status(400)
-          .send({ message: "มีบางอย่างผิดพลาด", status: false });
-      } else {
-        return res.status(200).send({
-          name: admin.admin_name,
-          username: admin.admin_username,
-          position: "admin",
-          level: admin.admin_position,
-        });
-      }
-    }
-    if (decoded && decoded.row === "employee") {
-      const id = decoded._id;
-      const employee = await Employee.findOne({ _id: id });
-      if (!employee) {
-        return res
-          .status(400)
-          .send({ message: "มีบางอย่างผิดพลาด", status: false });
-      } else {
-        return res.status(200).send({
-          name: employee.name,
-          username: employee.username,
-          position: "employee",
-          level: employee.employee_position,
-          department: employee.employee_sub_department,
-        });
-      }
-      employee;
-    }
-    if (decoded && decoded.row === "sale") {
-      const id = decoded._id;
-      const sale = await Sale.findOne({ _id: id });
-      if (!sale) {
-        return res
-          .status(400)
-          .send({ message: "มีบางอย่างผิดพลาด", status: false });
-      } else {
-        return res.status(200).send({
-          name: sale.sale_name,
-          username: sale.sale_username,
-          position: "sale",
-          level: sale.sale__position,
-        });
-      }
-      sale;
-    }
-    if (decoded && decoded.row === "saleLeader") {
-      const id = decoded._id;
-      const sale = await SaleLeader.findOne({ _id: id });
-      if (!sale) {
-        return res
-          .status(400)
-          .send({ message: "มีบางอย่างผิดพลาด", status: false });
-      } else {
-        return res.status(200).send({
-          name: sale.sale_name,
-          username: sale.sale_username,
-          position: "sale Leader",
-          level: sale.sale__position,
-        });
-      }
-      sale;
-    }
-  } catch (error) {
-    res.status(500).send({ message: "Internal Server Error", status: false });
-  }
-});
-
-const checkEmployee = async (req, res) => {
-  try {
-    const emp = await Employee.findOne({
-      username: req.body.username,
+    const employee = await Employee.findOne({
+      employee_username: req.body.username,
     });
-    if (!emp) {
-      return await checkSale(req, res);
-    } else {
-      const validatemember = await bcrypt.compare(
-        req.body.password,
-        emp.password
-      );
-      if (!validatemember) {
-        // รหัสไม่ตรง
-        return res.status(401).send({
-          message: "password is not find",
-          status: false,
-        });
-      } else {
-        const token = emp.generateAuthToken();
-        const ResponesData = {
-          name: emp.name,
-          username: emp.username,
-          employee_position: emp.employee_position,
-          employee_sub_department: emp.employee_sub_department,
-        };
+
+    let password  
+    if(admin){
+      password = bcrypt.compare(req.body.password,admin.admin_password);
+      if(password)
+      {
+        const payload = {
+          _id: admin?._id,
+          username: admin?.admin_username,
+          name: admin?.admin_name,
+          row: "admin",
+        }
+        const token = jwt.sign(payload, process.env.JWTPRIVATEKEY, { expiresIn: "90d" });
         return res.status(200).send({
           status: true,
           token: token,
           message: "เข้าสู่ระบบสำเร็จ",
-          result: ResponesData,
-          level: "employee",
+          result: payload,
+          row: "admin",  
+        });
+        
+      }else{
+        return res.status(400).send({status:false,message:"รหัสผ่านไม่ถูกต้อง"});
+      }
+    }else if(sale){
+      password = bcrypt.compare(req.body.password,sale.sale_password);
+      if(password)
+      {
+        const payload = {
+          _id: sale?._id,
+          username: sale?.sale_username,
+          name: sale?.sale_name,
+          row: "sale",
+        }
+        const token = jwt.sign(payload, process.env.JWTPRIVATEKEY, { expiresIn: "90d" });
+        return res.status(200).send({
+          status: true,
+          token: token,
+          message: "เข้าสู่ระบบสำเร็จ",
+          result: payload,
+          row: "sale",  
+        });
+      }else{
+        return res.status(400).send({status:false,message:"รหัสผ่านไม่ถูกต้อง"});
+      }
+     
+    }else if(employee){
+      password = bcrypt.compare(req.body.password,employee.employee_password);
+      if(password)
+      {
+        const payload = {
+          _id: employee?._id,
+          username: employee?.employee_username,
+          name: employee?.name,
+          row: employee?.employee_position,
+        }
+        const token = jwt.sign(payload, process.env.JWTPRIVATEKEY, { expiresIn: "90d" });
+        return res.status(200).send({
+          status: true,
+          token: token,
+          message: "เข้าสู่ระบบสำเร็จ",
+          result: payload,
+          row: "employee",  
         });
       }
+      else{
+        return res.status(400).send({status:false,message:"รหัสผ่านไม่ถูกต้อง"});
+      }
+    }else{
+      return res.status(400).send({status:false,message:"ไม่พบผู้ใช้งานนี้ในระบบ"});
     }
-  } catch (error) {
-    res.status(500).send({ message: "Internal Server Error", status: false });
+  }catch(error){
+    return res.status(500).send({error:error.message});
+
   }
-};
-const checkSale = async (req, res) => {
-  try {
-    const sale = await Sale.findOne({
-      sale_username: req.body.username,
-    });
-    if (!sale) return await checkSaleLeader(req, res);
-    const validPasswordSale = await bcrypt.compare(
-      req.body.password,
-      sale.sale_password
-    );
-    if (!validPasswordSale) {
-      // รหัสไม่ตรง
-      return res.status(401).send({
-        message: "password is not find",
-        status: false,
-      });
-    } else {
-      const token = sale.generateAuthToken();
-      const ResponesData = {
-        name: sale.sale_username,
-        username: sale.sale_password,
-      };
-      return res.status(200).send({
-        status: true,
-        token: token,
-        message: "เข้าสู่ระบบสำเร็จ",
-        result: ResponesData,
-        level: "sale",
-        position: sale.sale_position,
-      });
+});
+
+router.get("/me", authMe, async (req, res) => {
+    try{
+      const { decoded } = req;
+      return res.status(200).send({ status: true, result: decoded });
+    }catch(error){
+      return res.status(500).send({error:error.message});
     }
-  } catch (error) {
-    return res.status(500).send({ message: error.message, status: false });
-  }
-};
-const checkSaleLeader = async (req, res) => {
-  try {
-    const sale = await SaleLeader.findOne({
-      sale_username: req.body.username,
-    });
-    // if (!sale) return await checkAccountant(req, res);
-    const validPasswordSaleLeader = await bcrypt.compare(
-      req.body.password,
-      sale.sale_password
-    );
-    if (!validPasswordSaleLeader) {
-      // รหัสไม่ตรง
-      return res.status(401).send({
-        message: "password is not find",
-        status: false,
-      });
-    } else {
-      const token = sale.generateAuthToken();
-      const ResponesData = {
-        name: sale.sale_username,
-        username: sale.sale_password,
-      };
-      return res.status(200).send({
-        status: true,
-        token: token,
-        message: "เข้าสู่ระบบสำเร็จ",
-        result: ResponesData,
-        level: "sale Leader",
-        position: sale.sale_position,
-      });
-    }
-  } catch (error) {
-    return res.status(500).send({ message: error.message, status: false });
-  }
-};
+}); 
 
 module.exports = router;
