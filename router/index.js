@@ -25,7 +25,7 @@ router.post("/login", async (req, res) => {
     });
 
     const employee = await Employee.findOne({
-      employee_username: req.body.username,
+      username: req.body.username,
     });
 
     let password  
