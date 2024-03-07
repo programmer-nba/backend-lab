@@ -1,13 +1,13 @@
 const router = require("express").Router();
-const authAdmin = require("../../lib/auth-admin");
-const item = require("../../controllers/item/analysis.item.controllers");
 
+const item = require("../../controllers/item/analysis.item.controllers");
+const auth = require("../../auth/auth")
 //วิธีการวิเคราะห์
-router.post("/create", authAdmin, item.create); //สร้างวิธีการวิเคราะห์
-router.put("/EditItem/:id", authAdmin, item.EditItem); //เเก้ไขวิธีการวิเคราะห์
-router.get("/GetAllItem", authAdmin, item.GetAllIem);
-router.get("/GetItem/:id", authAdmin, item.GetAllIemByid);
-router.delete("/deleteItemAnalysis/:id", authAdmin, item.deleteItemAnalysis);
-router.delete("/deleteAll", authAdmin, item.deleteAll); //ลบข้อมูลทั้งหมด ใช้สำหรับคนขี้เกียจลบ
+router.post("/create", auth.admin, item.create); //สร้างวิธีการวิเคราะห์
+router.put("/EditItem/:id", auth.admin, item.EditItem); //เเก้ไขวิธีการวิเคราะห์
+router.get("/GetAllItem", auth.admin, item.GetAllIem);
+router.get("/GetItem/:id", auth.admin, item.GetAllIemByid);
+router.delete("/deleteItemAnalysis/:id", auth.admin, item.deleteItemAnalysis);
+router.delete("/deleteAll", auth.admin, item.deleteAll); //ลบข้อมูลทั้งหมด ใช้สำหรับคนขี้เกียจลบ
 
 module.exports = router;

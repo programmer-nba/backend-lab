@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const revenue = require("../../controllers/RevenueDepartment/revenue.controllers")
-const authSale = require("../../lib/auth-sale")
 
+const auth = require("../../auth/auth")
 
-router.post("/Chack",authSale,revenue.Chack)
+router.post("/Chack",auth.sale,revenue.Chack)
 
 
 module.exports = router;

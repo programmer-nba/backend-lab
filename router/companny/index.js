@@ -1,11 +1,11 @@
 const router = require("express").Router();
 const commanny = require("../../controllers/companny/companny.contollers");
-const authAdmin = require("../../lib/auth-admin")
 
-router.post("/create", authAdmin, commanny.create);
-router.put("/EditCompany/:id", authAdmin, commanny.EditCompany);
-router.delete("/deleteCompany/:id", authAdmin, commanny.deleteCompany);
-router.delete("/deleteAllCompany", authAdmin, commanny.deleteAllCompany);
-router.get("/getCompannyAll", authAdmin, commanny.getCompannyAlls);
-router.get("/getCompanyBy/:id", authAdmin, commanny.getCompanyById);
+const auth = require("../../auth/auth")
+router.post("/create", auth.admin, commanny.create);
+router.put("/EditCompany/:id", auth.admin, commanny.EditCompany);
+router.delete("/deleteCompany/:id", auth.admin, commanny.deleteCompany);
+router.delete("/deleteAllCompany", auth.admin, commanny.deleteAllCompany);
+router.get("/getCompannyAll", auth.all, commanny.getCompannyAlls);
+router.get("/getCompanyBy/:id", auth.all, commanny.getCompanyById);
 module.exports = router;

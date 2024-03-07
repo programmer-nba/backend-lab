@@ -1,12 +1,14 @@
 const router = require("express").Router();
-const authSale = require("../../lib/auth-sale")
-const commanny = require("../../controllers/companny_customer/companny_customer.controllers");
 
-router.post("/create",authSale, commanny.create);
-router.put("/EditCompanyCustomer/:id", authSale,commanny.EditCompanyCustomer);
-router.delete("/deleteCompanyCustomer/:id",authSale, commanny.deleteCompanyCustomer);
-router.delete("/deleteAllCompanyCustomer",authSale, commanny.deleteAllCompanyCustomer)
-router.get("/getCompannyCustomeAllsr",authSale, commanny.getCompannyCustomeAllsr)
-router.get("/getCompanyCustomerBy/:id",authSale, commanny.getCompanyCustomerById)
+const commanny = require("../../controllers/companny_customer/companny_customer.controllers");
+const auth = require("../../auth/auth")
+
+
+router.post("/create",auth.sale, commanny.create);
+router.put("/EditCompanyCustomer/:id", auth.sale,commanny.EditCompanyCustomer);
+router.delete("/deleteCompanyCustomer/:id",auth.sale, commanny.deleteCompanyCustomer);
+router.delete("/deleteAllCompanyCustomer",auth.sale, commanny.deleteAllCompanyCustomer)
+router.get("/getCompannyCustomeAllsr",auth.all, commanny.getCompannyCustomeAllsr)
+router.get("/getCompanyCustomerBy/:id",auth.all, commanny.getCompanyCustomerById)
 
 module.exports = router;
