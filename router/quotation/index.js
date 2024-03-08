@@ -5,6 +5,7 @@ const auth = require("../../auth/auth")
 
 
 router.post("/CreateVat", auth.sale, quotation.Quotation);//สร้างใบเสนอราคา
+router.put("/UpdateVatBy/:id", auth.sale, quotation.edit);//แก้ไขใบเสนอราคา
 router.delete("/deleteQtBy/:id", auth.sale, quotation.deleteQtByid);
 router.delete("/deleteAllQt", auth.sale, quotation.deleteAllQt);
 router.get("/GetAllQuotation", auth.sale, quotation.GetAllQuotation);
