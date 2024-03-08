@@ -1,9 +1,10 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
-const ChainSchema = new mongoose.Schema({
+const SubChainSchema = new mongoose.Schema({
 
   quotation:{type: mongoose.Schema.Types.ObjectId,ref:'Quotation',default:null},
+  chains_id:{type: mongoose.Schema.Types.ObjectId,ref:'Chain',default:null},
   jobnumber: { type: String, required: false }, //เลขที่บ้าน
   employee_name: { type: String, required: false }, //คนทำรายการ หรือผุ้เสนอราคา
   tax_id_company: { type: String, required: false }, //เลขประจำตัวผู้เสียภาษี
@@ -66,6 +67,9 @@ const ChainSchema = new mongoose.Schema({
                   type_amount: { type: String, required: false }, //ประเภทของจำนวน
                   frequency: { type: Number, required: false }, //ความถี่
                   type_frequency: { type: String, required: false }, //ประเภทความถี่
+                  count: { type: Number, required: false }, //จำนวนครั้ง
+                  endcount:{type:Number,required:false},//จำนวนรอบ
+
                 },
               ],
               final_details: [
@@ -81,11 +85,10 @@ const ChainSchema = new mongoose.Schema({
       ],
     },
   ],
-  status: { type: String, required: false },
-  subchains :{type:Array,required:false},
+  allcount:{type:Number,required:false,default:0},
+  allendcount:{type:Number,required:false,default:0},
   timestamps: { type: Date, required: false, default: Date.now() }, // วันที่สร้าง
 });
 
-const Chain = mongoose.model("Chain", ChainSchema);
-
-module.exports = { Chain };
+const SubChain = mongoose.model("SubChain", SubChainSchema);
+module.exports = { SubChain };

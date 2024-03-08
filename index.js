@@ -29,6 +29,10 @@ app.use(prefix + "/employee", require("./router/employee/index"));
 //บริษัทตัวเอง
 app.use(prefix + "/companny", require("./router/companny/index")); //เพิ่มข้อมูลบริษัท
 
+
+app.use(prefix + "/subchain", require("./router/subchain/subchain")); //เพิ่มข้อมูล subchain
+app.use(prefix + "/workchain", require("./router/workchain/workchain")); //เพิ่มข้อมูล workchain
+
 //เพิ่มข้อมูลบริษัทลูกค้า
 app.use(
   prefix + "/companny_customer",

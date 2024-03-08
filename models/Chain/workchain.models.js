@@ -1,10 +1,11 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
-const ChainSchema = new mongoose.Schema({
-
+const WorkChainSchema = new mongoose.Schema({
   quotation:{type: mongoose.Schema.Types.ObjectId,ref:'Quotation',default:null},
-  jobnumber: { type: String, required: false }, //เลขที่บ้าน
+  chains_id:{type: mongoose.Schema.Types.ObjectId,ref:'Chain',default:null},
+  subchains_id:{type: mongoose.Schema.Types.ObjectId,ref:'SubChain',default:null},
+  jobnumber: { type: String, required: false }, //เลข
   employee_name: { type: String, required: false }, //คนทำรายการ หรือผุ้เสนอราคา
   tax_id_company: { type: String, required: false }, //เลขประจำตัวผู้เสียภาษี
   company: {
@@ -60,12 +61,17 @@ const ChainSchema = new mongoose.Schema({
               detail_name: { type: String, required: true }, //รายละเอียดโครงการ
               sub_detail: [
                 {
+                  bottelref: { type: String, required: false ,default:null }, //เลขที่ขวด
                   sub_name: { type: String, required: true },
                   name_analysis: { type: String, required: false }, //วิธีการวิเคระห์
                   amount: { type: Number, required: false }, //จำนวน
                   type_amount: { type: String, required: false }, //ประเภทของจำนวน
                   frequency: { type: Number, required: false }, //ความถี่
                   type_frequency: { type: String, required: false }, //ประเภทความถี่
+                  rider:{type: mongoose.Schema.Types.ObjectId,ref:'Employee',default:null}, //ทีม rider
+                  evidenceget:{type:String,default:""}, //(หลักฐานที่เก็บตัวอย่างขวด)
+	                analysis: {type: mongoose.Schema.Types.ObjectId,ref:'Employee',default:null}, //ทีมวิเคราะห์
+	                fillvalues: {type:Number,default:0}, //จำนวนที่ต้องกรอก
                 },
               ],
               final_details: [
@@ -81,11 +87,15 @@ const ChainSchema = new mongoose.Schema({
       ],
     },
   ],
+  date:{type:Date,required:false,default:null}, //วันที่ไปเก็บตัวอย่าง
+  count : {type:Number,required:false,default:0}, //ครั้งที่กรอก
+  endcount:{type:Number,required:false,default:0}, //จำนวนรอบทั้งหมด
   status: { type: String, required: false },
-  subchains :{type:Array,required:false},
+  evidencebottel:{type:String,default:""}, //หลักฐานที่เก็บตัวอย่างขวด
   timestamps: { type: Date, required: false, default: Date.now() }, // วันที่สร้าง
 });
 
-const Chain = mongoose.model("Chain", ChainSchema);
+const WorkChain = mongoose.model("WorkChain", WorkChainSchema);
+module.exports = { WorkChain };
 
-module.exports = { Chain };
+
