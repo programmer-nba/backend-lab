@@ -85,6 +85,19 @@ exports.getall = async (req, res) => {
     }
 } 
 
+//ดึงข้อมูลตาม id
+exports.getbyid = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const data = await WorkChain.findById(id);
+        return res.status(200).send({data: data, status: true});
+    }
+    catch(error){
+        return res.status(500).send({message:error.message, status: false});
+    }
+}
+
+
 
 
 async function jobnumber(date) {
