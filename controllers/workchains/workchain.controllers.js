@@ -104,6 +104,7 @@ exports.getbyid = async (req, res) => {
             })
         });
         return res.status(200).send({data: data,bottle:bottle, status: true});
+        
     }
     catch(error){
         return res.status(500).send({message:error.message, status: false});

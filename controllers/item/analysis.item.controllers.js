@@ -2,95 +2,68 @@ const { ItemAnalysis } = require("../../models/item/analysis.item.models");
 
 exports.create = async (req, res) => {
   try {
-    const item = await ItemAnalysis.findOne({
-      name: req.body.name,
-    });
-    if (item)
-      return res.status(409).send({
-        status: false,
-        message: "มีชื่อวิธีการวิเคราะห์นี้อยู่ในระบบเเล้ว",
-      });
-    await new ItemAnalysis({
-      ...req.body,
-    }).save();
-    res.status(201).send({ message: "เพิ่มข้อมุลงานสำเร็จ", status: true });
+      const item = new ItemAnalysis({
+        name: req.body.name,
+        methods: req.body.methods,
+      })
+      const result = await item.save();
+      return res.status(200).send({ status: true, message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", data: result});
   } catch (err) {
     return res
       .status(500)
-      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+      .send({ status: false, message: err.message });
   }
 };
+
+
 exports.EditItem = async (req, res) => {
   try {
     const id = req.params.id;
-    if (!req.body) {
+    const analysis = await ItemAnalysis.findById(id);
+    if (!analysis) {
       return res
-        .status(400)
-        .send({ status: false, message: error.details[0].message });
+        .status(404)
+        .send({ status: false, message: "ไม่พบข้อมูลวิธีการวิเคราะห์" });
     }
-    const new_item = await ItemAnalysis.findByIdAndUpdate(id, {
-      ...req.body,
-    });
-    if (new_item) {
-      return res.send({
-        status: true,
-        message: "เเก้ไขวิธีการวิเคราะห์สำเร็จ",
-      });
-    } else {
-      return res.status(400).send({
-        status: false,
-        message: "เเก้ไขวิธีการวิเคราะห์ไม่สำเร็จ",
-      });
+
+    const data = {
+      name: req.body.name,
+      methods: req.body.methods,
     }
+    const item = await ItemAnalysis.findByIdAndUpdate(id, data,{new:true});
+    return res.status(200).send({ status: true, message: "แก้ไขวิธีการวิเคราะห์สำเร็จ", data: item});
+
+    
   } catch (err) {
     return res
       .status(500)
-      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+      .send({ status: false, message: err.message });
   }
 };
+
 exports.GetAllIem = async (req, res) => {
   try {
-    const item = await ItemAnalysis.find();
-    if (item.length > 0) {
-      return res.status(200).send({
-        status: true,
-        message: "ดึงข้อมูลรายละเอียดโครงการสำเร็จ",
-        data: item,
-      });
-    } else {
-      return res
-        .status(404)
-        .send({ message: "ไม่พบข้อมูลรายละเอียดโครงการ", status: false });
-    }
+    const analysis = await ItemAnalysis.find();
+    return res.status(200).send({ status: true, message: "ดึงข้อมูลวิธีการวิเคราะห์สำเร็จ", data: analysis});
   } catch (error) {
-    res.status(500).send({
-      message: "มีบางอย่างผิดพลาด",
-      status: false,
-    });
+     return res
+      .status(500)
+      .send({ status: false, message: err.message });
   }
 };
+
 exports.GetAllIemByid = async (req, res) => {
   try {
-    const id = req.params.id;
-    const item = await ItemAnalysis.findById(id);
-    if (item) {
-      return res.status(200).send({
-        status: true,
-        message: "ดึงข้อมูลรายละเอียดโครงการสำเร็จ",
-        data: item,
-      });
-    } else {
-      return res
-        .status(404)
-        .send({ message: "ไม่พบข้อมูลรายละเอียดโครงการ", status: false });
-    }
+    const analysis = await ItemAnalysis.findById(req.params.id);
+    if(!analysis) return res.status(404).send({ status: false, message: "ไม่พบข้อมูลวิธีการวิเคราะห์"});
+    return res.status(200).send({ status: true, message: "ดึงข้อมูลวิธีการวิเคราะห์สำเร็จ", data: analysis});
   } catch (error) {
-    res.status(500).send({
-      message: "มีบางอย่างผิดพลาด",
-      status: false,
-    });
+     return res
+      .status(500)
+      .send({ status: false, message: err.message });
   }
 };
+
 exports.deleteItemAnalysis = async (req, res) => {
   try {
     const id = req.params.id;
@@ -110,6 +83,7 @@ exports.deleteItemAnalysis = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+
 exports.deleteAll = async (req, res) => {
   try {
     const result = await ItemAnalysis.deleteMany({});
