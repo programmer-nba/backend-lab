@@ -100,7 +100,8 @@ const bottle = async (req, res, next) => {
                     });
                 }
                 req.decoded = decoded;
-                if(decoded.row === 'bottle')
+                
+                if(decoded.row == 'bottle')
                 {
                     next();
                 }else{

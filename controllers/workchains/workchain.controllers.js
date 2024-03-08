@@ -90,12 +90,75 @@ exports.getbyid = async (req, res) => {
     try{
         const id = req.params.id;
         const data = await WorkChain.findById(id);
-        return res.status(200).send({data: data, status: true});
+        if(!data){
+            return res.status(400).send({message: "ไม่พบข้อมูล", status: false});
+        }
+        const bottle  = []
+        data.detail.forEach((item) => {
+            item.work_details.forEach((item2) => {
+                item2.project_details.forEach((item3) => {
+                    item3.sub_detail.forEach((item4) => {
+                        bottle.push(item4);
+                    })
+                })
+            })
+        });
+        return res.status(200).send({data: data,bottle:bottle, status: true});
     }
     catch(error){
         return res.status(500).send({message:error.message, status: false});
     }
 }
+
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+    // console.log(file.originalname);
+  },
+});
+const {
+  uploadFileCreate,
+  deleteFile,
+} = require("../../funtions/uploadfilecreate");
+
+
+// จัดเตรียมสำเร็จ
+exports.preparesuccess = async (req, res) => { 
+  try{
+    let upload = multer({ storage: storage }).array("img", 20);
+    upload(req, res, async function (err) {
+      const reqFiles = [];
+      const result = [];
+      if (err) {
+        return res.status(500).send(err);
+      }
+      const id = req.params.id;
+      const workchain = await WorkChain.findById(id);
+      if(!workchain){
+        return res.status(400).send({message: "ไม่พบข้อมูล workchain", status: false});
+      }
+      const bottel_id = req.body.bottel_id;
+      let image = ""; // ตั้งตัวแปรรูป
+      if (req.files) {
+        const url = req.protocol + "://" + req.get("host");
+        for (var i = 0; i < req.files.length; i++) {
+          const src = await uploadFileCreate(req.files, res, { i, reqFiles });
+          result.push(src);
+        }
+        image = reqFiles[0];
+      }
+
+      const data = await WorkChain.findByIdAndUpdate(id, {evidencebottel:image,status:"จัดเตรียมเสร็จแล้ว",bottel:bottel_id},{new:true});
+      return res.status(200).send({message: "จัดเตรียมเสร็จแล้ว",data :data, status: true});
+         
+    });
+
+  }catch(error){
+    return res.status(500).send({message:error.message, status: false});
+  }
+} 
 
 
 

@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
 
     let password  
     if(admin){
-      password = bcrypt.compare(req.body.password,admin.admin_password);
+      password =  await bcrypt.compare(req.body.password,admin.admin_password);
       if(password)
       {
         const payload = {
@@ -52,7 +52,7 @@ router.post("/login", async (req, res) => {
         return res.status(400).send({status:false,message:"รหัสผ่านไม่ถูกต้อง"});
       }
     }else if(sale){
-      password = bcrypt.compare(req.body.password,sale.sale_password);
+      password = await bcrypt.compare(req.body.password,sale.sale_password);
       if(password)
       {
         const payload = {
@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
       }
      
     }else if(employee){
-      password = bcrypt.compare(req.body.password,employee.employee_password);
+      password =  await bcrypt.compare(req.body.password,employee.password);
       if(password)
       {
         const payload = {

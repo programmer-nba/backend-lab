@@ -91,7 +91,8 @@ const WorkChainSchema = new mongoose.Schema({
   count : {type:Number,required:false,default:0}, //ครั้งที่กรอก
   endcount:{type:Number,required:false,default:0}, //จำนวนรอบทั้งหมด
   status: { type: String, required: false },
-  evidencebottel:{type:String,default:""}, //หลักฐานที่เก็บตัวอย่างขวด
+  bottel:{type: mongoose.Schema.Types.ObjectId,ref:'Employee',default:null}, //id คนเตรียมขวด
+  evidencebottel:{type:String,default:""}, //หลักฐานที่เก็บเตรียมขวด
   timestamps: { type: Date, required: false, default: Date.now() }, // วันที่สร้าง
 });
 
