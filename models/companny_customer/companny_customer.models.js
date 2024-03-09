@@ -14,6 +14,7 @@ const CompanyCustomerSchema = new mongoose.Schema({
   company_customer_tel: { type: String, required: false }, //เบอร์โทรศัพท์
   companuy_customer_fax: { type: String, required: false }, //เบอร์โทรสาร
   company_customer_status: { type: Boolean, required: false, default: true }, //สถานะ
+  company_customer_email: { type: String, required: false }, //email
   bank: {
     //บัญชีธนาคาร
     name: { type: String, required: false, default: "-" },
