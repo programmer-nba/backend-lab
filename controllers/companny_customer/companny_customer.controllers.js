@@ -23,14 +23,7 @@ const {
 
 exports.create = async (req, res) => {
   try {
-    const company = await CompanyCustomer.findOne({
-      company_customer_tname: req.body.company_customer_tname, 
-    });
-    if (company)
-      return res.status(409).send({
-        status: false,
-        message: "มีชื่อบริษัทนี้อยู่ในระบบเเล้ว",
-      });
+    
     await new CompanyCustomer({
       ...req.body,
     }).save();
