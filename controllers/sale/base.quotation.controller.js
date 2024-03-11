@@ -6,12 +6,8 @@ const { default: axios } = require("axios");
 const req = require("express/lib/request.js");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
+const { BaseQuotation } = require("../../models/sale/base.quotation.models");
 const { Sale, validateSale } = require("../../models/sale/sale.models");
-const { Quotation } = require("../../models/sale/quotation.models");
-const { Company } = require("../../models/companny/companny.models");
-const { Chain } = require("../../models/Chain/chain.models");
-const { Item } = require("../../models/item/item.models");
-const { ItemAnalysis } = require("../../models/item/analysis.item.models");
 const {
   CompanyCustomer,
 } = require("../../models/companny_customer/companny_customer.models");
@@ -26,9 +22,9 @@ const {
   deleteFile,
 } = require("../../funtions/uploadfilecreate");
 
-exports.Quotation = async (req, res) => {
+exports.BaseQuotation = async (req, res) => {
   try {
-    const data = new Quotation({
+    const data = new BaseQuotation({
       subhead: {
         customer_name: req.body.subhead.customer_name,
         customer_company: req.body.subhead.customer_company,
@@ -44,9 +40,9 @@ exports.Quotation = async (req, res) => {
       bodies: req.body.bodies,
       footer: req.body.footer,
       payment_term: req.body.payment_term,
-      signature:  req.body.signature,
+      signature: req.body.signature,
       status: req.body.status,
-    })
+    });
     const add = await data.save();
     if (add) {
       return res.status(200).send({
@@ -71,7 +67,7 @@ exports.Quotation = async (req, res) => {
 
 exports.GetAllQuotation = async (req, res) => {
   try {
-    const qt = await Quotation.find();
+    const qt = await BaseQuotation.find();
     if (qt.length > 0) {
       return res.status(200).send({
         status: true,
@@ -91,10 +87,10 @@ exports.GetAllQuotation = async (req, res) => {
   }
 };
 
-exports.GetSaleByIds = async (req, res) => {
+exports.GetBaseQuotationById = async (req, res) => {
   try {
     const id = req.params.id;
-    const qt = await Quotation.findById(id);
+    const qt = await BaseQuotation.findById(id);
     if (qt) {
       return res.status(200).send({
         status: true,
@@ -116,13 +112,17 @@ exports.GetSaleByIds = async (req, res) => {
 exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
-    const quotation = await Quotation.findById(id);
+    const quotation = await BaseQuotation.findById(id);
     if (!quotation) {
       return res
         .status(404)
         .send({ status: false, message: "ไม่พบข้อมูลใบเสนอราคา" });
     }
-    const result = await Quotation.findByIdAndUpdate(id, { $set: req.body },{new:true});
+    const result = await BaseQuotation.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true }
+    );
     if (result) {
       return res.status(200).send({
         status: true,
@@ -134,13 +134,13 @@ exports.edit = async (req, res) => {
         .status(404)
         .send({ status: false, message: "แก้ไขข้อมูลใบเสนอราคาไม่สำเร็จ" });
     }
-  }catch (error) {
+  } catch (error) {
     res.status(500).send({
       message: error.message,
       status: false,
     });
   }
-}
+};
 
 exports.deleteQtByid = async (req, res) => {
   try {
@@ -181,9 +181,8 @@ exports.deleteAllQt = async (req, res) => {
   }
 };
 
-
 async function Quotationnumber(date) {
-  const number = await Quotation.find();
+  const number = await BaseQuotation.find();
   let quotation_number = null;
   if (number.length !== 0) {
     let data = "";
@@ -191,16 +190,18 @@ async function Quotationnumber(date) {
     let check = null;
     do {
       num = num + 1;
-      data = `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, '0') ;
+      data =
+        `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
       check = await Quotation.find({ quotation: data });
       if (check.length === 0) {
         quotation_number =
-        `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, '0') ;
+          `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
       }
     } while (check.length !== 0);
   } else {
     quotation_number =
-      `QT-${dayjs(date).format("YYYYMM")}` + String(number.length).padStart(4, '0') ;
+      `QT-${dayjs(date).format("YYYYMM")}` +
+      String(number.length).padStart(4, "0");
   }
   return quotation_number;
 }

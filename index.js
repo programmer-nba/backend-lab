@@ -20,8 +20,6 @@ app.use(prefix + "/", require("./router/index"));
 app.use(prefix + "/admin", require("./router/admin/index"));
 app.use(prefix + "/admin/quotation", require("./router/admin/quotaion"));
 
-
-
 //พนักงานเเต่ละเเผนก
 app.use(prefix + "/employee", require("./router/employee/index"));
 
@@ -44,6 +42,7 @@ app.use(prefix + "/sale/maneger", require("./router/admin/saleManager")); //ห�
 app.use(prefix + "/sale", require("./router/sale/index")); //เพิ่มลบเเก้ไขข้อมูลของพนักงาน
 app.use(prefix + "/fromtDetails", require("./router/customer/index")); //กรอกข้อมูลของลูกค้า
 app.use(prefix + "/quotation", require("./router/quotation/index")); //.ใบเสนอราคา
+app.use(prefix + "/Base/quotation", require("./router/quotation/base.quotation")); //สร้างใบเสนอราคาหลัก
 
 //พนักงานห้องปฏิบัติการ เเผนกจัดเก็บตัวอย่าง ไรเดอร์
 app.use(
@@ -73,10 +72,11 @@ app.use(
 );
 
 ///////////////////////
-app.use(prefix + "/type", require("./router/item/index"));//สร้างประเภทของรายละเอียดงาน
-app.use(prefix + "/type/Analysis", require("./router/item/AnalysisMethods"));//สร้างวิธีการวิเคราะห์
-app.use(prefix + "/type/PaymentTerm", require("./router/item/paymentTerm"));//สร้างวิธีการวิเคราะห์
-app.use(prefix + "/type/report", require("./router/item/itemReport"));//สร้าง report แบบ id
+app.use(prefix + "/type", require("./router/item/index")); //สร้างประเภทของรายละเอียดงาน
+app.use(prefix + "/type/Analysis", require("./router/item/AnalysisMethods")); //สร้างวิธีการวิเคราะห์
+app.use(prefix + "/type/PaymentTerm", require("./router/item/paymentTerm")); //สร้างวิธีการวิเคราะห์
+app.use(prefix + "/type/report", require("./router/item/itemReport")); //สร้าง report แบบ id
+app.use(prefix + "/type/Signature", require("./router/item/Signature")); //สร้าง ลายเซ็น
 
 //กรมสรรพากร
 app.use(
