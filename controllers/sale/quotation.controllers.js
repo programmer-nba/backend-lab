@@ -247,8 +247,9 @@ async function Quotationnumber(date) {
     let check = null;
     do {
       num = num + 1;
-      data = `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
-      check = await Quotation.find({ document_date: date });
+      data =
+        `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
+      check = await Quotation.find({ "subhead.document_no": data });
       if (check.length === 0) {
         document_no =
           `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
