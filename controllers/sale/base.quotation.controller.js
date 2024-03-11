@@ -145,11 +145,11 @@ exports.edit = async (req, res) => {
 exports.deleteQtByid = async (req, res) => {
   try {
     const id = req.params.id;
-    const qt = await Quotation.findByIdAndDelete(id);
+    const qt = await BaseQuotation.findByIdAndDelete(id);
     if (!qt) {
       return res
         .status(404)
-        .send({ status: false, message: "ไม่พบใยเสนอราคา" });
+        .send({ status: false, message: "ไม่พบใบเสนอราคา" });
     } else {
       return res
         .status(200)
@@ -163,7 +163,7 @@ exports.deleteQtByid = async (req, res) => {
 };
 exports.deleteAllQt = async (req, res) => {
   try {
-    const result = await Quotation.deleteMany({});
+    const result = await BaseQuotation.deleteMany({});
 
     if (result.deletedCount > 0) {
       return res
