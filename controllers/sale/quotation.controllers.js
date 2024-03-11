@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const dayjs = require("dayjs");
+
 const Joi = require("joi");
 const { google } = require("googleapis");
 const { default: axios } = require("axios");
@@ -75,8 +76,21 @@ exports.QuotationById = async (req, res) => {
     const quotation = await Quotation.findById(id);
 
     if (quotation) {
+      const newDocumentDate = new Date();
+      const quotationNumber = await Quotationnumber();
       const newQuotationData = {
-        subhead: quotation.subhead,
+        subhead: {
+          customer_name: quotation.subhead.customer_name,
+          customer_company: quotation.subhead.customer_company,
+          customer_address: quotation.subhead.customer_address,
+          customer_tel: quotation.subhead.customer_tel,
+          customer_fax: quotation.subhead.customer_fax,
+          sample_lacation: quotation.subhead.sample_lacation,
+          document_no: quotationNumber,
+          document_date: newDocumentDate,
+          offerer: quotation.subhead.offerer,
+          offerer_tax_id: quotation.subhead.offerer_tax_id,
+        },
         bodies: quotation.bodies,
         footer: quotation.footer,
         payment_term: quotation.payment_term,
@@ -226,25 +240,24 @@ exports.deleteAllQt = async (req, res) => {
 
 async function Quotationnumber(date) {
   const number = await Quotation.find();
-  let quotation_number = null;
+  let document_no = null;
   if (number.length !== 0) {
     let data = "";
     let num = 0;
     let check = null;
     do {
       num = num + 1;
-      data =
-        `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
-      check = await Quotation.find({ quotation: data });
+      data = `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
+      check = await Quotation.find({ document_date: date });
       if (check.length === 0) {
-        quotation_number =
+        document_no =
           `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
       }
     } while (check.length !== 0);
   } else {
-    quotation_number =
+    document_no =
       `QT-${dayjs(date).format("YYYYMM")}` +
       String(number.length).padStart(4, "0");
   }
-  return quotation_number;
+  return document_no;
 }
