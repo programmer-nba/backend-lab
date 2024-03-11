@@ -72,11 +72,11 @@ app.use(
   require("./router/employee/employee.documents")
 );
 
-//สร้างประเภทของรายละเอียดงาน
-app.use(prefix + "/type", require("./router/item/index"));
-
-//สร้างวิธีการวิเคราะห์
-app.use(prefix + "/type/Analysis", require("./router/item/AnalysisMethods"));
+///////////////////////
+app.use(prefix + "/type", require("./router/item/index"));//สร้างประเภทของรายละเอียดงาน
+app.use(prefix + "/type/Analysis", require("./router/item/AnalysisMethods"));//สร้างวิธีการวิเคราะห์
+app.use(prefix + "/type/PaymentTerm", require("./router/item/paymentTerm"));//สร้างวิธีการวิเคราะห์
+app.use(prefix + "/type/report", require("./router/item/itemReport"));//สร้าง report แบบ id
 
 //กรมสรรพากร
 app.use(
