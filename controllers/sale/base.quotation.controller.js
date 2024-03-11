@@ -41,7 +41,6 @@ exports.BaseQuotation = async (req, res) => {
       footer: req.body.footer,
       payment_term: req.body.payment_term,
       signature: req.body.signature,
-      status: req.body.status,
     });
     const add = await data.save();
     if (add) {
