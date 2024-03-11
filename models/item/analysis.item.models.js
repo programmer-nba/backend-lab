@@ -3,6 +3,7 @@ const Joi = require("joi");
 
 const AnalysisItemSchema = new mongoose.Schema({
   name:{type:String, required:false},
+  bottletype:{type:String, required:false},
   methods:{type:[{
     method:{type:String, required:false},
     cost :{type:Number, required:false},

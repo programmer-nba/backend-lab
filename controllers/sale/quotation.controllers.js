@@ -181,6 +181,8 @@ exports.deleteAllQt = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+
+
 async function Quotationnumber(date) {
   const number = await Quotation.find();
   let quotation_number = null;

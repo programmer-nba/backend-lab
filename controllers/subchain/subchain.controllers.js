@@ -1,73 +1,82 @@
+const {Chain} = require('../../models/Chain/chain.models');
 const {SubChain} = require('../../models/Chain/subchain.models');
-const {WorkChain} = require('../../models/Chain/workchain.models');
+const {ItemAnalysis} = require('../../models/item/analysis.item.models');
 const dayjs = require("dayjs");
 
 //admin กำหนดวันที่จะไป ทีม rider และ สร้างใบ workchains
 exports.add = async (req, res) => {
     try{
 
-        const subchains_id = req.body.subchains_id;
-        const date = req.body.date;
-        const sub_detail = req.body.sub_detail;
-
-        const subchain = await SubChain.findById(subchains_id);
-        if(!subchain){
-            return res.status(400).send({message: "ไม่พบข้อมูล subchains", status: false});
+        const chains_id = req.body.chains_id;
+        const detail = await Chain.findById(chains_id);
+        if(!detail){
+            return res.status(400).send({message: "ไม่พบข้อมูล chains", status: false});
         }
-        // const newsubdetail = sub_detail.map((item) => {
-        //     return {
-        //       bottelref: bottelref(),
-        //       sub_name: item.sub_name,
-        //       name_analysis: item.name_analysis,
-        //       amount: item.amount,
-        //       type_amount: item.type_amount,
-        //       frequency: item.frequency,
-        //       type_frequency: item.type_frequency,
-        //       rider: item.rider,
-        //       evidenceget: item.evidenceget,
-        //       analysis: item.analysis,
-        //       fillvalues: item.fillvalues,
-        //     };
-        // });
-        // console.log(newsubdetail);
-        const mapdetail = subchain.detail.map((item) => {
-            return {
-              name_work: item.name_work,
-              work_details: [
-                {
-                  project_name: item.work_details[0].project_name,
-                  project_details: item.work_details[0].project_details.map((item2) => {
-                    return {
-                      detail_name: item2.detail_name, 
+        const date = req.body.date;
+        const details = req.body.details;
 
-                      sub_detail:sub_detail,
-                    }
-                  }),
-                },
-              ]
-            };
-          })
+        let num = 0
+        for (const item of details) {
+          let selectdetail = detail.chaindetail.details.find((item2) => item2._id == item._id);
+          if (selectdetail.length != 0) {
+            let numgen = 0;
+            let refno = "";
+            const gendetailPromises = [];
+            for (const element of selectdetail.params) {
+                const subdata = await SubChain.find();
+                refno = `BOTTEL-${dayjs(Date.now()).format("YYYYMMDD")}` + String(subdata.length).padStart(4, '0') + "-" + String(numgen).padStart(4, '0');
+                console.log(refno);
+                numgen++;
+                const analysis = await ItemAnalysis.findOne({ name: element.name });
+                let bottletype = "";
+                if (analysis == undefined) {
+                    bottletype = "ไม่มีประเภทขวด"
+                } else {
+                    bottletype = analysis?.bottletype;
+                }
+            
+                gendetailPromises.push({
+                    name: element.name,
+                    method: element.method,
+                    amount: element.amount,
+                    amount_unit: element.amount_unit,
+                    freq: element.freq,
+                    freq_unit: element.freq_unit,
+                    unit_price: element.unit_price,
+                    total_price: element.total_price,
+                    discount: element.discount,
+                    cost: element.cost,
+                    bottelref: refno,
+                    bottletype: bottletype,
+                });
+            }
+          
+              const data = new SubChain({
+                  quotation: detail.quotation,
+                  work_id: detail.work_id,
+                  chains_id: chains_id,
+                  subchains_no: await jobsub(),
+                  subchaindetail: {
+                      points: selectdetail.points,
+                      chaincount: selectdetail.chaincount,
+                      frequency: selectdetail.frequency,
+                      frequency_text: selectdetail.frequency_text,
+                      collect_month: selectdetail.collect_month,
+                      collect_year: selectdetail.collect_year,
+                      amount_point: selectdetail.amount_point,
+                      params: gendetailPromises,
+                  },
+                  date: date[num]?.subchaindate,
+                  status: "จัดเตรียมขวด",
+              })
+              const add = await data.save();
+          }
+          num++;
+        }
 
-        const data = new WorkChain( {
-            quotation:subchain.quotation,
-            chains_id:subchain.chains_id,
-            subchains_id: subchains_id,
-            jobnumber: await jobnumber(), //เลข
-            employee_name: subchain.employee_name, //คนทำรายการ หรือผุ้เสนอราคา
-            tax_id_company: subchain.tax_id_company, //เลขประจำตัวผู้เสียภาษี
-            company:subchain.company, //ข้อมูลบริษัทตัวเอง
-            customer_company: subchain.customer_company, //ข้อมูลบริษัทลูกค้า
-            customer_detail: subchain.customer_detail, //ข้อมูลลูกค้า
-            date: date,
-            detail:mapdetail,
-            count : subchain.allcount+1 , //ครั้งที่กรอก
-            endcount: subchain.allendcount, //จำนวนรอบทั้งหมด
-            status: "จัดเตรียมขวด",
-            evidencebottel:"", //หลักฐานที่เก็บตัวอย่างขวด
-        })
+        
 
-        const add = await data.save();
-        return res.status(200).send({message: "admin กำหนดวันให้ rider สำเร็จ",data :add, status: true});
+        return res.status(200).send({message: "admin กำหนดวันให้ rider สำเร็จ", status: true});
 
     } catch(error){
         return res.status(500).send({message:error.message, status: false});
@@ -78,7 +87,7 @@ exports.add = async (req, res) => {
 //ดึงข้อมูล
 exports.getall = async (req, res) => {
     try{
-        const data = await WorkChain.find();
+        const data = await SubChain.find().populate("quotation");
         return res.status(200).send({data: data, status: true});
     } catch(error){
         return res.status(500).send({message:error.message, status: false});
@@ -89,7 +98,7 @@ exports.getall = async (req, res) => {
 exports.getbyid = async (req, res) => {
     try{
         const id = req.params.id;
-        const data = await WorkChain.findById(id);
+        const data = await SubChain.findById(id).populate("quotation");;
         if(!data){
             return res.status(400).send({message: "ไม่พบข้อมูล", status: false});
         }
@@ -164,8 +173,8 @@ exports.preparesuccess = async (req, res) => {
 
 
 
-async function jobnumber(date) {
-    const sal = await WorkChain.find();
+async function jobsub(date) {
+    const sal = await SubChain.find();
     let jobnumber = null;
     if (sal.length !== 0) {
       let data = "";
@@ -173,15 +182,15 @@ async function jobnumber(date) {
       let check = null;
       do {
         num = num + 1;
-        data = `WORK${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + num;
-        check = await WorkChain.find({ jobnumber: data });
+        data = `SUBCHAIN-${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + num;
+        check = await SubChain.find({ jobnumber: data });
         if (check.length === 0) {
           jobnumber =
-            `WORK${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + num;
+            `SUBCHAIN-${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + num;
         }
       } while (check.length !== 0);
     } else {
-      jobnumber = `WORK${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + "1";
+      jobnumber = `SUBCHAIN-${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + "1";
     }
     return jobnumber;
   }

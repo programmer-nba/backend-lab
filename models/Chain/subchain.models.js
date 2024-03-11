@@ -5,6 +5,7 @@ const subchainSchema = new mongoose.Schema({
   quotation:{type: mongoose.Schema.Types.ObjectId,ref:'Quotation',default:null},
   work_id:{type: mongoose.Schema.Types.ObjectId,ref:'work',default:null},
   chains_id:{type: mongoose.Schema.Types.ObjectId,ref:'chain',default:null},
+  subchains_no:{type:String,required:false,default:""},
   subchaindetail:{type:{ // sub chain
     points: {type:[String],required:false,default:null},
     //จำนวนรอบ
@@ -24,7 +25,17 @@ const subchainSchema = new mongoose.Schema({
         unit_price: {type:Number,required:false,default:0},
         total_price: {type:Number,required:false,default:0},
         discount: {type:Number,required:false,default:0},
-        cost: {type:Number,required:false,default:0}
+        cost: {type:Number,required:false,default:0},
+        ///
+        bottelref:{type:String,default:""},
+        bottletype:{type:String,default:""},
+	      rider:{type: mongoose.Schema.Types.ObjectId,ref:'Employee',default:null}, //id คนเก็บตัวอย่าง
+	      evidenceget:{type:String,default:""},// (หลักฐานที่เก็บตัวอย่างขวด)
+	      analysis: {type: mongoose.Schema.Types.ObjectId,ref:'Employee',default:null},
+	      fillvalues:{type:Number,required:false,default:0},
+
+
+
     }],required:false,default:null},
 },default:null},
 
@@ -34,6 +45,7 @@ const subchainSchema = new mongoose.Schema({
   evidencebottel:{type:String,default:""}, //หลักฐานที่เก็บเตรียมขวด
   timestamps: { type: Date, required: false, default: Date.now() }, // วันที่สร้าง
 });
+
 
 const SubChain = mongoose.model("subchain", subchainSchema);
 module.exports = { SubChain };

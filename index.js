@@ -29,9 +29,9 @@ app.use(prefix + "/employee", require("./router/employee/index"));
 app.use(prefix + "/companny", require("./router/companny/index")); //เพิ่มข้อมูลบริษัท
 
 // //chain
-// app.use(prefix + "/chain", require("./router/chain/index"));
-// app.use(prefix + "/subchain", require("./router/subchain/subchain")); //เพิ่มข้อมูล subchain
-// app.use(prefix + "/workchain", require("./router/workchain/workchain")); //เพิ่มข้อมูล workchain
+app.use(prefix + "/work", require("./router/work/index"));
+app.use(prefix + "/chain", require("./router/chain/chain")); //เพิ่มข้อมูล chain
+app.use(prefix + "/subchain", require("./router/subchain/subchain")); //เพิ่มข้อมูล workchain
 
 //เพิ่มข้อมูลบริษัทลูกค้า
 app.use(

@@ -79,7 +79,7 @@ const QuotationSchema = new mongoose.Schema({
   },default:null},
   status: {type:[{
       name: {type:String,required:false,default:""},
-      text: {type:String,required:false,default:""},
+      text: {type:String,required:false,default:"รออนุมัติ"},
       sender: {type:{
           name: {type:String,required:false,default:""},
           code: {type:String,required:false,default:""},

@@ -52,4 +52,4 @@ const WorkSchema = new mongoose.Schema({
 
 const Work = mongoose.model("work", WorkSchema);
 
-module.exports = { Chain };
+module.exports = { Work };
