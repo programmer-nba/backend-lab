@@ -145,7 +145,7 @@ exports.preparesuccess = async (req, res) => {
         return res.status(500).send(err);
       }
       const id = req.params.id;
-      const workchain = await WorkChain.findById(id);
+      const workchain = await SubChain.findById(id);
       if(!workchain){
         return res.status(400).send({message: "ไม่พบข้อมูล workchain", status: false});
       }
@@ -160,7 +160,7 @@ exports.preparesuccess = async (req, res) => {
         image = reqFiles[0];
       }
 
-      const data = await WorkChain.findByIdAndUpdate(id, {evidencebottel:image,status:"จัดเตรียมเสร็จแล้ว",bottel:bottel_id},{new:true});
+      const data = await SubChain.findByIdAndUpdate(id, {evidencebottel:image,status:"จัดเตรียมเสร็จแล้ว",bottel:bottel_id},{new:true});
       return res.status(200).send({message: "จัดเตรียมเสร็จแล้ว",data :data, status: true});
          
     });
