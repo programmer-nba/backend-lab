@@ -41,6 +41,7 @@ exports.Quotation = async (req, res) => {
         document_date: req.body.subhead.document_date,
         offerer: req.body.subhead.offerer,
         offerer_tax_id: req.body.subhead.offerer_tax_id,
+        customer_email: req.body.subhead.customer_email
       },
       bodies: req.body.bodies,
       footer: req.body.footer,
@@ -87,6 +88,7 @@ exports.QuotationById = async (req, res) => {
           customer_fax: quotation.subhead.customer_fax,
           sample_lacation: quotation.subhead.sample_lacation,
           document_no: quotationNumber,
+          customer_email: quotation.subhead.customer_email,
           document_date: newDocumentDate,
           offerer: quotation.subhead.offerer,
           offerer_tax_id: quotation.subhead.offerer_tax_id,

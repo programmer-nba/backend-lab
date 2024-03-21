@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const QuotationSchema = new mongoose.Schema({
   subhead:{type:{
       customer_name: {type:String,required:false,default:""},
+      customer_email: {type:String},
       customer_company: {type:String,required:false,default:""},
       customer_address: {type:String,required:false,default:""},
       customer_tel: {type:String,required:false,default:""},
@@ -15,12 +16,7 @@ const QuotationSchema = new mongoose.Schema({
       offerer_tax_id: {type:String,required:false,default:""},
   },default:null},
   bodies: {type:[{
-      duration: {type:{
-        start_month: {type:Date,required:false,default:new Date().getMonth()},
-        start_year: {type:Date,required:false,default:new Date().getYear()},
-        end_month: {type:Date,required:false,default:new Date().getMonth()},
-        end_year: {type:Date,required:false,default:new Date().getYear()}
-      },default:null},
+      duration: [{type:Date}],
       title: {type:String,required:false,default:""},
       subtitles: {type:[{
           subtitle: {type:String,required:false,default:""},
@@ -33,6 +29,7 @@ const QuotationSchema = new mongoose.Schema({
               collect_month: {type:[String],required:false,default:null},
               collect_year: {type:String,required:false,default:""},
               amount_point: {type:Number,required:false,default:0},
+              months: [{type:Date}],
               params: {type:[{
                   name: {type:String,required:false,default:""},
                   method: {type:String,required:false,default:""},
