@@ -25,12 +25,18 @@ const {
 exports.BaseQuotation = async (req, res) => {
   try {
     const data = new BaseQuotation({
+      title: req.body.title,
+      creator: {
+        name: req.body.creator.name,
+        _id: req.body.creator._id
+      },
       subhead: {
         customer_name: req.body.subhead.customer_name,
         customer_company: req.body.subhead.customer_company,
         customer_address: req.body.subhead.customer_address,
         customer_tel: req.body.subhead.customer_tel,
         customer_fax: req.body.subhead.customer_fax,
+        customer_email: re.body.subhead.customer_email,
         sample_lacation: req.body.subhead.sample_lacation,
         document_no: await Quotationnumber(),
         document_date: req.body.subhead.document_date,

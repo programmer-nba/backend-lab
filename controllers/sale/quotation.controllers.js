@@ -30,6 +30,10 @@ const {
 exports.Quotation = async (req, res) => {
   try {
     const data = new Quotation({
+      creator: {
+        name: req.body.creator.name,
+        _id: req.body.creator._id
+      },
       subhead: {
         customer_name: req.body.subhead.customer_name,
         customer_company: req.body.subhead.customer_company,
@@ -47,7 +51,14 @@ exports.Quotation = async (req, res) => {
       footer: req.body.footer,
       payment_term: req.body.payment_term,
       signature: req.body.signature,
-      status: req.body.status,
+      status: {
+        name: "new",
+        text: "รออนุมัติ",
+        sender: {
+          name: "",
+          code: ""
+        }
+      },
     });
     const add = await data.save();
     if (add) {
@@ -80,6 +91,10 @@ exports.QuotationById = async (req, res) => {
       const newDocumentDate = new Date();
       const quotationNumber = await Quotationnumber();
       const newQuotationData = {
+        creator: {
+          name: quotation.creator.name,
+          _id: quotation.creator._id
+        },
         subhead: {
           customer_name: quotation.subhead.customer_name,
           customer_company: quotation.subhead.customer_company,
@@ -168,6 +183,7 @@ exports.GetSaleByIds = async (req, res) => {
     });
   }
 };
+
 exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
@@ -239,6 +255,7 @@ exports.deleteAllQt = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+
 
 async function Quotationnumber(date) {
   const number = await Quotation.find();

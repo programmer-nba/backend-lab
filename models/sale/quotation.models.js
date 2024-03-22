@@ -2,6 +2,10 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const QuotationSchema = new mongoose.Schema({
+    creator: {
+        name: String,
+        _id: String,
+    },
   subhead:{type:{
       customer_name: {type:String,required:false,default:""},
       customer_email: {type:String},
@@ -76,7 +80,7 @@ const QuotationSchema = new mongoose.Schema({
   },default:null},
   status: {type:[{
       name: {type:String,required:false,default:""},
-      text: {type:String,required:false,default:"รออนุมัติ"},
+      text: {type:String,required:false,default:""},
       sender: {type:{
           name: {type:String,required:false,default:""},
           code: {type:String,required:false,default:""},

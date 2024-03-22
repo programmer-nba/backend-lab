@@ -2,6 +2,11 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const BaseQuotationSchema = new mongoose.Schema({
+  title: String,
+  creator: {
+    name: String,
+    _id: String
+  },
   subhead: {
     type: {
       customer_name: { type: String, required: false, default: "" },
@@ -9,6 +14,7 @@ const BaseQuotationSchema = new mongoose.Schema({
       customer_address: { type: String, required: false, default: "" },
       customer_tel: { type: String, required: false, default: "" },
       customer_fax: { type: String, required: false, default: "" },
+      customer_email: { type: String, required: false, default: "" },
       sample_lacation: { type: String, required: false, default: "" },
       document_no: { type: String, required: false, default: "" },
       document_date: { type: Date, required: false, default: new Date() },
