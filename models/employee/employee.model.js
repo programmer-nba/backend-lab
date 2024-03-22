@@ -20,6 +20,7 @@ const EmployeeSchema = new mongoose.Schema({
   tel: { type: String, required: false }, //เบอร์โทร
   username: { type: String, required: false },
   password: { type: String, required: false }, //รหัสผ่าน
+  email: String,
   address: {
     house_umber: { type: String, required: false }, //เลขที่บ้าน
     moo_number: { type: String, required: false }, //เลขที่ หมู่

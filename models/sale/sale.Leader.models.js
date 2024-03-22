@@ -21,6 +21,7 @@ const SaleLeaderSchema = new mongoose.Schema({
   sale_username: { type: String, required: false },
   sale_password: { type: String, required: false }, //รหัสผ่าน
   sale_address: { type: String, required: false }, //ที่อยู่
+  sale_email: String,
   address: {
     house_number: { type: String, required: false }, //เลขที่บ้าน
     moo_number: { type: String, required: false }, //เลขที่ หมู่

@@ -63,6 +63,7 @@ exports.create = async (req, res) => {
         sale_number: sale_number,
         profile_image: profile_image,
         card_number: req.body.card_number,
+        sale_email: req.body.sale_email,
         address: {
           moo_number: req.body.moo_number,
           house_number: req.body.house_number,

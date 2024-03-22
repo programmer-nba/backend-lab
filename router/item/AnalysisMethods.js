@@ -5,8 +5,8 @@ const auth = require("../../auth/auth")
 //วิธีการวิเคราะห์
 router.post("/create", auth.admin, item.create); //สร้างวิธีการวิเคราะห์
 router.put("/EditItem/:id", auth.admin, item.EditItem); //เเก้ไขวิธีการวิเคราะห์
-router.get("/GetAllItem", auth.admin, item.GetAllIem);
-router.get("/GetItem/:id", auth.admin, item.GetAllIemByid);
+router.get("/GetAllItem", item.GetAllIem);
+router.get("/GetItem/:id", item.GetAllIemByid);
 router.delete("/deleteItemAnalysis/:id", auth.admin, item.deleteItemAnalysis);
 router.delete("/deleteAll", auth.admin, item.deleteAll); //ลบข้อมูลทั้งหมด ใช้สำหรับคนขี้เกียจลบ
 

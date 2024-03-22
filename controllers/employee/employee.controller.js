@@ -56,6 +56,7 @@ exports.create = async (req, res) => {
         employee_number: employee_number,
         profile_image: profile_image,
         card_number: req.body.card_number,
+        email: req.body.email,
         address: {
           house_number: req.body.house_number,
           moo_number: req.body.moo_number,
