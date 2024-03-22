@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 
 const PaymentTermSchema = new mongoose.Schema({
+  title: String,
   payment_term: [
     { type: String, required: false }, //รายละเอียดงาน
   ],

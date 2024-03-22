@@ -3,6 +3,7 @@ const Joi = require("joi");
 
 const ItemReportSchema = new mongoose.Schema({
   report: {
+    title: String,
     freq: { type: Number, required: false },
     freq_unit: { type: String, required: false },
     unit_price: { type: Number, required: false },
