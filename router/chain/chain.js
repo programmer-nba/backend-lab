@@ -3,8 +3,22 @@ const router = require("express").Router();
 const chain = require("../../controllers/chain/chains.controllers");
 const auth = require("../../auth/auth");
 
+router.post("/main/create", auth.all, chain.createChain);
+router.put("/main/:id", auth.all, chain.updateChainStatus);
+router.get("/main/all", auth.all, chain.getChains);
 
-router.get("/",auth.all, chain.getall);
+router.post("/sub/create", auth.all, chain.createSubChain);
+router.get("/sub/all", auth.all, chain.getSubChains);
+router.get("/sub/:id", auth.all, chain.getSubChain);
+router.get("/sub/all/:chain_id", auth.all, chain.getSubChainsByMain);
+router.delete("/sub/:id", auth.all, chain.deleteSubChain);
 
+router.post("/sub-labparam/create", auth.all, chain.createLabParam);
+router.post("/sub-labparam/creates", auth.all, chain.createLabParams);
+router.put("/sub-labparam/update/:id", auth.all, chain.updateLabParam);
+router.get("/sub-labparam/all", auth.all, chain.getLabParams);
+router.get("/sub-labparam/:id", auth.all, chain.getLabParam);
+router.get("/sub-labparam/all-bysubchain/:subChain_id", auth.all, chain.getLabParamsBySubChain);
+router.delete("/sub-labparam/:id", auth.all, chain.deleteLabParam);
 
 module.exports = router;
