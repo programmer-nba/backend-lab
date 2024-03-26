@@ -207,6 +207,50 @@ exports.createSubChain = async (req, res) => {
     }
 }
 
+exports.updateSubChainStatus = async (req, res) => {
+    const { id } = req.params
+    const {
+        status_name,
+        status_code,
+        sender_name,
+        sender_code
+    } = req.body
+
+    try {
+        let subChain = await SubChain.findById(id)
+        
+        subChain.status = status_code && status_name ? [...subChain.status, {
+            code: status_code,
+            name: status_name,
+            updatedBy: sender_name && sender_code ? `${sender_name} ${sender_code}` : null,
+            updatedAt: new Date()
+        }] : [...subChain.status]
+        
+        const saved_subChain = await subChain.save()
+        if (!saved_subChain) {
+            return res.status(500).json({
+                message: 'can not update!',
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: 'successfully',
+            status: true,
+            data: saved_subChain
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
 exports.getSubChains = async (req, res) => {
     try{
         const subChains = await SubChain.find();
