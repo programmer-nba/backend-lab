@@ -6,6 +6,14 @@ const subchainSchema = new mongoose.Schema({
     code: String,
     _id: String
   },
+  location: String,
+  map: String,
+  point: String,
+  customer: {
+    name: String,
+    contract_name: String,
+    contract_tel: String
+  },
   date: Date,
   date_string: String,
   status: [

@@ -65,6 +65,12 @@ exports.ApproveQuotation = async (req, res) => {
       const job_number = await jobnumber();
       const newWork = new Work({
         quotation:updatedQuotation?._id,
+        customer: {
+          name: updatedQuotation?.subhead?.customer_company,
+          contract_name: "",
+          contract_number: updatedQuotation?.subhead?.customer_tel
+        },
+        location: updatedQuotation?.subhead?.sample_lacation,
         work_no: job_number,
         workdetail:item,
         status: "กำลังดำเนินการ",

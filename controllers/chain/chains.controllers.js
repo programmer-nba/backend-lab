@@ -6,7 +6,7 @@ const LabParam = require('../../models/Chain/labparam.models');
 // chains
 exports.createChain = async (req, res) => {
     const {
-        work_code, work_id,
+        work_code, work_id, work_location, work_customer,
         quotation_code, quotation_id,
         subtitle,
         analysis,
@@ -42,6 +42,8 @@ exports.createChain = async (req, res) => {
                 code: quotation_code,
                 _id: quotation_id
             },
+            customer: work_customer,
+            location: work_location,
             code: code,
             subtitle: subtitle,
             analysis: analysis,
@@ -155,16 +157,20 @@ exports.createSubChain = async (req, res) => {
         chain_code,
         chain_id,
         date,
+        chain_point,
+        chain_location,
+        customer,
         date_string,
         sender_name,
         sender_code
     } = req.body
 
     try {
+        const map = ""
         const subChains = await SubChain.find()
         const genedcode = genCode(subChains.length, date)
         const subChain_code = `CHAIN-${genedcode}`
-
+        const point = chain_point.join(',')
         const data = {
             code: subChain_code,
             chain: {
@@ -178,7 +184,11 @@ exports.createSubChain = async (req, res) => {
                 name: 'ใหม่',
                 updatedBy: sender_name && sender_code ? `${sender_name} ${sender_code}` : null,
                 updatedAt: new Date()
-            }
+            },
+            location: chain_location,
+            map: map,
+            point: point,
+            customer: customer,
         }
 
         const new_subChain = new SubChain(data)
@@ -252,6 +262,24 @@ exports.updateSubChainStatus = async (req, res) => {
 }
 
 exports.getSubChains = async (req, res) => {
+    try{
+        const subChains = await SubChain.find();
+        return res.status(200).json({
+            message: `data ${subChains.length}`,
+            data: subChains, 
+            status: true
+        });
+
+    } catch(error){
+        return res.status(500).json({
+            message: error.message, 
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.getSubChainsRider = async (req, res) => {
     try{
         const subChains = await SubChain.find();
         return res.status(200).json({

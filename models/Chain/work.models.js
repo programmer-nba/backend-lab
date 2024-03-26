@@ -5,13 +5,19 @@ const WorkSchema = new mongoose.Schema({
 
   quotation:{type: mongoose.Schema.Types.ObjectId,ref:'Quotation',default:null},
   work_no: { type: String, required: false,default:""}, //รหัสงาน 
+  location: String,
+  customer: {
+    name: String,
+    contract_name: String,
+    contract_number: String
+  },
   workdetail:{type:{
-    duration: {type:{
-      start_month: {type:Date,required:false,default:new Date().getMonth()},
-      start_year: {type:Date,required:false,default:new Date().getYear()},
-      end_month: {type:Date,required:false,default:new Date().getMonth()},
-      end_year: {type:Date,required:false,default:new Date().getYear()}
-    },default:null},
+    duration: {
+      start_month: Number,
+      start_year: Number,
+      end_month: Number,
+      end_year: Number
+    },
     title: {type:String,required:false,default:""},
     subtitles: {type:[{ //chain
         subtitle: {type:String,required:false,default:""},
@@ -42,7 +48,6 @@ const WorkSchema = new mongoose.Schema({
         }],required:false,default:null},
     }],required:false,default:null},
   },required:false,default:null},
- 
   status: { type: String, required: false,default:"" },
   chain :{type:[{
     chain_id:{type: mongoose.Schema.Types.ObjectId,ref:'chain',default:null},

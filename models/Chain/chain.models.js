@@ -10,6 +10,12 @@ const chainSchema = new mongoose.Schema(
       code: String,
       _id: String
     },
+    location: String,
+    customer: {
+      name: String,
+      contract_name: String,
+      contract_tel: String
+    },
     code: String,
     subtitle: String,
     analysis: String,
