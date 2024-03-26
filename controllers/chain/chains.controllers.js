@@ -336,11 +336,13 @@ exports.createLabParam = async (req, res) => {
             bottle_tag: bottle_tag || null,
             bottle_type: bottle_type || null,
             bottle_qr: bottle_qr || null,
+            bottle_status: false,
             name: name,
             method: method,
             ref: "",
             base: null,
             result: null,
+            result_status: false,
             status: {
                 code: 'new',
                 name: 'ใหม่',
@@ -398,11 +400,13 @@ exports.createLabParams = async (req, res) => {
                 bottle_tag: data.bottle_tag || null,
                 bottle_type: data.bottle_type || null,
                 bottle_qr: data.bottle_qr || null,
+                bottle_status: false,
                 name: data.name,
                 method: data.method,
                 ref: "",
                 base: null,
                 result: null,
+                result_status: false,
                 status: {
                     code: 'new',
                     name: 'ใหม่',
@@ -447,9 +451,11 @@ exports.updateLabParam = async (req, res) => {
         bottle_tag,
         bottle_type,
         bottle_qr,
+        bottle_status,
         ref,
         base,
         result,
+        result_status,
         status_code,
         status_name
     } = req.body
@@ -473,9 +479,11 @@ exports.updateLabParam = async (req, res) => {
         labParam.bottle_type = bottle_type || labParam.bottle_type
         labParam.bottle_tag = bottle_tag || labParam.bottle_tag
         labParam.bottle_qr = bottle_qr || labParam.bottle_qr
+        labParam.bottle_status = bottle_status || labParam.bottle_status
         labParam.ref = ref || labParam.ref
         labParam.base = base || labParam.base
         labParam.result = result || labParam.result
+        labParam.result_status = result_status || labParam.result_status
         labParam.status = 
             status_code && status_name
             ? [
