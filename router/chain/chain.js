@@ -9,6 +9,7 @@ router.get("/main/all", auth.all, chain.getChains);
 
 router.post("/sub/create", auth.all, chain.createSubChain);
 router.put("/sub/update-status/:id", auth.all, chain.updateSubChainStatus);
+router.put("/sub/upload/:id", auth.all, chain.uploadPictureSubChain);
 router.get("/sub/all", auth.all, chain.getSubChains);
 router.get("/sub/:id", auth.all, chain.getSubChain);
 router.get("/sub/all/:chain_id", auth.all, chain.getSubChainsByMain);
@@ -21,5 +22,6 @@ router.get("/sub-labparam/all", auth.all, chain.getLabParams);
 router.get("/sub-labparam/:id", auth.all, chain.getLabParam);
 router.get("/sub-labparam/all-bysubchain/:subChain_id", auth.all, chain.getLabParamsBySubChain);
 router.delete("/sub-labparam/:id", auth.all, chain.deleteLabParam);
+router.put("/sub-labparam/upload/:id", auth.all, chain.uploadPictureLabParam);
 
 module.exports = router;

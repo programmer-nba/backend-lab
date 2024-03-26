@@ -1,7 +1,15 @@
 
 const { Chain } = require('../../models/Chain/chain.models'); 
 const { SubChain } = require('../../models/Chain/subchain.models'); 
-const LabParam = require('../../models/Chain/labparam.models'); 
+const LabParam = require('../../models/Chain/labparam.models');
+const multer = require("multer");
+const storage = multer.diskStorage({ 
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+const { uploadFileCreate, deleteFile } = require("../../funtions/uploadfilecreate");
+
 
 // chains
 exports.createChain = async (req, res) => {
@@ -368,6 +376,70 @@ exports.deleteSubChain = async (req, res) => {
     }
 }
 
+exports.uploadPictureSubChain = async (req, res) => {
+    const { id } = req.params
+    try {
+        let upload = multer({ storage: storage }).array("imgCollection", 20)
+        upload(req, res, async function (err) {
+            const { upload_type } = req.body
+            if (err) {
+                return res.status(500).send(err);
+            }
+            const reqFiles = [];
+            const result = [];
+
+            let subChain = await SubChain.findById( id )
+            if (!subChain) {
+                return res.status(404).json({
+                    message: 'not founded',
+                    status: false,
+                    data: null
+                })
+            }
+
+            for (let i = 0; i < req.files.length; i++) {
+                const src = await uploadFileCreate(req.files, res, { i, reqFiles });
+                result.push(src);
+                reqFiles.push(src)
+
+                if (upload_type === 'collecteds') {
+                    subChain.img_collecteds = src
+                } else if (upload_type === 'prepareds') {
+                    subChain.img_prepareds = src
+                } else if (upload_type === 'getbottles') {
+                    subChain.img_getbottles = src
+                }
+            }
+
+            const saved_subChain = await subChain.save()
+            if (!saved_subChain) {
+                return res.status(500).json({
+                    message: "can not saved",
+                    status: false,
+                    data: null
+                })
+            }
+
+            return res.status(200).json({
+                message: 'uploaded successfully',
+                status: true,
+                data: {
+                    upload_type: req.body.upload_type,
+                    upload_img: result[0]
+                }
+            })
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
 // Lab params
 exports.createLabParam = async (req, res) => {
     const {
@@ -677,6 +749,64 @@ exports.deleteLabParam = async (req, res) => {
             message: `deleted`,
             status: true,
             data: null
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.uploadPictureLabParam = async (req, res) => {
+    const { id } = req.params
+    try {
+        let upload = multer({ storage: storage }).array("imgCollection", 20)
+        upload(req, res, async function (err) {
+            const { upload_type } = req.body
+            if (err) {
+                return res.status(500).send(err);
+            }
+            const reqFiles = [];
+            const result = [];
+
+            let labParam = await LabParam.findById( id )
+            if (!labParam) {
+                return res.status(404).json({
+                    message: 'not founded',
+                    status: false,
+                    data: null
+                })
+            }
+
+            for (let i = 0; i < req.files.length; i++) {
+                const src = await uploadFileCreate(req.files, res, { i, reqFiles });
+                result.push(src);
+                reqFiles.push(src)
+                console.log(upload_type)
+                labParam.img_collected = (upload_type === 'collected') ? src : labParam.img_collected
+            }
+
+            const saved_labParam = await labParam.save()
+            if (!saved_labParam) {
+                return res.status(500).json({
+                    message: "can not saved",
+                    status: false,
+                    data: null
+                })
+            }
+
+            return res.status(200).json({
+                message: 'uploaded successfully',
+                status: true,
+                data: {
+                    upload_type: req.body.upload_type,
+                    upload_img: saved_labParam.img_collected
+                }
+            })
         })
     }
     catch (err) {

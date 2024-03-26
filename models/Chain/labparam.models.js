@@ -34,7 +34,8 @@ const labParamSchema = new Schema (
                 updatedAt: Date,
                 updatedBy: String
             }
-        ]
+        ],
+        img_collected: String,
     },
     {
         timestamp : true

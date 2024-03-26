@@ -23,7 +23,12 @@ const subchainSchema = new mongoose.Schema({
       updatedAt: Date,
       updatedBy: String
     }
-  ]
+  ],
+  
+  img_prepareds: String,
+  img_getbottles: String,
+  img_collecteds: String,
+  
 });
 
 const SubChain = mongoose.model("subchain", subchainSchema);
