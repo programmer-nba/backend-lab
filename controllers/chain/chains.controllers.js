@@ -592,6 +592,8 @@ exports.updateLabParam = async (req, res) => {
         analysis_name,
         prepared_code,
         prepared_name,
+        rider_name,
+        rider_code,
         bottle_tag,
         bottle_type,
         bottle_qr,
@@ -620,6 +622,8 @@ exports.updateLabParam = async (req, res) => {
         labParam.analysis.name = analysis_name || labParam.analysis.name
         labParam.prepared.code = prepared_code || labParam.prepared.code
         labParam.prepared.name = prepared_name || labParam.prepared.name
+        labParam.rider.code = rider_code || labParam.prepared.code
+        labParam.rider.name = rider_name || labParam.prepared.name
         labParam.bottle_type = bottle_type || labParam.bottle_type
         labParam.bottle_tag = bottle_tag || labParam.bottle_tag
         labParam.bottle_qr = bottle_qr || labParam.bottle_qr

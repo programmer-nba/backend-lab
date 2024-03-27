@@ -9,6 +9,10 @@ const labParamSchema = new Schema (
             date: Date,
             date_string: String,
         },
+        rider: {
+            code: String,
+            name: String
+        },
         analysis: {
             code: String,
             name: String
