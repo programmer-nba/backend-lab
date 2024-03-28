@@ -423,7 +423,7 @@ exports.scanToCollect = async (req, res) => {
                 <head>
                     <title>Response Message</title>
                     <script>
-                        alert('ยืนยันการตรวจแล้ว...')
+                        alert('ยืนยันการตรวจแล้ว')
                         setTimeout(function() {
                             window.location.href = 'http://lab.nbadigitalsuccessmore.com';
                         }, 5000);
