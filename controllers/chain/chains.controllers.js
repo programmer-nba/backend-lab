@@ -83,8 +83,8 @@ exports.createChain = async (req, res) => {
                 data: null
             })
         }
-        const domain = domain || 'http://lab.nbadigitalsuccessmore.com'
-        const qr_link = `${domain}/${saved_chain.code}/${saved_chain.customer.secret}`
+        const cur_domain = domain || 'http://147.50.183.57:4681/LAB/chain/sub/scan'
+        const qr_link = `${cur_domain}/${saved_chain.code}/${saved_chain.customer.secret}`
         QRCode.toDataURL(qr_link, async function (err, url) {
             if (err) {
                 console.error(err);
