@@ -30,13 +30,13 @@ exports.ApproveQuotation = async (req, res) => {
     const id = req.params.id;
 
     const quotation = await Quotation.findById(id);
-    const chackStatus = quotation.status.some((item) => item.text === "อนุมัติ");
+    /* const chackStatus = quotation.status.some((item) => item.text === "อนุมัติ");
     if (chackStatus) {
       return res.status(400).send({
         message: "รายการนี้ได้ดำเนินการไปแล้ว",
         status: false,
       });
-    }
+    } */
 
     
     let token = req.headers["auth-token"];
