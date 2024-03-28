@@ -38,7 +38,6 @@ exports.ApproveQuotation = async (req, res) => {
       });
     } */
 
-    
     let token = req.headers["auth-token"];
     token = token.replace(/^Bearer\s+/, "");
     const decoded = jwt.verify(token, process.env.JWTPRIVATEKEY)
@@ -81,7 +80,7 @@ exports.ApproveQuotation = async (req, res) => {
         chain:[],
       });
       const savedWork = await newWork.save();
-      //สร้าง chain
+      /* //สร้าง chain
       for (const item2 of savedWork.workdetail.subtitles){
         const chain_no = await jobChain();
         const newChain = new Chain({
@@ -96,8 +95,7 @@ exports.ApproveQuotation = async (req, res) => {
         const workid = await Work.findById(savedWork?._id);
         workid?.chain.push({chain_id:savedChain?._id});
         const updatechain = await workid.save();
-      }   
-      
+      } */
     }
 
     return res.status(200).send({
@@ -139,6 +137,7 @@ exports.RejectQuotation = async (req, res) => {
       .send({ message: "มีบางอย่างผิดพลาด", status: false });
   }
 };
+
 exports.getQuotationAll = async (req, res) => {
   try {
     const qt = await Quotation.find();
@@ -198,10 +197,6 @@ exports.deleteQT = async (req, res) => {
   }
 };
 
-
-
-
-
 async function jobnumber(date) {
   const sal = await Work.find();
   let jobnumber = null;
@@ -245,7 +240,6 @@ async function jobChain(date) {
   }
   return jobnumber;
 }
-
 
 async function jobsub(date) {
   const sal = await SubChain.find();

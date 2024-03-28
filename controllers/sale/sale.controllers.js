@@ -8,6 +8,7 @@ const axios = require("axios");
 const querystring = require("querystring");
 const { google } = require("googleapis");
 const { linenotify } = require("../../lib/line");
+const { Chain } = require('../../models/Chain/chain.models');
 const qrcode = require("qrcode");
 const nodemailer = require("nodemailer");
 const req = require("express/lib/request.js");
@@ -293,8 +294,8 @@ exports.SendGmail = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "warunyoo084@gmail.com",
-        pass: "obgi ehtx humt gpgm",
+        user: "kiekoong.dev@gmail.com",
+        pass: "hibu nxfd sdvf igvo",
       },
       tls: {
         rejectUnauthorized: false,
@@ -306,51 +307,85 @@ exports.SendGmail = async (req, res) => {
         return res.status(500).send(err);
       }
 
-      const reqFiles = req.files;
-      if (!reqFiles || reqFiles.length === 0) {
-        return res
-          .status(400)
-          .send({ status: false, message: "ไม่มีไฟล์รูปภาพที่อัปโหลด" });
-      }
-      const { to, subject, text } = req.body;
+      let reqFiles = req.files;
+
+      const { to, subject, text, chain_id } = req.body;
       if (!to) {
         return res
           .status(400)
           .send({ status: false, message: "ไม่ได้กำหนดผู้รับอีเมล" });
       }
 
-      const attachments = reqFiles.map((file) => {
-        if (!file.buffer || !file.mimetype) {
-          return res.status(400).send({
-            status: false,
-            message: "Invalid file format or buffer is undefined",
-          });
-        }
-        return {
-          filename: file.originalname,
-          content: file.buffer.toString("base64"),
-          encoding: "base64",
-        };
-      });
+      let chain = await Chain.findById(chain_id)
+      if (!chain) {
+        return res.status(404).json({
+          message: 'chain id not founded',
+          status: false,
+          data: null
+        })
+      }
+      
+      const base64String = chain.qr_code_img.replace('data:image/png;base64,', ''); 
+
+      // Convert base64 to buffer
+      const buffer = Buffer.from(base64String, 'base64');
+      
       const mailOptions = {
-        from: "warunyoo084@gmail.com",
+        from: "kiekoong1@gmail.com",
         to,
         subject,
         text,
-        attachments,
+        attachments: [
+          {
+            filename: "qr_code.png",
+            content: buffer,
+            encoding: "base64",
+          },
+        ],
+        html: `
+          <div>
+            <h1>รหัสงาน : ${chain.code}</h1>
+            <p>ลูกค้า : ${chain.customer.name}</p>
+            <p>secret : ${chain.customer.secret}</p>
+            <p>*qr code ใช้สำหรับให้ไรเดอร์แสกน กรณีแสกนไม่ได้ ให้ไรเดอร์ใส่รหัส secret</p>
+            <p>เอกสารอ้างอิง ref : ${chain.quotation.code}</p>
+          </div>
+          <div>
+            <stron>รายละเอียดงาน :</strong>
+            <p>${chain.subtitle}</p>
+            <p>สถานที่เก็บตัวอย่าง : ${chain.location}</p>
+            <p>ความถี่ : ${chain.frequency_text}</p>
+            <p>พารามิเตอร์</p>
+            <ul>
+              ${chain.params.map(param => `<li>${param.name} (${param.method})</li>`).join('')}
+            </ul>
+          </div>
+        `,
       };
-      const info = await transporter.sendMail(mailOptions);
-      console.log("ส่งอีเมลสำเร็จ: " + info.response);
 
-      res.status(200).send({ status: true, message: "ส่งอีเมล์สำเร็จ" });
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.error("Error sending email:", error);
+          res.status(500).send({ status: false, message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
+        } else {
+          /* const new_status = {
+            code: 'exported',
+            name: 'ส่งเมลล์แล้ว',
+            updatedAt: new Date(),
+            updatedBy: `-`
+          } */
+          //chain.status = [...chain.status, new_status]
+          console.log("ส่งอีเมลสำเร็จ: " + info.response);
+          res.status(200).send({ status: true, message: "ส่งอีเมล์สำเร็จ" });
+        }
+      });
     });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .send({ error: "ไม่สามารถส่งได้: " + error.message, status: false });
+    console.error("Error:", error);
+    res.status(500).send({ status: false, message: "เกิดข้อผิดพลาดในการดำเนินการ" });
   }
 };
+
 //------------------------------------------------------//
 
 async function Salenumber(date) {
