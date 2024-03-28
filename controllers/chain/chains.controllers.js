@@ -269,6 +269,7 @@ exports.updateSubChainStatus = async (req, res) => {
     }
 }
 
+
 exports.getSubChains = async (req, res) => {
     try{
         const subChains = await SubChain.find();
@@ -368,6 +369,51 @@ exports.getSubChainByMainCode = async (req, res) => {
             message: `founded!`,
             data: curSubChain,
             datas: subChains,
+            status: true
+        });
+
+    } catch(error){
+        return res.status(500).json({
+            message: error.message, 
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.scanToCollect = async (req, res) => {
+    const { code } = req.params
+    try {
+        let subChains = await SubChain.find( { 'chain.code' : code } )
+        if (!subChains) {
+            return res.status(404).json({
+                message: 'not found',
+                status: false,
+                data: null
+            })
+        }
+
+        const curSubChain = subChains[subChains.length-1]
+        const new_status = {
+            code: "collecting",
+            name: "กำลังเก็บตัวอย่าง",
+            updatedAt: new Date(),
+            updatedBy: "scan"
+        }
+        subChains[subChains.length-1].status = [...subChains[subChains.length-1].status, new_status]
+
+        const saved = await subChains[subChains.length-1].save()
+        if(!saved) {
+            return res.status(500).json({
+                message: 'can not saved',
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(200).json({
+            message: `updated!`,
+            data: curSubChain,
             status: true
         });
 
