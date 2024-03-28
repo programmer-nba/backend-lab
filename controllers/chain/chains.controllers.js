@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
     }
 });
 const { uploadFileCreate, deleteFile } = require("../../funtions/uploadfilecreate");
+const QRCode = require('qrcode');
 
 
 // chains
@@ -269,7 +270,6 @@ exports.updateSubChainStatus = async (req, res) => {
     }
 }
 
-
 exports.getSubChains = async (req, res) => {
     try{
         const subChains = await SubChain.find();
@@ -409,7 +409,10 @@ exports.scanToCollect = async (req, res) => {
                 data: null
             })
         }
-        
+
+        QRCode.toDataURL('I am a pony!', function (err, url) {
+            console.log(url)
+        })
         
         /* return res.status(200).send(
             `<strong>ยืนยันการตรวจ</strong> 
