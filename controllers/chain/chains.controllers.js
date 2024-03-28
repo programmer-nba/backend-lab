@@ -258,6 +258,35 @@ exports.createSubChain = async (req, res) => {
             })
         }
 
+        const new_params = chain.params.map( p => {
+            const param = {
+                subChain_code : saved_subChain.code,
+                subChain_id : saved_subChain._id,
+                subChain_date : saved_subChain.date,
+                subChain_date_string : saved_subChain.date_string,
+                bottle_tag : 
+                    p.bottle_tag ? `${p.bottle_tag}${saved_subChain.chain.code}-${saved_subChain.code}`
+                    : `${p.name[0]}${p.name[1]}${p.name[2]}${saved_subChain.chain.code}-${saved_subChain.code}`,
+                bottle_type : 
+                    p.bottle_type 
+                    ? p.bottle_type 
+                    : "-",
+                bottle_qr : "-",
+                name : p.name, 
+                method : p.method
+            }
+            return param
+        })
+
+        const labParams = await LabParam.insertMany(new_params)
+        if(!labParams) {
+            return res.status(500).json({
+                message: "can not create lab params",
+                status: false,
+                data: null
+            })
+        }
+
         chain.chaincount += 1
         const saved_chain = await chain.save()
         if (!saved_chain) {
@@ -269,7 +298,7 @@ exports.createSubChain = async (req, res) => {
         }
 
         return res.status(201).json({
-            message: 'created successfully',
+            message: `created successfully paramsx${labParams.length}`,
             status: true,
             data: saved_subChain
         })
