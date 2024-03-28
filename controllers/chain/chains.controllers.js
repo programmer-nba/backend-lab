@@ -259,22 +259,49 @@ exports.createSubChain = async (req, res) => {
         }
 
         const new_params = chain.params.map( p => {
-            const param = {
-                subChain_code : saved_subChain.code,
-                subChain_id : saved_subChain._id,
-                subChain_date : saved_subChain.date,
-                subChain_date_string : saved_subChain.date_string,
-                bottle_tag : 
-                    p.bottle_tag ? `${p.bottle_tag}${saved_subChain.chain.code}-${saved_subChain.code}`
-                    : `${p.name[0]}${p.name[1]}${p.name[2]}${saved_subChain.chain.code}-${saved_subChain.code}`,
-                bottle_type : 
-                    p.bottle_type 
-                    ? p.bottle_type 
-                    : "-",
-                bottle_qr : "-",
-                name : p.name, 
-                method : p.method
-            }
+            const param = 
+                {
+                    subChain: {
+                        code: saved_subChain.code,
+                        _id: saved_subChain._id,
+                        date: saved_subChain.date,
+                        date_string: saved_subChain.date_string,
+                    },
+                    rider: {
+                        code: null,
+                        name: null
+                    },
+                    analysis: {
+                        code: null,
+                        name: null
+                    },
+                    prepared: {
+                        code: null,
+                        name: null
+                    },
+                    bottle_type: 
+                        p.bottle_type 
+                        ? p.bottle_type 
+                        : "-",
+                    bottle_qr: "-",
+                    bottle_tag: 
+                        p.bottle_tag ? `${p.bottle_tag}${saved_subChain.chain.code}-${saved_subChain.code}`
+                        : `${p.name[0]}${p.name[1]}${p.name[2]}${saved_subChain.chain.code}-${saved_subChain.code}`,
+                    bottle_status: false,
+                    name: p.name,
+                    method: p.method,
+                    ref: null,
+                    base: null,
+                    result: null,
+                    result_status: false,
+                    status: {
+                        code: "new",
+                        name: "ใหม่",
+                        updatedAt: new Date(),
+                        updatedBy: "-"
+                    },
+                    img_collected: null,
+                }
             return param
         })
 
