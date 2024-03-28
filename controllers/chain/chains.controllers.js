@@ -410,8 +410,8 @@ exports.scanToCollect = async (req, res) => {
             })
         }
 
-        QRCode.toDataURL('I am a pony!', function (err, url) {
-            console.log(url)
+        const qrcode = QRCode.toDataURL('http://lab.nbadigitalsuccessmore.com', function (err, url) {
+            return url
         })
         
         /* return res.status(200).send(
@@ -437,6 +437,7 @@ exports.scanToCollect = async (req, res) => {
                     <p>รหัส chain : ${saved.chain.code}</p>
                     <p>วันที่ : ${formatDate(new Date())}</p>
                     <p>ลูกค้า : ${saved.customer.name}</p>
+                    <img src="${qrcode}" alt="qrcode">
                 </body>
             </html>
         `);
