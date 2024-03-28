@@ -61,6 +61,7 @@ exports.ApproveQuotation = async (req, res) => {
     const updatedQuotation = await quotation.save();
 
     // สร้าง งาน
+    const secret = randomSecret()
     for (const item of updatedQuotation.bodies) {
       const job_number = await jobnumber();
       const newWork = new Work({
@@ -68,7 +69,8 @@ exports.ApproveQuotation = async (req, res) => {
         customer: {
           name: updatedQuotation?.subhead?.customer_company,
           contract_name: "",
-          contract_number: updatedQuotation?.subhead?.customer_tel
+          contract_number: updatedQuotation?.subhead?.customer_tel,
+          secret: secret
         },
         location: updatedQuotation?.subhead?.sample_lacation,
         work_no: job_number,
@@ -262,4 +264,16 @@ async function jobsub(date) {
     jobnumber = `SUB${dayjs(date).format("YYYYMMDD")}`.padEnd(10, "0") + "1";
   }
   return jobnumber;
+}
+
+function randomSecret() {
+  // Generate a random number between 0 and 9999
+  let randomNumber = Math.floor(Math.random() * 10000);
+
+  // If the number is less than 1000, pad it with zeros to ensure it's 4 digits
+  if (randomNumber < 1000) {
+    randomNumber = randomNumber.toString().padStart(4, '0');
+  }
+
+  return randomNumber;
 }

@@ -9,7 +9,8 @@ const WorkSchema = new mongoose.Schema({
   customer: {
     name: String,
     contract_name: String,
-    contract_number: String
+    contract_number: String,
+    secret: String
   },
   workdetail:{type:{
     duration: {

@@ -14,7 +14,8 @@ const chainSchema = new mongoose.Schema(
     customer: {
       name: String,
       contract_name: String,
-      contract_tel: String
+      contract_tel: String,
+      secret: String
     },
     code: String,
     subtitle: String,

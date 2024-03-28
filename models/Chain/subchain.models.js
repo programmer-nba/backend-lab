@@ -12,7 +12,8 @@ const subchainSchema = new mongoose.Schema({
   customer: {
     name: String,
     contract_name: String,
-    contract_tel: String
+    contract_tel: String,
+    secret: String,
   },
   date: Date,
   date_string: String,
