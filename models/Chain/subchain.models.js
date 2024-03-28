@@ -14,6 +14,8 @@ const subchainSchema = new mongoose.Schema({
     contract_name: String,
     contract_tel: String,
     secret: String,
+    email: String,
+    tel: String
   },
   date: Date,
   date_string: String,
