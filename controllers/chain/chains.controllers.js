@@ -423,13 +423,17 @@ exports.scanToCollect = async (req, res) => {
                 <head>
                     <title>Response Message</title>
                     <script>
+                        alert('ยืนยันการตรวจแล้ว...')
                         setTimeout(function() {
-                            window.location.href = 'http://lab.nbadigitalsuccessmore.com'; // Replace with your frontend URL
-                        }, 5000); // Redirect after 5 seconds (5000 milliseconds)
+                            window.location.href = 'http://lab.nbadigitalsuccessmore.com';
+                        }, 5000);
                     </script>
                 </head>
-                <body>
-                    <strong>ยืนยันการตรวจ</strong> ${saved.customer.name} #${saved.chain.code} วันที่ ${formatDate(new Date())}
+                <body style="font-size: 32px;">
+                    <strong>ยืนยันการตรวจแล้ว</strong>
+                    <p>รหัส chain : ${saved.chain.code}</p>
+                    <p>วันที่ : ${formatDate(new Date())}</p>
+                    <p>ลูกค้า : ${saved.customer.name}</p>
                 </body>
             </html>
         `);
