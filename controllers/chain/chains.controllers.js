@@ -409,14 +409,16 @@ exports.scanToCollect = async (req, res) => {
                 data: null
             })
         }
-        alert('Scan successful! Redirecting...');
-        window.location.href = 'http://lab.nbadigitalsuccessmore.com';
-        /*  return res.status(200).send(
+        
+        
+        /* return res.status(200).send(
             `<strong>ยืนยันการตรวจ</strong> 
             ${saved.customer.name} 
             #${saved.chain.code} 
             วันที่ ${formatDate(new Date())}`
         ); */
+
+        return res.redirect('http://lab.nbadigitalsuccessmore.com')
 
     } catch(error){
         return res.status(500).json({
