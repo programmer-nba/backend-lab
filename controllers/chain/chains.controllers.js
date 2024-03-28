@@ -382,9 +382,9 @@ exports.getSubChainByMainCode = async (req, res) => {
 }
 
 exports.scanToCollect = async (req, res) => {
-    const { code } = req.params
+    const { code, secret } = req.params
     try {
-        let subChains = await SubChain.find( { 'chain.code' : code } )
+        let subChains = await SubChain.find( { 'chain.code' : code, 'customer.secret' : secret } )
         if (!subChains) {
             return res.status(404).json({
                 message: 'not found',
@@ -393,7 +393,6 @@ exports.scanToCollect = async (req, res) => {
             })
         }
 
-        const curSubChain = subChains[subChains.length-1]
         const new_status = {
             code: "collecting",
             name: "กำลังเก็บตัวอย่าง",
@@ -411,11 +410,12 @@ exports.scanToCollect = async (req, res) => {
             })
         }
 
-        return res.status(200).json({
-            message: `updated!`,
-            data: curSubChain,
-            status: true
-        });
+        return res.status(200).send(
+            `<strong>ยืนยันการตรวจ</strong> 
+            ${saved.chain.customer.name} 
+            #${saved.chain.code} 
+            วันที่ ${formatDate(new Date())}`
+        );
 
     } catch(error){
         return res.status(500).json({
@@ -914,5 +914,12 @@ function formatDateToYYYYMMDD(date) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}${month}${day}`;
+}
+
+function formatDate(date) {
+    const year = date.getFullYear()+543;
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
 }
 
