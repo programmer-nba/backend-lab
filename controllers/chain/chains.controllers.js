@@ -412,7 +412,7 @@ exports.scanToCollect = async (req, res) => {
 
         return res.status(200).send(
             `<strong>ยืนยันการตรวจ</strong> 
-            ${saved.chain.customer.name} 
+            ${saved.customer.name} 
             #${saved.chain.code} 
             วันที่ ${formatDate(new Date())}`
         );
