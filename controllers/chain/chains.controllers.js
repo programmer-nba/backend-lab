@@ -409,44 +409,43 @@ exports.scanToCollect = async (req, res) => {
                 data: null
             })
         }
+        QRCode.toDataURL('http://lab.nbadigitalsuccessmore.com', function (err, url) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    message: 'Error generating QR code',
+                    status: false,
+                    data: null
+                });
+            }
+            const qrcode = url;
 
-        const qrcode = QRCode.toDataURL('http://lab.nbadigitalsuccessmore.com', function (err, url) {
-            return url
-        })
-        
-        /* return res.status(200).send(
-            `<strong>ยืนยันการตรวจ</strong> 
-            ${saved.customer.name} 
-            #${saved.chain.code} 
-            วันที่ ${formatDate(new Date())}`
-        ); */
-
-        return res.send(`
-            <html>
-                <head>
-                    <title>Response Message</title>
-                    <script>
-                        alert('ยืนยันการตรวจแล้ว')
-                        setTimeout(function() {
-                            window.location.href = 'http://lab.nbadigitalsuccessmore.com';
-                        }, 5000);
-                    </script>
-                </head>
-                <body style="font-size: 32px;">
-                    <strong>ยืนยันการตรวจแล้ว</strong>
-                    <p>รหัส chain : ${saved.chain.code}</p>
-                    <p>วันที่ : ${formatDate(new Date())}</p>
-                    <p>ลูกค้า : ${saved.customer.name}</p>
-                    <img src="${qrcode}" alt="qrcode">
-                </body>
-            </html>
-        `);
-
-        //return res.redirect('http://lab.nbadigitalsuccessmore.com')
+            // Send response with HTML and generated QR code
+            return res.send(`
+                <html>
+                    <head>
+                        <title>Response Message</title>
+                        <script>
+                            alert('ยืนยันการตรวจแล้ว');
+                            setTimeout(function() {
+                                window.location.href = 'http://lab.nbadigitalsuccessmore.com';
+                            }, 5000);
+                        </script>
+                    </head>
+                    <body style="font-size: 32px;">
+                        <strong>ยืนยันการตรวจแล้ว</strong>
+                        <p>รหัส chain : ${saved.chain.code}</p>
+                        <p>วันที่ : ${formatDate(new Date())}</p>
+                        <p>ลูกค้า : ${saved.customer.name}</p>
+                        <img src="${qrcode}" alt="qrcode">
+                    </body>
+                </html>
+            `);
+        });
 
     } catch(error){
         return res.status(500).json({
-            message: 'รหัสไม่ถูกต้อง', 
+            message: error.message, 
             status: false,
             data: null
         })
