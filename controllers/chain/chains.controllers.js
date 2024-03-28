@@ -422,7 +422,7 @@ exports.scanToCollect = async (req, res) => {
 
     } catch(error){
         return res.status(500).json({
-            message: error.message, 
+            message: 'รหัสไม่ถูกต้อง', 
             status: false,
             data: null
         })
