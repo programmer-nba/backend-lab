@@ -418,7 +418,23 @@ exports.scanToCollect = async (req, res) => {
             วันที่ ${formatDate(new Date())}`
         ); */
 
-        return res.redirect('http://lab.nbadigitalsuccessmore.com')
+        return res.send(`
+            <html>
+                <head>
+                    <title>Response Message</title>
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = 'http://lab.nbadigitalsuccessmore.com'; // Replace with your frontend URL
+                        }, 5000); // Redirect after 5 seconds (5000 milliseconds)
+                    </script>
+                </head>
+                <body>
+                    <strong>ยืนยันการตรวจ</strong> ${saved.customer.name} #${saved.chain.code} วันที่ ${formatDate(new Date())}
+                </body>
+            </html>
+        `);
+
+        //return res.redirect('http://lab.nbadigitalsuccessmore.com')
 
     } catch(error){
         return res.status(500).json({
