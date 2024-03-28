@@ -42,7 +42,9 @@ const chainSchema = new mongoose.Schema(
         updatedAt: Date,
         updatedBy: String
       }
-    ]
+    ],
+    qr_code_img: String,
+    qr_code_link: String
   },
   {
     timestamps: true

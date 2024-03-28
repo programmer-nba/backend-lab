@@ -23,6 +23,8 @@ const {
 } = require("../../funtions/uploadfilecreate");
 const { admin } = require("googleapis/build/src/apis/admin");
 
+const QRCode = require('qrcode');
+
 exports.ApproveQuotation = async (req, res) => {
   try {
     const id = req.params.id;
@@ -96,8 +98,8 @@ exports.ApproveQuotation = async (req, res) => {
         const updatechain = await workid.save();
       }   
       
-
     }
+
     return res.status(200).send({
       status: true,
       message: "อนุมัติสำเร็จ",
@@ -108,7 +110,7 @@ exports.ApproveQuotation = async (req, res) => {
     return res.status(500).send({ message: error.message, status: false });
   }
 };
- 
+
 exports.RejectQuotation = async (req, res) => {
   try {
     const id = req.params.id;

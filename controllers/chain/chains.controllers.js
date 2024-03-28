@@ -1,4 +1,3 @@
-
 const { Chain } = require('../../models/Chain/chain.models'); 
 const { SubChain } = require('../../models/Chain/subchain.models'); 
 const LabParam = require('../../models/Chain/labparam.models');
@@ -11,12 +10,12 @@ const storage = multer.diskStorage({
 const { uploadFileCreate, deleteFile } = require("../../funtions/uploadfilecreate");
 const QRCode = require('qrcode');
 
-
 // chains
 exports.createChain = async (req, res) => {
     const {
         work_code, work_id, work_location, work_customer,
         quotation_code, quotation_id,
+        domain,
         subtitle,
         analysis,
         points,
@@ -53,7 +52,7 @@ exports.createChain = async (req, res) => {
             },
             customer: work_customer,
             location: work_location,
-            code: code,
+            code: 'CHAIN'+code,
             subtitle: subtitle,
             analysis: analysis,
             total_amount_points: total_amount_points,
@@ -70,7 +69,9 @@ exports.createChain = async (req, res) => {
                 name: 'ใหม่',
                 updatedBy: `${sender_name} ${sender_code}`,
                 updatedAt: new Date()
-            }
+            },
+            qr_code_img: "",
+            qr_code_link: ""
         }
 
         const new_chain = new Chain(data)
@@ -82,11 +83,44 @@ exports.createChain = async (req, res) => {
                 data: null
             })
         }
+        const domain = domain || 'http://lab.nbadigitalsuccessmore.com'
+        const qr_link = `${domain}/${saved_chain.code}/${saved_chain.customer.secret}`
+        QRCode.toDataURL(qr_link, async function (err, url) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    message: 'Error generating QR code',
+                    status: false,
+                    data: null
+                });
+            }
 
-        return res.status(201).json({
-            message: 'saved data successfully',
-            status: true,
-            data: saved_chain
+            let cur_chain = await Chain.findById(saved_chain._id)
+            if (!cur_chain) {
+                return res.status(404).json({
+                    message: "chain not found",
+                    status: false,
+                    data: null
+                })
+            }
+
+            cur_chain.qr_code_img = url
+            cur_chain.qr_code_link = qr_link
+
+            const saved_cur_chain = await cur_chain.save()
+            if (!saved_cur_chain) {
+                return res.status(500).json({
+                    message: 'can not save cur chain',
+                    status: false,
+                    data: null
+                })
+            }
+
+            return res.status(201).json({
+                message: 'saved data successfully',
+                status: true,
+                data: cur_chain
+            })
         })
     }
     catch (err) {
@@ -175,13 +209,27 @@ exports.createSubChain = async (req, res) => {
     } = req.body
 
     try {
+        let chain = await Chain.findById(chain_id)
+        if (!chain) {
+            return res.status(404).json({
+                message: "chain not found",
+                status: true,
+                data: null
+            })
+        }
+        if (chain.chaincount+1 === chain.frequency) {
+            return res.json({
+                message: "สร้าง chain ครบจำนวนแล้ว",
+                status: true,
+                data: `${chain.chaincount}/${chain.frequency}`
+            })
+        }
+
+        const code = `${chain.chaincount+1}/${chain.frequency}`
         const map = ""
-        const subChains = await SubChain.find()
-        const genedcode = genCode(subChains.length, date)
-        const subChain_code = `CHAIN-${genedcode}`
         const point = chain_point.join(',')
         const data = {
-            code: subChain_code,
+            code: code,
             chain: {
                 code: chain_code,
                 _id: chain_id
@@ -205,6 +253,16 @@ exports.createSubChain = async (req, res) => {
         if (!saved_subChain) {
             return res.status(500).json({
                 message: 'can not save!',
+                status: false,
+                data: null
+            })
+        }
+
+        chain.chaincount += 1
+        const saved_chain = await chain.save()
+        if (!saved_chain) {
+            return res.status(500).json({
+                message: "can not plus count",
                 status: false,
                 data: null
             })
@@ -510,6 +568,8 @@ exports.uploadPictureSubChain = async (req, res) => {
                     subChain.img_prepareds = src
                 } else if (upload_type === 'getbottles') {
                     subChain.img_getbottles = src
+                } else if (upload_type === 'sents') {
+                    subChain.img_sents = src
                 }
             }
 
