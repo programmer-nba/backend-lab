@@ -350,6 +350,36 @@ exports.getSubChain = async (req, res) => {
     }
 }
 
+exports.getSubChainByMainCode = async (req, res) => {
+    const { code } = req.params
+    try {
+        const subChains = await SubChain.find( { 'chain.code' : code } )
+        if (!subChains) {
+            return res.status(404).json({
+                message: 'not found',
+                status: false,
+                data: null
+            })
+        }
+
+        const curSubChain = subChains[subChains.length-1]
+
+        return res.status(200).json({
+            message: `founded!`,
+            data: curSubChain,
+            datas: subChains,
+            status: true
+        });
+
+    } catch(error){
+        return res.status(500).json({
+            message: error.message, 
+            status: false,
+            data: null
+        })
+    }
+}
+
 exports.deleteSubChain = async (req, res) => {
     const { id } = req.params
     try {
