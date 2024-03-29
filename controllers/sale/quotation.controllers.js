@@ -260,39 +260,22 @@ exports.deleteAllQt = async (req, res) => {
   }
 };
 
-
 async function Quotationnumber(date) {
   const sal = await Quotation.find();
   let jobnumber = null;
 
-  if (sal.length !== 0) {
-    let data = "";
-    let num = 0;
-    let check = null;
+  const currentYear = new Date().getFullYear();
+  const yearOffset = currentYear - 1957;
 
-    do {
-      const currentYear = new Date().getFullYear();
-      const yearOffset = currentYear - 1957;
-      num = num + 1;
+  let num = sal.length + 1; // Increment based on the number of existing quotations
 
-      // Format the date as YYMM
-      const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
-      
-      // Pad the number with leading zeros if necessary
-      const paddedNum = String(num).padStart(3, "0");
+  // Format the date as YYMM
+  const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
+  
+  // Pad the number with leading zeros if necessary
+  const paddedNum = String(num).padStart(3, "0");
 
-      data = `QT${formattedDate}${paddedNum}`;
-      check = await Quotation.find({ code: data });
-
-      if (check.length === 0) {
-        jobnumber = data;
-      }
-    } while (check.length !== 0 && num < 999);
-  } else {
-    const currentYear = new Date().getFullYear();
-    const yearOffset = currentYear - 1957;
-    jobnumber = `QT${dayjs(date).year(yearOffset).format("YYMM")}001`;
-  }
+  jobnumber = `QT${formattedDate}${paddedNum}`;
 
   return jobnumber;
 }
