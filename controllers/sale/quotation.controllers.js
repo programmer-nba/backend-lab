@@ -262,26 +262,37 @@ exports.deleteAllQt = async (req, res) => {
 
 
 async function Quotationnumber(date) {
-  const number = await Quotation.find();
-  let document_no = null;
-  if (number.length !== 0) {
+  const sal = await Quotation.find();
+  let jobnumber = null;
+
+  if (sal.length !== 0) {
     let data = "";
     let num = 0;
     let check = null;
+
     do {
+      const currentYear = new Date().getFullYear();
+      const yearOffset = currentYear - 1957;
       num = num + 1;
-      data =
-        `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
-      check = await Quotation.find({ "subhead.document_no": data });
+
+      // Format the date as YYMM
+      const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
+      
+      // Pad the number with leading zeros if necessary
+      const paddedNum = String(num).padStart(3, "0");
+
+      data = `QT${formattedDate}${paddedNum}`;
+      check = await Work.find({ work_no: data });
+
       if (check.length === 0) {
-        document_no =
-          `QT-${dayjs(date).format("YYYYMM")}` + String(num).padStart(4, "0");
+        jobnumber = data;
       }
-    } while (check.length !== 0);
+    } while (check.length !== 0 && num < 999);
   } else {
-    document_no =
-      `QT-${dayjs(date).format("YYYYMM")}` +
-      String(number.length).padStart(4, "0");
+    const currentYear = new Date().getFullYear();
+    const yearOffset = currentYear - 1957;
+    jobnumber = `QT${dayjs(date).year(yearOffset).format("YYMM")}001`;
   }
-  return document_no;
+
+  return jobnumber;
 }

@@ -40,7 +40,7 @@ exports.createChain = async (req, res) => {
             }
             return result
         })
-        const code = genCode(chains.length, null)
+        const code = genCode(new Date())
 
         const data = {
             work: {
@@ -54,7 +54,7 @@ exports.createChain = async (req, res) => {
             customer: work_customer,
             location: work_location,
             map: map,
-            code: 'CHAIN'+code,
+            code: code,
             subtitle: subtitle,
             analysis: analysis,
             total_amount_points: total_amount_points,
@@ -1114,7 +1114,7 @@ exports.uploadPictureLabParam = async (req, res) => {
     }
 }
 
-const genCode = (length, date) => {
+/* const genCode = (length, date) => {
     const gendate = date ? formatDateToYYYYMMDD(date) : formatDateToYYYYMMDD(new Date())
     const genlength =
         length >= 0 && length < 10 ? `000${length}`
@@ -1122,9 +1122,45 @@ const genCode = (length, date) => {
         : length >= 100 && length < 1000 ? `0${length}`
         : `${length}`
     return `${gendate}${genlength}`
-}
+} */
 
-function formatDateToYYYYMMDD(date) {
+async function genCode(date) {
+    const sal = await Chain.find();
+    let jobnumber = null;
+
+    if (sal.length !== 0) {
+      let data = "";
+      let num = 0;
+      let check = null;
+  
+      do {
+        const currentYear = new Date().getFullYear();
+        const yearOffset = currentYear - 1957;
+        num = num + 1;
+
+        // Format the date as YYMM
+        const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
+        
+        // Pad the number with leading zeros if necessary
+        const paddedNum = String(num).padStart(3, "0");
+
+        data = `CN${formattedDate}${paddedNum}`;
+        check = await Work.find({ work_no: data });
+
+        if (check.length === 0) {
+          jobnumber = data;
+        }
+      } while (check.length !== 0 && num < 999);
+    } else {
+      const currentYear = new Date().getFullYear();
+      const yearOffset = currentYear - 1957;
+      jobnumber = `CN${dayjs(date).year(yearOffset).format("YYMM")}001`;
+    }
+  
+    return jobnumber;
+  }
+
+/* function formatDateToYYYYMMDD(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -1136,5 +1172,5 @@ function formatDate(date) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${day}/${month}/${year}`;
-}
+} */
 
