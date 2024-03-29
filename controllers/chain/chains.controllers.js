@@ -204,17 +204,33 @@ exports.deleteChain = async (req, res) => {
 
         // Find all subchains related to the chain
         const subChains = await SubChain.find({ 'chain._id': id });
+        console.log(subChains.length)
 
         // Extract subchain ids
         const subChainIds = subChains.map(subChain => subChain._id);
+        console.log(subChainIds)
 
         // Delete subchains
-        await SubChain.deleteMany({ 'chain._id': id });
+        const delete_subChains = await SubChain.deleteMany({ 'chain._id': id });
+        if (!delete_subChains) {
+            return res.send({
+                message: 'can not cascade subchains',
+                status: false,
+                data: null
+            })
+        }
 
         // Delete lab parameters associated with subchains
-        await LabParam.deleteMany({ 'subChain._id': { $in: subChainIds } });
+        const delete_labParams = await LabParam.deleteMany({ 'subChain._id': { $in: subChainIds } })
+        if (!delete_labParams) {
+            return res.json({
+                message: 'can not cascade labParams',
+                status: false,
+                data : null
+            })
+        }
 
-        res.json({
+        return res.json({
             message: 'Delete successful',
             status: true,
             data: null
