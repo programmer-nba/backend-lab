@@ -206,6 +206,8 @@ exports.createSubChain = async (req, res) => {
         chain_location,
         customer,
         date_string,
+        rider_name,
+        rider_code,
         sender_name,
         sender_code,
         map
@@ -229,7 +231,6 @@ exports.createSubChain = async (req, res) => {
         }
 
         const code = `${chain_code.slice(-4)}-${chain.chaincount+1}/${chain.frequency}`
-        const map = map
         const point = chain_point.join(',')
         const data = {
             code: code,
@@ -249,6 +250,10 @@ exports.createSubChain = async (req, res) => {
             map: map,
             point: point,
             customer: customer,
+            rider: {
+                name: rider_name,
+                code: rider_code
+            }
         }
 
         const new_subChain = new SubChain(data)
@@ -508,6 +513,8 @@ exports.scanToCollect = async (req, res) => {
                 status: false,
                 data: null
             })
+        } else if (subChains.length < 1) {
+            return res.send('ขออภัย ขณะนี้ยังไม่สามารถเข้ารับงานได้')
         }
 
         const new_status = {
@@ -537,7 +544,6 @@ exports.scanToCollect = async (req, res) => {
             }
             const qrcode = url;
 
-            // Send response with HTML and generated QR code
             return res.send(`
                 <html>
                     <head>
@@ -885,6 +891,70 @@ exports.updateLabParam = async (req, res) => {
         console.log(err)
         return res.status(500).json({
             message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.scanBottle = async (req, res) => {
+    const { id } = req.params
+    try {
+        let subChain = await SubChain.findByIdAndUpdate( id, {
+            $push : {
+                status: {
+                    code: "",
+                    name: "",
+                    createdAt: new Date(),
+                    updatedBy: "scan"
+                }
+            }
+        }, { new : true } )
+        if (!subChain) {
+            return res.status(404).send('ไม่พบข้อมูล')
+        } else if (subChain.length < 1) {
+            return res.send('ขออภัย ขณะนี้ยังไม่สามารถเข้ารับงานได้')
+        }
+
+        const new_status = {
+            code: "collecting",
+            name: "กำลังเก็บตัวอย่าง",
+            updatedAt: new Date(),
+            updatedBy: "scan"
+        }
+        
+        if(!saved) {
+            return res.status(500).json({
+                message: 'can not saved',
+                status: false,
+                data: null
+            })
+        }
+
+        return res.send(`
+            <html>
+                <head>
+                    <title>Response Message</title>
+                    <script>
+                        alert('ยืนยันการตรวจแล้ว');
+                        setTimeout(function() {
+                            window.location.href = 'http://lab.nbadigitalsuccessmore.com';
+                        }, 5000);
+                    </script>
+                </head>
+                <body style="font-size: 32px;">
+                    <strong>ยืนยันการตรวจแล้ว</strong>
+                    <p>รหัส chain : ${saved.chain.code}</p>
+                    <p>วันที่ : ${formatDate(new Date())}</p>
+                    <p>ลูกค้า : ${saved.customer.name}</p>
+                    <img src="${qrcode}" alt="qrcode">
+                </body>
+            </html>
+        `);
+        
+    } catch(error){
+        return res.status(500).json({
+            message: error.message, 
             status: false,
             data: null
         })
