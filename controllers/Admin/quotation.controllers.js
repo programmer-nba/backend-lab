@@ -219,7 +219,7 @@ async function jobnumber(date) {
       const paddedNum = String(num).padStart(3, "0");
 
       data = `JOB${formattedDate}${paddedNum}`;
-      check = await Work.find({ work_no: data });
+      check = await Work.find({ code: data });
 
       if (check.length === 0) {
         jobnumber = data;

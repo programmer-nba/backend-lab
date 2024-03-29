@@ -282,7 +282,7 @@ async function Quotationnumber(date) {
       const paddedNum = String(num).padStart(3, "0");
 
       data = `QT${formattedDate}${paddedNum}`;
-      check = await Work.find({ work_no: data });
+      check = await Quotation.find({ code: data });
 
       if (check.length === 0) {
         jobnumber = data;

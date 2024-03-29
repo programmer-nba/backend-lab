@@ -1189,7 +1189,7 @@ async function genCode(date) {
         const paddedNum = String(num).padStart(3, "0");
 
         data = `CN${formattedDate}${paddedNum}`;
-        check = await Work.find({ work_no: data });
+        check = await Chain.find({ code: data });
 
         if (check.length === 0) {
           jobnumber = data;
