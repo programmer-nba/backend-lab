@@ -196,6 +196,34 @@ exports.getChains = async (req, res) => {
     }
 }
 
+exports.deleteChain = async (req, res) => {
+    const { id } = req.params
+    try {
+        // Delete the chain
+        await Chain.findByIdAndDelete(id);
+
+        // Find all subchains related to the chain
+        const subChains = await SubChain.find({ 'chain._id': id });
+
+        // Extract subchain ids
+        const subChainIds = subChains.map(subChain => subChain._id);
+
+        // Delete subchains
+        await SubChain.deleteMany({ 'chain._id': id });
+
+        // Delete lab parameters associated with subchains
+        await LabParam.deleteMany({ 'subChain._id': { $in: subChainIds } });
+
+        res.json({
+            message: 'Delete successful',
+            status: true,
+            data: null
+        });
+    } catch (error) {
+        return res.status(500).send({ message: error.message, status: false });
+    }
+}
+
 // subchains
 exports.createSubChain = async (req, res) => {
     const {
