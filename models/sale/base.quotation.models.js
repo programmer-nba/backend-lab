@@ -26,31 +26,7 @@ const BaseQuotationSchema = new mongoose.Schema({
   bodies: {
     type: [
       {
-        duration: {
-          type: {
-            start_month: {
-              type: Number,
-              required: false,
-              default: new Date().getMonth(),
-            },
-            start_year: {
-              type: Number,
-              required: false,
-              default: new Date().getYear(),
-            },
-            end_month: {
-              type: Number,
-              required: false,
-              default: new Date().getMonth(),
-            },
-            end_year: {
-              type: Number,
-              required: false,
-              default: new Date().getYear(),
-            },
-          },
-          default: null,
-        },
+        duration: [Date],
         title: { type: String, required: false, default: "" },
         subtitles: {
           type: [
@@ -82,6 +58,7 @@ const BaseQuotationSchema = new mongoose.Schema({
                       required: false,
                       default: "",
                     },
+                    months: [Date],
                     amount_point: { type: Number, required: false, default: 0 },
                     params: {
                       type: [
