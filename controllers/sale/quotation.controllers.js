@@ -55,11 +55,15 @@ exports.Quotation = async (req, res) => {
         name: "new",
         text: "รออนุมัติ",
         sender: {
-          name: "",
+          name: req.body.creator.name,
           code: ""
         }
       },
     });
+
+    
+
+
     const add = await data.save();
     if (add) {
       return res.status(200).send({

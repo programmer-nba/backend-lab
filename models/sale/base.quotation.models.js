@@ -29,22 +29,22 @@ const BaseQuotationSchema = new mongoose.Schema({
         duration: {
           type: {
             start_month: {
-              type: Date,
+              type: Number,
               required: false,
               default: new Date().getMonth(),
             },
             start_year: {
-              type: Date,
+              type: Number,
               required: false,
               default: new Date().getYear(),
             },
             end_month: {
-              type: Date,
+              type: Number,
               required: false,
               default: new Date().getMonth(),
             },
             end_year: {
-              type: Date,
+              type: Number,
               required: false,
               default: new Date().getYear(),
             },

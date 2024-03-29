@@ -18,6 +18,7 @@ exports.createChain = async (req, res) => {
         domain,
         subtitle,
         analysis,
+        map,
         points,
         frequency,
         frequency_text,
@@ -52,6 +53,7 @@ exports.createChain = async (req, res) => {
             },
             customer: work_customer,
             location: work_location,
+            map: map,
             code: 'CHAIN'+code,
             subtitle: subtitle,
             analysis: analysis,
@@ -205,7 +207,8 @@ exports.createSubChain = async (req, res) => {
         customer,
         date_string,
         sender_name,
-        sender_code
+        sender_code,
+        map
     } = req.body
 
     try {
@@ -225,8 +228,8 @@ exports.createSubChain = async (req, res) => {
             })
         }
 
-        const code = `${chain.chaincount+1}/${chain.frequency}`
-        const map = ""
+        const code = `${chain_code.slice(-4)}-${chain.chaincount+1}/${chain.frequency}`
+        const map = map
         const point = chain_point.join(',')
         const data = {
             code: code,

@@ -29,7 +29,7 @@ const WorkSchema = new mongoose.Schema({
             points: {type:[String],required:false,default:null},
             //จำนวนรอบ
             chaincount: {type:Number,required:false,default:0},
-
+            months: [String],
             frequency: {type:Number,required:false,default:0},
             frequency_text: {type:String,required:false,default:""},
             collect_month: {type:[String],required:false,default:null},
