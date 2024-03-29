@@ -8,6 +8,6 @@ router.put("/EditItem/:id", auth.admin, item.EditItem); //เเก้ไขว�
 router.get("/GetAllItem", item.GetAllIem);
 router.get("/GetItem/:id", item.GetAllIemByid);
 router.delete("/deleteItemAnalysis/:id", auth.admin, item.deleteItemAnalysis);
-router.delete("/deleteAll", auth.admin, item.deleteAll); //ลบข้อมูลทั้งหมด ใช้สำหรับคนขี้เกียจลบ
+router.delete("/deleteAll", auth.admin, item.deleteAll);
 
 module.exports = router;

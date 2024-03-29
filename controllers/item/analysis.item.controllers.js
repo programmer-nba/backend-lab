@@ -4,7 +4,7 @@ exports.create = async (req, res) => {
   try {
       const item = new ItemAnalysis({
         name: req.body.name,
-        bottletype: req.body.bottletype,
+        bottle_type: req.body.bottletype,
         methods: req.body.methods,
       })
       const result = await item.save();
@@ -15,7 +15,6 @@ exports.create = async (req, res) => {
       .send({ status: false, message: err.message });
   }
 };
-
 
 exports.EditItem = async (req, res) => {
   try {
@@ -29,13 +28,12 @@ exports.EditItem = async (req, res) => {
 
     const data = {
       name: req.body.name,
-      bottletype: req.body.bottletype,
+      bottle_type: req.body.bottletype,
       methods: req.body.methods,
     }
     const item = await ItemAnalysis.findByIdAndUpdate(id, data,{new:true});
     return res.status(200).send({ status: true, message: "แก้ไขวิธีการวิเคราะห์สำเร็จ", data: item});
 
-    
   } catch (err) {
     return res
       .status(500)
@@ -46,11 +44,16 @@ exports.EditItem = async (req, res) => {
 exports.GetAllIem = async (req, res) => {
   try {
     const analysis = await ItemAnalysis.find();
-    return res.status(200).send({ status: true, message: "ดึงข้อมูลวิธีการวิเคราะห์สำเร็จ", data: analysis});
+    return res.status(200).send({ 
+      status: true, 
+      message: `have ${analysis.length} items`, 
+      data: analysis
+    });
   } catch (error) {
-     return res
-      .status(500)
-      .send({ status: false, message: err.message });
+      return res.status(500).send({ 
+        status: false,
+        message: err.message 
+      });
   }
 };
 
@@ -60,9 +63,10 @@ exports.GetAllIemByid = async (req, res) => {
     if(!analysis) return res.status(404).send({ status: false, message: "ไม่พบข้อมูลวิธีการวิเคราะห์"});
     return res.status(200).send({ status: true, message: "ดึงข้อมูลวิธีการวิเคราะห์สำเร็จ", data: analysis});
   } catch (error) {
-     return res
-      .status(500)
-      .send({ status: false, message: err.message });
+      return res.status(500).send({ 
+        status: false,
+        message: err.message 
+      });
   }
 };
 
@@ -83,6 +87,20 @@ exports.deleteItemAnalysis = async (req, res) => {
     return res
       .status(500)
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+  }
+};
+
+exports.deleteAllItemAnalysis = async (req, res) => {
+  try {
+    const items = await ItemAnalysis.deleteMany()
+    return res.status(200).send({ 
+      status: true, 
+      message: `deleted ${items.length} items`
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: err.message });
   }
 };
 
