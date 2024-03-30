@@ -1171,22 +1171,22 @@ exports.uploadPictureLabParam = async (req, res) => {
 async function genCode(date) {
     const sal = await Chain.find();
     let jobnumber = null;
-  
+
     const currentYear = new Date().getFullYear();
     const yearOffset = currentYear - 1957;
-  
+
     let num = sal.length + 1; // Increment based on the number of existing quotations
-  
+
     // Format the date as YYMM
     const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
     
     // Pad the number with leading zeros if necessary
     const paddedNum = String(num).padStart(3, "0");
-  
+
     jobnumber = `CH${formattedDate}${paddedNum}`;
-  
+
     return jobnumber;
-  }
+}
 
 /* function formatDateToYYYYMMDD(date) {
     const year = date.getFullYear();
