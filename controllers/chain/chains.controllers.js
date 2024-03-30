@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
 });
 const { uploadFileCreate, deleteFile } = require("../../funtions/uploadfilecreate");
 const QRCode = require('qrcode');
+const dayjs = require("dayjs");
 
 // chains
 exports.createChain = async (req, res) => {
@@ -31,7 +32,6 @@ exports.createChain = async (req, res) => {
         sender_code
     } = req.body
     try {
-        const chains = await Chain.find()
         const formatted_params = params.map(param=>{
             const result = {
                 name: param.name,
@@ -40,7 +40,7 @@ exports.createChain = async (req, res) => {
             }
             return result
         })
-        const code = genCode(new Date())
+        const code = await genCode(new Date())
 
         const data = {
             work: {
@@ -1159,16 +1159,6 @@ exports.uploadPictureLabParam = async (req, res) => {
     }
 }
 
-/* const genCode = (length, date) => {
-    const gendate = date ? formatDateToYYYYMMDD(date) : formatDateToYYYYMMDD(new Date())
-    const genlength =
-        length >= 0 && length < 10 ? `000${length}`
-        : length >= 10 && length < 100 ? `00${length}`
-        : length >= 100 && length < 1000 ? `0${length}`
-        : `${length}`
-    return `${gendate}${genlength}`
-} */
-
 async function genCode(date) {
     const sal = await Chain.find();
     let jobnumber = null;
@@ -1182,24 +1172,10 @@ async function genCode(date) {
     const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
     
     // Pad the number with leading zeros if necessary
-    const paddedNum = String(num).padStart(3, "0");
+    const paddedNum = String(num).padStart(4, "0");
 
     jobnumber = `CH${formattedDate}${paddedNum}`;
 
     return jobnumber;
 }
-
-/* function formatDateToYYYYMMDD(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}${month}${day}`;
-}
-
-function formatDate(date) {
-    const year = date.getFullYear()+543;
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${day}/${month}/${year}`;
-} */
 

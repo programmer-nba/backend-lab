@@ -211,7 +211,7 @@ async function Quotationnumber(date) {
   const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
   
   // Pad the number with leading zeros if necessary
-  const paddedNum = String(num).padStart(3, "0");
+  const paddedNum = String(num).padStart(4, "0");
 
   jobnumber = `JOB${formattedDate}${paddedNum}`;
 
