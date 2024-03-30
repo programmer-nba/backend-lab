@@ -563,7 +563,7 @@ exports.scanToCollect = async (req, res) => {
     const { id, secret } = req.params
     const { rider_name, rider_code } = req.body
     try {
-        let subChains = await SubChain.find( { _id : id, 'customer.secret' : secret } )
+        let subChains = await SubChain.find( { 'chain._id' : id, 'customer.secret' : secret } )
         if (!subChains) {
             return res.status(404).json({
                 message: 'not found',
