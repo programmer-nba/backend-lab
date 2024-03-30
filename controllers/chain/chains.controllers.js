@@ -915,7 +915,7 @@ exports.updateLabParam = async (req, res) => {
                 {
                     code: status_code,
                     name: status_name,
-                    updatedBy: `${analysis_name || prepared_name} ${analysis_code || prepared_code}`,
+                    updatedBy: `${analysis_name || 'ฝ่ายขวด'} ${analysis_code || 'ฝ่ายขวด'}`,
                     updatedAt: new Date()
                 }
             ] 
