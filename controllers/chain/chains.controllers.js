@@ -571,7 +571,7 @@ exports.scanToCollect = async (req, res) => {
                 data: null
             })
         } else if (subChains.length < 1) {
-            return res.send('ขออภัย ขณะนี้ยังไม่สามารถเข้ารับงานได้')
+            return res.send(subChains)
         }
 
         const new_status = {
