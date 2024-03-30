@@ -252,6 +252,8 @@ exports.createSubChain = async (req, res) => {
         date_string,
         rider_name,
         rider_code,
+        prepared_name,
+        prepared_code,
         sender_name,
         sender_code,
         map
@@ -297,6 +299,10 @@ exports.createSubChain = async (req, res) => {
             rider: {
                 name: rider_name,
                 code: rider_code
+            },
+            prepared: {
+                name: prepared_name,
+                code: prepared_code
             }
         }
 
@@ -319,15 +325,7 @@ exports.createSubChain = async (req, res) => {
                         date: saved_subChain.date,
                         date_string: saved_subChain.date_string,
                     },
-                    rider: {
-                        code: null,
-                        name: null
-                    },
                     analysis: {
-                        code: null,
-                        name: null
-                    },
-                    prepared: {
                         code: null,
                         name: null
                     },
@@ -403,7 +401,10 @@ exports.updateSubChainStatus = async (req, res) => {
 
     try {
         let subChain = await SubChain.findById(id)
-        
+        subChain.prepared = {
+            code:sender_code,
+            name: sender_name
+        }
         subChain.status = status_code && status_name ? [...subChain.status, {
             code: status_code,
             name: status_name,
@@ -721,8 +722,8 @@ exports.createLabParam = async (req, res) => {
         
         analysis_code,
         analysis_name,
-        prepared_code,
-        prepared_name,
+        //prepared_code,
+        //prepared_name,
         
         bottle_tag,
         bottle_type,
@@ -861,10 +862,10 @@ exports.updateLabParam = async (req, res) => {
     const {
         analysis_code,
         analysis_name,
-        prepared_code,
-        prepared_name,
-        rider_name,
-        rider_code,
+        //prepared_code,
+        //prepared_name,
+        //rider_name,
+        //rider_code,
         bottle_tag,
         bottle_type,
         bottle_qr,
@@ -891,10 +892,10 @@ exports.updateLabParam = async (req, res) => {
 
         labParam.analysis.code = analysis_code || labParam.analysis.code
         labParam.analysis.name = analysis_name || labParam.analysis.name
-        labParam.prepared.code = prepared_code || labParam.prepared.code
+        /* labParam.prepared.code = prepared_code || labParam.prepared.code
         labParam.prepared.name = prepared_name || labParam.prepared.name
         labParam.rider.code = rider_code || labParam.prepared.code
-        labParam.rider.name = rider_name || labParam.prepared.name
+        labParam.rider.name = rider_name || labParam.prepared.name */
         labParam.bottle_type = bottle_type || labParam.bottle_type
         labParam.bottle_tag = bottle_tag || labParam.bottle_tag
         labParam.bottle_qr = bottle_qr || labParam.bottle_qr

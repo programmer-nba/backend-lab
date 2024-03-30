@@ -9,10 +9,6 @@ const subchainSchema = new mongoose.Schema({
   location: String,
   map: String,
   point: String,
-  rider: {
-    code: String,
-    name: String
-  },
   prepared: {
     code: String,
     name: String
