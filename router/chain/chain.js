@@ -15,7 +15,7 @@ router.get("/sub/all", auth.all, chain.getSubChains);
 router.get("/sub/:id", auth.all, chain.getSubChain);
 router.get("/sub/all/:chain_id", auth.all, chain.getSubChainsByMain);
 router.get("/sub/code/:code", auth.all, chain.getSubChainByMainCode);
-router.get("/sub/scan/:code/:secret", auth.all, chain.scanToCollect);
+router.post("/sub/scan/:id/:secret", auth.all, chain.scanToCollect);
 router.delete("/sub/:id", auth.all, chain.deleteSubChain);
 
 router.post("/sub-labparam/create", auth.all, chain.createLabParam);

@@ -96,15 +96,17 @@ exports.createChain = async (req, res) => {
         //const cur_domain = domain || 'http://147.50.183.57:4681/LAB/chain/sub/scan'
         //const qr_link = `${cur_domain}/${saved_chain.code}/${saved_chain.customer.secret}`
         const qr_data = {
-            _id: saved_chain._id,
+            _id: saved_chain._id.toString(),
             code: saved_chain.code,
             secret: saved_chain.customer.secret
         }
-        QRCode.toDataURL(qr_data, async function (err, url) {
+        const qr_data_str = JSON.stringify(qr_data);
+        console.log(qr_data_str)
+        QRCode.toDataURL(qr_data_str, async function (err, url) {
             if (err) {
                 console.error(err);
                 return res.status(500).json({
-                    message: 'Error generating QR code',
+                    message: err,
                     status: false,
                     data: null
                 });
@@ -558,9 +560,10 @@ exports.getSubChainByMainCode = async (req, res) => {
 }
 
 exports.scanToCollect = async (req, res) => {
-    const { code, secret, rider_name, rider_code } = req.params
+    const { id, secret } = req.params
+    const { rider_name, rider_code } = req.body
     try {
-        let subChains = await SubChain.find( { 'chain.code' : code, 'customer.secret' : secret } )
+        let subChains = await SubChain.find( { _id : id, 'customer.secret' : secret } )
         if (!subChains) {
             return res.status(404).json({
                 message: 'not found',
