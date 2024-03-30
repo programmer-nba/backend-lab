@@ -283,7 +283,7 @@ exports.createSubChain = async (req, res) => {
                 data: null
             })
         }
-        if (chain.chaincount+1 === chain.frequency) {
+        if (chain.chaincount === chain.frequency) {
             return res.json({
                 message: "สร้าง chain ครบจำนวนแล้ว",
                 status: false,
