@@ -93,9 +93,14 @@ exports.createChain = async (req, res) => {
                 data: null
             })
         }
-        const cur_domain = domain || 'http://147.50.183.57:4681/LAB/chain/sub/scan'
-        const qr_link = `${cur_domain}/${saved_chain.code}/${saved_chain.customer.secret}`
-        QRCode.toDataURL(qr_link, async function (err, url) {
+        //const cur_domain = domain || 'http://147.50.183.57:4681/LAB/chain/sub/scan'
+        //const qr_link = `${cur_domain}/${saved_chain.code}/${saved_chain.customer.secret}`
+        const qr_data = {
+            _id: saved_chain._id,
+            code: saved_chain.code,
+            secret: saved_chain.customer.secret
+        }
+        QRCode.toDataURL(qr_data, async function (err, url) {
             if (err) {
                 console.error(err);
                 return res.status(500).json({
@@ -115,7 +120,7 @@ exports.createChain = async (req, res) => {
             }
 
             cur_chain.qr_code_img = url
-            cur_chain.qr_code_link = qr_link
+            cur_chain.qr_data = qr_data
 
             const saved_cur_chain = await cur_chain.save()
             if (!saved_cur_chain) {
@@ -553,7 +558,7 @@ exports.getSubChainByMainCode = async (req, res) => {
 }
 
 exports.scanToCollect = async (req, res) => {
-    const { code, secret } = req.params
+    const { code, secret, rider_name, rider_code } = req.params
     try {
         let subChains = await SubChain.find( { 'chain.code' : code, 'customer.secret' : secret } )
         if (!subChains) {
@@ -570,7 +575,7 @@ exports.scanToCollect = async (req, res) => {
             code: "collecting",
             name: "กำลังเก็บตัวอย่าง",
             updatedAt: new Date(),
-            updatedBy: "scan"
+            updatedBy: `${rider_name} ${rider_code}`
         }
         subChains[subChains.length-1].status = [...subChains[subChains.length-1].status, new_status]
 
@@ -582,7 +587,7 @@ exports.scanToCollect = async (req, res) => {
                 data: null
             })
         }
-        QRCode.toDataURL('http://lab.nbadigitalsuccessmore.com', function (err, url) {
+        /* QRCode.toDataURL('http://lab.nbadigitalsuccessmore.com', function (err, url) {
             if (err) {
                 console.error(err);
                 return res.status(500).json({
@@ -613,7 +618,13 @@ exports.scanToCollect = async (req, res) => {
                     </body>
                 </html>
             `);
-        });
+        }); */
+
+        return res.status(200).json({
+            message: 'success',
+            status: true,
+            data: saved
+        })
 
     } catch(error){
         return res.status(500).json({

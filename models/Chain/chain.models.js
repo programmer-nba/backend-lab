@@ -49,7 +49,7 @@ const chainSchema = new mongoose.Schema(
       }
     ],
     qr_code_img: String,
-    qr_code_link: String
+    qr_data: String
   },
   {
     timestamps: true
