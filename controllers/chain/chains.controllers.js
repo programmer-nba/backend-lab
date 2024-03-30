@@ -317,6 +317,7 @@ exports.createSubChain = async (req, res) => {
         }
 
         const new_params = chain.params.map( p => {
+            const index = chain.params.findIndex(i => i === p)
             const param = 
                 {
                     subChain: {
@@ -334,14 +335,12 @@ exports.createSubChain = async (req, res) => {
                         ? p.bottle_type 
                         : "-",
                     bottle_qr: "-",
-                    bottle_tag: 
-                        p.bottle_tag ? `${p.bottle_tag}${saved_subChain.chain.code}-${saved_subChain.code}`
-                        : `${p.name[0]}${p.name[1]}${p.name[2]}${saved_subChain.chain.code}-${saved_subChain.code}`,
+                    bottle_tag: `${index}-${p.name}-${saved_subChain.code}`,
                     bottle_status: false,
                     name: p.name,
                     method: p.method,
-                    ref: null,
-                    base: null,
+                    ref: p.ref,
+                    base: p.base,
                     result: null,
                     result_status: false,
                     status: {
