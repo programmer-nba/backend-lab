@@ -335,7 +335,7 @@ exports.createSubChain = async (req, res) => {
                         ? p.bottle_type 
                         : "-",
                     bottle_qr: "-",
-                    bottle_tag: `${index}-${p.name}-${saved_subChain.code}`,
+                    bottle_tag: `${index}-${p.name}${saved_subChain.code}`,
                     bottle_status: false,
                     name: p.name,
                     method: p.method,
