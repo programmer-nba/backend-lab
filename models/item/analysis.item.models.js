@@ -5,6 +5,7 @@ const AnalysisItemSchema = new mongoose.Schema({
     type: String, 
     required: false
   },
+  tag: String,
   bottle_type:{
     type: String, 
     required: false

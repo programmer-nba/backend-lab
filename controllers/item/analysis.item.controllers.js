@@ -4,8 +4,9 @@ exports.create = async (req, res) => {
   try {
       const item = new ItemAnalysis({
         name: req.body.name,
-        bottle_type: req.body.bottletype,
+        bottle_type: req.body.bottle_type,
         methods: req.body.methods,
+        tag: req.body.tag
       })
       const result = await item.save();
       return res.status(200).send({ status: true, message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", data: result});
@@ -28,8 +29,9 @@ exports.EditItem = async (req, res) => {
 
     const data = {
       name: req.body.name,
-      bottle_type: req.body.bottletype,
+      bottle_type: req.body.bottle_type,
       methods: req.body.methods,
+      tag: req.body.tag
     }
     const item = await ItemAnalysis.findByIdAndUpdate(id, data,{new:true});
     return res.status(200).send({ status: true, message: "แก้ไขวิธีการวิเคราะห์สำเร็จ", data: item});

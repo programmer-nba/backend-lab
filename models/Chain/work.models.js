@@ -14,12 +14,7 @@ const WorkSchema = new mongoose.Schema({
     email: String
   },
   workdetail:{type:{
-    duration: {
-      start_month: Number,
-      start_year: Number,
-      end_month: Number,
-      end_year: Number
-    },
+    duration: [Date],
     title: {type:String,required:false,default:""},
     subtitles: {type:[{ //chain
         subtitle: {type:String,required:false,default:""},
@@ -36,6 +31,7 @@ const WorkSchema = new mongoose.Schema({
             collect_year: {type:String,required:false,default:""},
             amount_point: {type:Number,required:false,default:0},
             params: {type:[{ //ขวด
+                ref_id: String,
                 name: {type:String,required:false,default:""},
                 method: {type:String,required:false,default:""},
                 amount: {type:Number,required:false,default:0},

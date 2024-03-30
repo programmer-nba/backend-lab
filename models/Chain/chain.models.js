@@ -31,9 +31,13 @@ const chainSchema = new mongoose.Schema(
     amount_point: Number,
     params: [
       {
+        ref_id: String,
         name: String,
+        tag: String,
         method: String,
         amount: Number,
+        base: Number,
+        ref: String
       }
     ],
     status: [

@@ -1,6 +1,7 @@
 const { Chain } = require('../../models/Chain/chain.models'); 
 const { SubChain } = require('../../models/Chain/subchain.models'); 
 const LabParam = require('../../models/Chain/labparam.models');
+const { ItemAnalysis } = require('../../models/item/analysis.item.models');
 const multer = require("multer");
 const storage = multer.diskStorage({ 
     filename: function (req, file, cb) {
@@ -32,11 +33,18 @@ exports.createChain = async (req, res) => {
         sender_code
     } = req.body
     try {
+        const ref_params = await ItemAnalysis.find()
         const formatted_params = params.map(param=>{
+            const ref_param = ref_params.find(val => val._id.toString() === param.ref_id)
             const result = {
-                name: param.name,
+                ref_id: ref_param?._id,
+                name: ref_param?.name || param.name,
                 method: param.method,
-                amount: param.amount
+                amount: param.amount,
+                bottle_type: ref_param?.bottle_type,
+                tag: ref_param?.tag,
+                ref: ref_param?.methods[0]?.ref,
+                base: ref_param?.methods[0]?.base
             }
             return result
         })
@@ -330,16 +338,13 @@ exports.createSubChain = async (req, res) => {
                         code: null,
                         name: null
                     },
-                    bottle_type: 
-                        p.bottle_type 
-                        ? p.bottle_type 
-                        : "-",
+                    bottle_type: p.bottle_type || "-",
                     bottle_qr: "-",
-                    bottle_tag: `${index}-${p.name}${saved_subChain.code}`,
+                    bottle_tag: `${index+1}-${p.tag}${saved_subChain.code}`,
                     bottle_status: false,
                     name: p.name,
                     method: p.method,
-                    ref: p.ref,
+                    ref: p.ref || '-',
                     base: p.base,
                     result: null,
                     result_status: false,

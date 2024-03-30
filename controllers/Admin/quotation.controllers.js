@@ -198,7 +198,7 @@ exports.deleteQT = async (req, res) => {
   }
 };
 
-async function Quotationnumber(date) {
+async function jobnumber(date) {
   const sal = await Work.find();
   let jobnumber = null;
 
