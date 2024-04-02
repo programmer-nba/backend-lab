@@ -37,7 +37,7 @@ exports.BaseQuotation = async (req, res) => {
         customer_tel: req.body.subhead.customer_tel,
         customer_fax: req.body.subhead.customer_fax,
         customer_email: re.body.subhead.customer_email,
-        sample_lacation: req.body.subhead.sample_lacation,
+        sample_location: req.body.subhead.sample_location,
         document_no: await Quotationnumber(),
         document_date: req.body.subhead.document_date,
         offerer: req.body.subhead.offerer,

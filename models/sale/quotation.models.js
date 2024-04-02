@@ -12,7 +12,7 @@ const QuotationSchema = new mongoose.Schema({
       customer_address: {type:String,required:false,default:""},
       customer_tel: {type:String,required:false,default:""},
       customer_fax: {type:String,required:false,default:""},
-      sample_lacation: {type:String,required:false,default:""},
+      sample_location: {type:String,required:false,default:""},
       document_no: {type:String,required:false,default:""},
       document_date: {type:Date,required:false,default:new Date()},
       offerer: {type:String,required:false,default:""},
