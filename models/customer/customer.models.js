@@ -19,11 +19,11 @@ const CustomerSchema = new mongoose.Schema({
   profile_image: { type: String, required: false },
   customer_prefix: { type: String, required: false }, //คำนำหน้า
   customer_name: { type: String, required: false },
-  customer_lastname: { type: String, required: true },
-  customer_idcard: { type: String, required: true }, //รหัสบัตรประชาชน
+  customer_lastname: { type: String, required: false },
+  customer_idcard: { type: String, required: false }, //รหัสบัตรประชาชน
   customer_birthday: { type: String, required: true }, //วันเกิด
   customer_email: { type: String, required: false ,default:""}, //อีเมล์
-  customer_phone: { type: String, required: true },
+  customer_phone: { type: String, required: false },
   address: {
     house_umber: { type: String, required: false }, //เลขที่บ้าน
     moo_number: { type: String, required: false }, //เลขที่ หมู่
@@ -34,7 +34,7 @@ const CustomerSchema = new mongoose.Schema({
     province: { type: String, required: false }, //จังหวัด
     zip_code: { type: String, required: false }, //รหัสไปรษณีย์
   }, //ที่อยู่
-  customer_position: { type: String, required: true },
+  customer_position: { type: String, required: false },
   customer_role: { type: String, required: false },
   customer_contact: {
     type: String,
