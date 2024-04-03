@@ -12,6 +12,7 @@ const CompanyCustomerSchema = new mongoose.Schema({
   company_customer_province: { type: String, required: false }, //จังหวัด
   company_customer_postcode: { type: String, required: false }, //รหัสไปรษณีย์
   company_customer_tel: { type: String, required: false }, //เบอร์โทรศัพท์
+  company_customer_contract: { type: String, required: false },
   companuy_customer_fax: { type: String, required: false }, //เบอร์โทรสาร
   company_customer_status: { type: Boolean, required: false, default: true }, //สถานะ
   company_customer_email: { type: String, required: false }, //email
