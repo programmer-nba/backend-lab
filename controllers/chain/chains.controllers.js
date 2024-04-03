@@ -376,6 +376,12 @@ exports.createSubChain = async (req, res) => {
         }
 
         chain.chaincount += 1
+        chain.status = [...chain.status, {
+            code: 'onProcess',
+            name: `กำลังดำเนินการ ${chain.chaincount}/${chain.frequency}`,
+            updatedAt: new Date(),
+            updatedBy: 'admin'
+        }]
         const saved_chain = await chain.save()
         if (!saved_chain) {
             return res.status(500).json({
