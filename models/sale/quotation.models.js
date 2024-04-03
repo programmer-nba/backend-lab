@@ -44,7 +44,8 @@ const QuotationSchema = new mongoose.Schema({
                   unit_price: {type:Number,required:false,default:0},
                   total_price: {type:Number,required:false,default:0},
                   discount: {type:Number,required:false,default:0},
-                  cost: {type:Number,required:false,default:0}
+                  cost: {type:Number,required:false,default:0},
+                  bottle_type: String,
               }],required:false,default:null},
           }],required:false,default:null},
       }],required:false,default:null},

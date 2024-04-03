@@ -37,7 +37,8 @@ const chainSchema = new mongoose.Schema(
         method: String,
         amount: Number,
         base: Number,
-        ref: String
+        ref: String,
+        bottle_type: String
       }
     ],
     status: [

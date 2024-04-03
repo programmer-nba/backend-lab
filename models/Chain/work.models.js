@@ -33,6 +33,7 @@ const WorkSchema = new mongoose.Schema({
             params: {type:[{ //ขวด
                 ref_id: String,
                 name: {type:String,required:false,default:""},
+                bottle_type: String,
                 method: {type:String,required:false,default:""},
                 amount: {type:Number,required:false,default:0},
                 amount_unit: {type:String,required:false,default:""},

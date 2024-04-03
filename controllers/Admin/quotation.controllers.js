@@ -74,7 +74,7 @@ exports.ApproveQuotation = async (req, res) => {
           secret: secret,
           email: updatedQuotation?.subhead?.customer_email
         },
-        location: updatedQuotation?.subhead?.sample_lacation,
+        location: updatedQuotation?.subhead?.sample_location,
         work_no: job_number,
         workdetail:item,
         status: "กำลังดำเนินการ",
