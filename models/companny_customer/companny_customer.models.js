@@ -3,7 +3,7 @@ const Joi = require("joi");
 
 const CompanyCustomerSchema = new mongoose.Schema({
   //เลขที่การเสียภาษี
-  taxnumber: { type: String, required: false, default: false }, //เลขที่การเสียภาษี
+  taxnumber: { type: String, required: false, default: "-" }, //เลขที่การเสียภาษี
   company_customer_name: { type: String, required: false, default: "ไม่มี" }, //ชื่อบริษัท
   company_customer_number: { type: String, required: false, default: "ไม่มี" }, //เลขที่บริษัท
   company_customer_address: { type: String, required: false }, //ที่อยู่
