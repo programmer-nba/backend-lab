@@ -84,5 +84,35 @@ app.use(
   require("./router/RevenueDepartment/Revenue")
 );
 
+const { google } = require('googleapis');
+
+const oauth2Client = new google.auth.OAuth2(
+  '1015524499302-a0cke74vtkckkisuor47u9hvhm645km9.apps.googleusercontent.com',
+  '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',
+  'http://localhost/4681/'
+);
+
+app.get('/auth/google', (req, res) => {
+  const url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: ['https://www.googleapis.com/auth/drive'] // Specify scopes as needed
+  });
+  res.redirect(url);
+});
+
+app.get('/auth/google/callback', async (req, res) => {
+  const code = req.query.code;
+  try {
+    const { tokens } = await oauth2Client.getToken(code);
+    console.log('Access token:', tokens.access_token);
+    console.log('Refresh token:', tokens.refresh_token);
+    console.log('Expires in:', tokens.expires_in); // Expiry time in seconds
+    res.send('Authorization code exchanged for tokens successfully!');
+  } catch (error) {
+    console.error('Error exchanging authorization code for tokens:', error);
+    res.status(500).send('Error exchanging authorization code for tokens');
+  }
+});
+
 const port = process.env.PORT || 4681;
 app.listen(port, console.log(`Listening on port ${port}`));

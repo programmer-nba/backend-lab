@@ -5,6 +5,7 @@ exports.create = async (req, res) => {
       const item = new ItemAnalysis({
         name: req.body.name,
         bottle_type: req.body.bottle_type,
+        jobType: req.body.jobType,
         methods: req.body.methods,
         tag: req.body.tag
       })
@@ -31,6 +32,7 @@ exports.EditItem = async (req, res) => {
       name: req.body.name,
       bottle_type: req.body.bottle_type,
       methods: req.body.methods,
+      jobType: req.body.jobType,
       tag: req.body.tag
     }
     const item = await ItemAnalysis.findByIdAndUpdate(id, data,{new:true});
