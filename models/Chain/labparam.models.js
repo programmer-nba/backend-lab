@@ -22,6 +22,7 @@ const labParamSchema = new Schema (
             name: String
         }, */
         bottle_type: String,
+        jobType: String,
         bottle_qr: String,
         bottle_tag: String, // bottle tag or code
         bottle_status: Boolean,

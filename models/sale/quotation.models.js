@@ -35,6 +35,7 @@ const QuotationSchema = new mongoose.Schema({
               months: [{type:Date}],
               params: {type:[{
                   ref_id: String,
+                  ref: String,
                   name: {type:String,required:false,default:""},
                   method: {type:String,required:false,default:""},
                   amount: {type:Number,required:false,default:0},

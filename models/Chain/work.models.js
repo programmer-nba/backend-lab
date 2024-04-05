@@ -32,6 +32,8 @@ const WorkSchema = new mongoose.Schema({
             amount_point: {type:Number,required:false,default:0},
             params: {type:[{ //ขวด
                 ref_id: String,
+                ref: String,
+                jobType: String,
                 name: {type:String,required:false,default:""},
                 bottle_type: String,
                 method: {type:String,required:false,default:""},
