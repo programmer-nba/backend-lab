@@ -31,7 +31,8 @@ const WorkSchema = new mongoose.Schema({
               type: [
                   {
                       month: String,
-                      amount: Number
+                      amount: Number,
+                      _id: String
                   }
               ],
               required: false,
