@@ -81,22 +81,6 @@ exports.ApproveQuotation = async (req, res) => {
         chain:[],
       });
       const savedWork = await newWork.save();
-      /* //สร้าง chain
-      for (const item2 of savedWork.workdetail.subtitles){
-        const chain_no = await jobChain();
-        const newChain = new Chain({
-          quotation: updatedQuotation?._id,
-          work_id: savedWork?._id,
-          subchain: [],
-          chain_no: chain_no,
-          chaindetail: item2,
-          subwork: false,
-        })
-        const savedChain = await newChain.save();
-        const workid = await Work.findById(savedWork?._id);
-        workid?.chain.push({chain_id:savedChain?._id});
-        const updatechain = await workid.save();
-      } */
     }
 
     return res.status(200).send({

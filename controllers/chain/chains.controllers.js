@@ -45,7 +45,8 @@ exports.createChain = async (req, res) => {
                 bottle_type: ref_param?.bottle_type,
                 tag: ref_param?.tag,
                 ref: ref_param?.methods[0]?.ref,
-                base: ref_param?.methods[0]?.base
+                base: ref_param?.methods[0]?.base,
+                unit: ref_param?.unit || param.unit
             }
             return result
         })

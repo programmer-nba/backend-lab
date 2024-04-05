@@ -51,6 +51,7 @@ const WorkSchema = new mongoose.Schema({
                 freq: {type:Number,required:false,default:0},
                 freq_unit: {type:String,required:false,default:""},
                 unit_price: {type:Number,required:false,default:0},
+                unit: String,
                 total_price: {type:Number,required:false,default:0},
                 discount: {type:Number,required:false,default:0},
                 cost: {type:Number,required:false,default:0}
