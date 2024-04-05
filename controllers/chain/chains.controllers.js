@@ -1212,4 +1212,3 @@ async function genCode(date) {
 
     return jobnumber;
 }
-
