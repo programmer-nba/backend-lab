@@ -1,6 +1,7 @@
 const { Chain } = require('../../models/Chain/chain.models'); 
 const { SubChain } = require('../../models/Chain/subchain.models'); 
 const LabParam = require('../../models/Chain/labparam.models');
+const Bottles = require('../../models/Chain/bottles.model')
 const { ItemAnalysis } = require('../../models/item/analysis.item.models');
 const multer = require("multer");
 const storage = multer.diskStorage({ 

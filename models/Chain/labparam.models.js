@@ -9,18 +9,10 @@ const labParamSchema = new Schema (
             date: Date,
             date_string: String,
         },
-        /* rider: {
-            code: String,
-            name: String
-        }, */
         analysis: {
             code: String,
             name: String
         },
-        /* prepared: {
-            code: String,
-            name: String
-        }, */
         bottle_type: String,
         jobType: String,
         bottle_qr: String,
