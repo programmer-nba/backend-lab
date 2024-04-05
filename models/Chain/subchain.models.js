@@ -26,6 +26,9 @@ const subchainSchema = new mongoose.Schema({
     tel: String
   },
   date: Date,
+  day: Number,
+  month: String,
+  year: String,
   date_string: String,
   status: [
     {

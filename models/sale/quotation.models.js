@@ -29,7 +29,16 @@ const QuotationSchema = new mongoose.Schema({
               points: {type:[String],required:false,default:null},
               frequency: {type:Number,required:false,default:0},
               frequency_text: {type:String,required:false,default:""},
-              collect_month: {type:[String],required:false,default:null},
+            collect_month: {
+                type: [
+                    {
+                        month: String,
+                        amount: Number
+                    }
+                ],
+                required: false,
+                default: null
+            },
               collect_year: {type:String,required:false,default:""},
               amount_point: {type:Number,required:false,default:0},
               months: [{type:Date}],

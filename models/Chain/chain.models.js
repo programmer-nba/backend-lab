@@ -26,7 +26,16 @@ const chainSchema = new mongoose.Schema(
     chaincount: Number,
     frequency: Number,
     frequency_text: String,
-    collect_month: [ String ],
+    collect_month: {
+      type: [
+          {
+              month: String,
+              amount: Number
+          }
+      ],
+      required: false,
+      default: null
+    },
     collect_year: String,
     amount_point: Number,
     params: [

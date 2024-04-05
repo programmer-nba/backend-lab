@@ -41,6 +41,7 @@ exports.createChain = async (req, res) => {
                 name: ref_param?.name || param.name,
                 method: param.method,
                 amount: param.amount,
+                jobType: ref_param?.jobType,
                 bottle_type: ref_param?.bottle_type,
                 tag: ref_param?.tag,
                 ref: ref_param?.methods[0]?.ref,
@@ -271,7 +272,9 @@ exports.createSubChain = async (req, res) => {
         prepared_code,
         sender_name,
         sender_code,
-        map
+        map,
+        day,
+        month
     } = req.body
 
     try {
@@ -301,6 +304,9 @@ exports.createSubChain = async (req, res) => {
             },
             date: date || new Date(),
             date_string: date_string || "",
+            day: day || new Date(date)?.getDay,
+            month: month,
+            year: chain.collect_year,
             status: {
                 code: 'new',
                 name: 'ใหม่',
