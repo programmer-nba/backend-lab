@@ -705,14 +705,16 @@ exports.uploadPictureSubChain = async (req, res) => {
                 result.push(src);
                 reqFiles.push(src)
 
-                if (upload_type === 'collecteds') {
-                    subChain.img_collecteds = src
-                } else if (upload_type === 'prepareds') {
-                    subChain.img_prepareds = src
-                } else if (upload_type === 'getbottles') {
-                    subChain.img_getbottles = src
-                } else if (upload_type === 'sents') {
-                    subChain.img_sents = src
+                if (upload_type === 'img_1') {
+                    subChain.img_1 = src
+                } else if (upload_type === 'img_2') {
+                    subChain.img_2 = src
+                } else if (upload_type === 'img_3') {
+                    subChain.img_3 = src
+                } else if (upload_type === 'img_4') {
+                    subChain.img_4 = src
+                } else if (upload_type === 'img_5') {
+                    subChain.img_5 = src
                 }
             }
 
@@ -736,6 +738,134 @@ exports.uploadPictureSubChain = async (req, res) => {
         })
     }
     
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+// Bottles
+exports.createBottle = async (req, res) => {
+    const {
+        subChain_id,
+        bottle_type,
+        jobTag,
+        params,
+    } = req.body
+    try {
+        const subChain = await SubChain.findById( subChain_id )
+        if (!subChain) {
+            return res.status(404).json({
+                message: "ไม่พบไอดี subchain",
+                status: false,
+                data: null
+            })
+        }
+        
+        const number = await Bottles.countDocuments({ subChain: subChain_id })
+        const bottle_tag = `${jobTag || 'NN'}${subChain.code}${number}`
+
+        const new_bottle = new Bottles({
+            subChain: subChain_id,
+            bottle_tag: bottle_tag,
+            bottle_status: false,
+            bottle_type: bottle_type,
+            bottle_qr: null,
+            params: [...params]
+        })
+        const saved_bottle = await new_bottle.save()
+        if (!saved_bottle) {
+            return res.status(500).json({
+                message: "ไม่สามารถสร้างขวดใหม่ได้",
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: `สร้างขวดสำเร็จ มีพารามิเตอร์ ${saved_bottle.params.length}`,
+            status: true,
+            data: saved_bottle
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.updateBottle = async (req, res) => {
+    const {
+        params,
+        bottle_status
+    } = req.body
+    const { id } = req.params
+    try {
+        
+        let bottle = await Bottles.findById( id )
+        if (! bottle) {
+            return res.status(404).json({
+                message: "ไม่พบขวดนี้",
+                status: false,
+                data: null
+            })
+        }
+
+        bottle.bottle_status = bottle_status || bottle.bottle_status
+        bottle.params = params || bottle.params
+
+        const updated_bottle = await bottle.save()
+        if (!updated_bottle) {
+            return res.status(500).json({
+                message: "ไม่สามารถอัพเดทขวดได้",
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: `อัพเดทขวดสำเร็จ มีพารามิเตอร์ ${saved_bottle.params.length}`,
+            status: true,
+            data: updated_bottle
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.deleteBottle = async (req, res) => {
+    const { id } = req.params
+    try {
+        
+        let bottle = await Bottles.findByIdAndDelete( id )
+        if (! bottle) {
+            return res.status(404).json({
+                message: "ไม่พบขวดนี้",
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: `อัพเดทขวดสำเร็จ มีพารามิเตอร์ ${saved_bottle.params.length}`,
+            status: true,
+            data: updated_bottle
+        })
+    }
     catch (err) {
         console.log(err)
         return res.status(500).json({

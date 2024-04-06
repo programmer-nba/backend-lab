@@ -3,10 +3,7 @@ const mongoose = require('mongoose');
 
 const bottlesSchema = new Schema (
     {
-        subChain: {
-            code: String,
-            _id: String
-        },
+        subChain: String,
         bottle_tag: String,
         bottle_status: Boolean,
         bottle_type: String,

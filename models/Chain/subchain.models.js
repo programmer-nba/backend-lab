@@ -39,10 +39,11 @@ const subchainSchema = new mongoose.Schema({
     }
   ],
   
-  img_prepareds: String,
-  img_getbottles: String,
-  img_collecteds: String,
-  img_sents: String,
+  img_1: String,
+  img_2: String,
+  img_3: String,
+  img_4: String,
+  img_5: String,
   
 });
 
