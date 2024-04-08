@@ -215,6 +215,23 @@ exports.getChains = async (req, res) => {
     }
 }
 
+exports.getChain = async (req, res) => {
+    const { id } = req.params
+    try{
+        const data = await Chain.findById( id );
+        if (!data) {
+            return res.status(404).json({
+                message: "chain not found",
+                data: null,
+                status: false
+            })
+        }
+        return res.status(200).send({data: data, status: true});
+    } catch (error) {
+        return res.status(500).send({message:error.message, status: false});
+    }
+}
+
 exports.deleteChain = async (req, res) => {
     const { id } = req.params
     try {
