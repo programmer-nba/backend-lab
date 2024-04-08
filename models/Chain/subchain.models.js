@@ -6,6 +6,7 @@ const subchainSchema = new mongoose.Schema({
     code: String,
     _id: String
   },
+  period: Number,
   location: String,
   map: String,
   point: String,

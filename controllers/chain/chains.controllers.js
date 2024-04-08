@@ -264,6 +264,7 @@ exports.createSubChain = async (req, res) => {
         chain_code,
         chain_id,
         date,
+        period,
         chain_point,
         chain_location,
         customer,
@@ -296,10 +297,11 @@ exports.createSubChain = async (req, res) => {
             })
         }
 
-        const code = `${chain_code.slice(-4)}-${chain.chaincount+1}/${chain.frequency}`
+        const code = `${period || chain.chaincount+1}/${chain.frequency}`
         const point = chain_point.join(',')
         const data = {
             code: code,
+            period: period,
             chain: {
                 code: chain_code,
                 _id: chain_id
@@ -422,7 +424,11 @@ exports.updateSubChainStatus = async (req, res) => {
         status_name,
         status_code,
         sender_name,
-        sender_code
+        sender_code,
+        period,
+        date,
+        rider_name,
+        rider_code
     } = req.body
 
     try {
@@ -437,6 +443,9 @@ exports.updateSubChainStatus = async (req, res) => {
             updatedBy: sender_name && sender_code ? `${sender_name} ${sender_code}` : null,
             updatedAt: new Date()
         }] : [...subChain.status]
+        subChain.period = period || subChain.period
+        subChain.rider?.code = rider_code || subChain.rider?.code
+        subChain.rider?.name = rider_name || subChain.rider?.name
         
         const saved_subChain = await subChain.save()
         if (!saved_subChain) {
