@@ -64,9 +64,10 @@ const chainSchema = new mongoose.Schema(
     qr_data: String,
     subChain: [
       {
-        _id: String,
+        month_id: String,
+        month: String,
         date: Date,
-        period: Number
+        period: Number,
       }
     ]
   },

@@ -404,6 +404,8 @@ exports.createSubChain = async (req, res) => {
             })
         }
 
+        const month_id = chain.collect_month.find(m => m.month === month)?._id
+
         chain.chaincount += 1
         chain.status = [...chain.status, {
             code: 'onProcess',
@@ -412,7 +414,8 @@ exports.createSubChain = async (req, res) => {
             updatedBy: 'admin'
         }]
         chain.subChain.push({
-            _id: saved_subChain._id,
+            month_id: month_id,
+            month: month,
             date: saved_subChain.date,
             period: saved_subChain.period   
         })
