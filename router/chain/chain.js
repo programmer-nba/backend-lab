@@ -14,7 +14,7 @@ router.put("/sub/update-status/:id", auth.all, chain.updateSubChainStatus);
 router.put("/sub/upload/:id", auth.all, chain.uploadPictureSubChain);
 router.get("/sub/all", auth.all, chain.getSubChains);
 router.get("/sub/:id", auth.all, chain.getSubChain);
-router.get("/sub/all/:chain_id", auth.all, chain.getSubChainsByMain);
+router.get("/sub/all/:chain_id", chain.getSubChainsByMain);
 router.get("/sub/code/:code", auth.all, chain.getSubChainByMainCode);
 router.post("/sub/scan/:id/:secret", auth.all, chain.scanToCollect);
 router.delete("/sub/:id", auth.all, chain.deleteSubChain);
