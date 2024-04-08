@@ -83,6 +83,8 @@ const QuotationSchema = new mongoose.Schema({
       report_price: {type:Number,required:false,default:0},
       vat_price: {type:Number,required:false,default:0},
       net_price: {type:Number,required:false,default:0},
+      vatType: String,
+      isVat: Boolean
   },default:null},  
   payment_term: {type:[String],required:false,default:null},
   signature: {type:{
