@@ -308,7 +308,7 @@ exports.createSubChain = async (req, res) => {
             },
             date: date || new Date(),
             date_string: date_string || "",
-            day: day || new Date(date)?.getDay,
+            day: day || new Date(date)?.getDay(),
             month: month,
             year: chain.collect_year,
             status: {
