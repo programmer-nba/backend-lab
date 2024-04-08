@@ -61,7 +61,14 @@ const chainSchema = new mongoose.Schema(
       }
     ],
     qr_code_img: String,
-    qr_data: String
+    qr_data: String,
+    subChain: [
+      {
+        _id: String,
+        date: Date,
+        period: Number
+      }
+    ]
   },
   {
     timestamps: true

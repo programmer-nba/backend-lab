@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + "-" + file.originalname);
     }
 });
+
 const { uploadFileCreate, deleteFile } = require("../../funtions/uploadfilecreate");
 const QRCode = require('qrcode');
 const dayjs = require("dayjs");
@@ -389,10 +390,15 @@ exports.createSubChain = async (req, res) => {
         chain.chaincount += 1
         chain.status = [...chain.status, {
             code: 'onProcess',
-            name: `กำลังดำเนินการ ${chain.chaincount}/${chain.frequency}`,
+            name: `กำลังดำเนินการ`,
             updatedAt: new Date(),
             updatedBy: 'admin'
         }]
+        chain.subChain.push({
+            _id: saved_subChain._id,
+            date: saved_subChain.date,
+            period: saved_subChain.period   
+        })
         const saved_chain = await chain.save()
         if (!saved_chain) {
             return res.status(500).json({
@@ -444,6 +450,7 @@ exports.updateSubChainStatus = async (req, res) => {
             updatedAt: new Date()
         }] : [...subChain.status]
         subChain.period = period || subChain.period
+        subChain.date = date || subChain.date
         subChain.rider.code = rider_code || subChain.rider?.code
         subChain.rider.name = rider_name || subChain.rider?.name
         
@@ -451,6 +458,36 @@ exports.updateSubChainStatus = async (req, res) => {
         if (!saved_subChain) {
             return res.status(500).json({
                 message: 'can not update!',
+                status: false,
+                data: null
+            })
+        }
+
+        let chain = await Chain.findById( saved_subChain.chain._id )
+        if (!chain) {
+            return res.status(404).json({
+                message: "chain _id not founded",
+                status: false,
+                data: null
+            })
+        }
+
+        const subInChain = chain.subChain.findIndex(sub => sub._id === id)
+        if (subInChain === -1) {
+            return res.status(404).json({
+                message: "subChain not found",
+                status: false,
+                data: null
+            })
+        }
+
+        chain.subChain[subInChain].date = saved_subChain.date || chain.subChain[subInChain].date
+        chain.subChain[subInChain].period = saved_subChain.period || chain.subChain[subInChain].period
+
+        const updated_chain = await chain.save()
+        if (!updated_chain) {
+            return res.status(500).json({
+                message: "can not updated chain",
                 status: false,
                 data: null
             })
