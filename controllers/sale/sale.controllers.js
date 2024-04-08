@@ -309,7 +309,7 @@ exports.SendGmail = async (req, res) => {
 
       let reqFiles = req.files;
 
-      const { to, subject, text, chain_id } = req.body;
+      const { to, subject, text, chain_id, path } = req.body;
       if (!to) {
         return res
           .status(400)
@@ -351,7 +351,7 @@ exports.SendGmail = async (req, res) => {
             <p>เอกสารอ้างอิง ref : ${chain.quotation.code}</p>
           </div>
           <div>
-            <stron>รายละเอียดงาน :</strong>
+            <strong>รายละเอียดงาน :</strong>
             <p>${chain.subtitle}</p>
             <p>สถานที่เก็บตัวอย่าง : ${chain.location}</p>
             <p>ความถี่ : ${chain.frequency_text}</p>
@@ -359,6 +359,10 @@ exports.SendGmail = async (req, res) => {
             <ul>
               ${chain.params.map(param => `<li>${param.name} (${param.method})</li>`).join('')}
             </ul>
+          </div>
+          <div>
+            <strong>ลิงค์ติดตามงาน</strong>
+            <a href="${path}/${chain._id}" target="_blank">link</a>
           </div>
         `,
       };
