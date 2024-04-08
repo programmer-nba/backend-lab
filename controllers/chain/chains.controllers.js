@@ -444,8 +444,8 @@ exports.updateSubChainStatus = async (req, res) => {
             updatedAt: new Date()
         }] : [...subChain.status]
         subChain.period = period || subChain.period
-        subChain.rider?.code = rider_code || subChain.rider?.code
-        subChain.rider?.name = rider_name || subChain.rider?.name
+        subChain.rider.code = rider_code || subChain.rider?.code
+        subChain.rider.name = rider_name || subChain.rider?.name
         
         const saved_subChain = await subChain.save()
         if (!saved_subChain) {
