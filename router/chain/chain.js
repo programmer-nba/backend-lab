@@ -6,7 +6,7 @@ const auth = require("../../auth/auth");
 router.post("/main/create", auth.all, chain.createChain);
 router.put("/main/:id", auth.all, chain.updateChainStatus);
 router.get("/main/all", auth.all, chain.getChains);
-router.get("/main/one/:id", auth.all, chain.getChain);
+router.get("/main/one/:id", chain.getChain);
 router.delete("/main/:id", auth.all, chain.deleteChain);
 
 router.post("/sub/create", auth.all, chain.createSubChain);
