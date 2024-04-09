@@ -240,6 +240,7 @@ exports.deleteQtByid = async (req, res) => {
       .send({ status: false, message: "มีบางอย่างผิดพลาด" });
   }
 };
+
 exports.deleteAllQt = async (req, res) => {
   try {
     const result = await Quotation.deleteMany({});
