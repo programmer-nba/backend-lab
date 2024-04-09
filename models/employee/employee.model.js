@@ -21,6 +21,7 @@ const EmployeeSchema = new mongoose.Schema({
   username: { type: String, required: false },
   password: { type: String, required: false }, //รหัสผ่าน
   email: String,
+  location: String,
   address: {
     house_umber: { type: String, required: false }, //เลขที่บ้าน
     moo_number: { type: String, required: false }, //เลขที่ หมู่
@@ -42,6 +43,7 @@ EmployeeSchema.methods.generateAuthToken = function () {
       _id: this._id,
       name: this.name,
       row: "employee",
+      code: this.employee_number,
       employee_position: this.employee_position,
       employee_sub_department: this.employee_sub_department,
     },

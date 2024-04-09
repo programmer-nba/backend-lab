@@ -67,6 +67,7 @@ exports.create = async (req, res) => {
           province: req.body.province,
           zip_code: req.body.zip_code,
         },
+        location: req.body.location,
         employee_position: req.body.employee_position,
         employee_sub_department: req.body.employee_sub_department,
         name: req.body.name,
