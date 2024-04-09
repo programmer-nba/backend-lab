@@ -72,10 +72,10 @@ const QuotationSchema = new mongoose.Schema({
       
   }],required:false,default:null},
   footer: {type:{
-      test_method: {type:String,required:false,default:""},
-      report_method: {type:String,required:false,default:""},
-      report_detail: {type:String,required:false,default:""},
-      report_transfer: {type:String,required:false,default:""},
+      test_method: [{type:String,required:false,default:""}],
+      report_method: [{type:String,required:false,default:""}],
+      report_detail: [{type:String,required:false,default:""}],
+      report_transfer: [{type:String,required:false,default:""}],
       hidden: {type:[String],required:false,default:null},
       total_price: {type:Number,required:false,default:0},
       total_discount: {type:Number,required:false,default:0},
