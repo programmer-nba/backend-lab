@@ -206,6 +206,47 @@ exports.updateChainStatus = async (req, res) => {
     }
 }
 
+exports.updateChainMap = async (req, res) => {
+    const {
+        map,
+    } = req.body
+    const { id } = req.params
+    try {
+        let chain = await Chain.findById( id )
+        if (!chain) {
+            return res.status(404).json({
+                message: 'not found',
+                status: false,
+                data: null
+            })
+        }
+        chain.map = map || chain.map
+
+        const updated_chain = await chain.save()
+        if (!updated_chain) {
+            return res.status(500).json({
+                message: 'can not update data!',
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: 'updated data successfully',
+            status: true,
+            data: updated_chain
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
 exports.getChains = async (req, res) => {
     try{
         const data = await Chain.find();
@@ -336,7 +377,7 @@ exports.createSubChain = async (req, res) => {
                 updatedAt: new Date()
             },
             location: chain_location,
-            map: map,
+            map: chain.map,
             point: point,
             customer: customer,
             rider: {
@@ -898,9 +939,64 @@ exports.updateBottle = async (req, res) => {
         }
 
         return res.status(201).json({
-            message: `อัพเดทขวดสำเร็จ มีพารามิเตอร์ ${saved_bottle.params.length}`,
+            message: `อัพเดทขวดสำเร็จ มีพารามิเตอร์ ${updated_bottle.params.length}`,
             status: true,
             data: updated_bottle
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.getBottles = async (req, res) => {
+    try {
+        let bottles = await Bottles.find( )
+        if (! bottles) {
+            return res.status(404).json({
+                message: "ไม่พบขวด",
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: `มีขวดทั้งหมด ${bottles.length}`,
+            status: true,
+            data: bottles
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
+exports.getBottle = async (req, res) => {
+    const { id } = req.params
+    try {
+        let bottle = await Bottles.findById( id )
+        if (! bottle) {
+            return res.status(404).json({
+                message: "ไม่พบขวด",
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: `พบขวดแล้ว`,
+            status: true,
+            data: bottle
         })
     }
     catch (err) {
@@ -927,9 +1023,9 @@ exports.deleteBottle = async (req, res) => {
         }
 
         return res.status(201).json({
-            message: `อัพเดทขวดสำเร็จ มีพารามิเตอร์ ${saved_bottle.params.length}`,
+            message: 'ลบขวดแล้ว',
             status: true,
-            data: updated_bottle
+            data: null
         })
     }
     catch (err) {

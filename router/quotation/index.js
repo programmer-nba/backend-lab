@@ -3,7 +3,6 @@ const router = require("express").Router();
 const quotation = require("../../controllers/sale/quotation.controllers");
 const auth = require("../../auth/auth")
 
-
 router.post("/CreateVat", auth.sale, quotation.Quotation);//สร้างใบเสนอราคา
 router.post("/QuotationBy/:id", auth.sale, quotation.QuotationById);//สร้างใบเสนอราคาแบบไอดี
 router.put("/UpdateVatBy/:id", auth.sale, quotation.edit);//แก้ไขใบเสนอราคา

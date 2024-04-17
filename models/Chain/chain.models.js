@@ -11,6 +11,7 @@ const chainSchema = new mongoose.Schema(
       _id: String
     },
     location: String,
+    map: String,
     customer: {
       name: String,
       contract_name: String,
