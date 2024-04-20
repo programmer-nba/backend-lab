@@ -45,6 +45,7 @@ const subchainSchema = new mongoose.Schema({
   img_3: String,
   img_4: String,
   img_5: String,
+  img_6: String
   
 });
 

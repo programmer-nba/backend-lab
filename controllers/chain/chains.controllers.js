@@ -417,7 +417,7 @@ exports.createSubChain = async (req, res) => {
                     bottle_type: p.bottle_type || "-",
                     jobType: p.jobType,
                     bottle_qr: "-",
-                    bottle_tag: `${index+1}-${p.name}${saved_subChain.code}`,
+                    bottle_tag: `${index+1}-${p.name}-${saved_subChain.code}`,
                     bottle_status: false,
                     name: p.name,
                     method: p.method,
@@ -455,6 +455,7 @@ exports.createSubChain = async (req, res) => {
             updatedBy: 'admin'
         }]
         chain.subChain.push({
+            sub_id: saved_subChain._id,
             month_id: month_id,
             month: month,
             date: saved_subChain.date,
@@ -533,12 +534,12 @@ exports.updateSubChainStatus = async (req, res) => {
             })
         }
 
-        const subInChain = chain.subChain.findIndex(sub => sub._id === id)
+        const subInChain = chain.subChain.findIndex(sub => sub.sub_id === id)
         if (subInChain === -1) {
             return res.status(404).json({
                 message: "subChain not found",
                 status: false,
-                data: null
+                data: chain
             })
         }
 
@@ -811,6 +812,7 @@ exports.uploadPictureSubChain = async (req, res) => {
                 const src = await uploadFileCreate(req.files, res, { i, reqFiles });
                 result.push(src);
                 reqFiles.push(src)
+                console.log(src)
 
                 if (upload_type === 'img_1') {
                     subChain.img_1 = src
@@ -822,6 +824,8 @@ exports.uploadPictureSubChain = async (req, res) => {
                     subChain.img_4 = src
                 } else if (upload_type === 'img_5') {
                     subChain.img_5 = src
+                } else if (upload_type === 'img_6') {
+                    subChain.img_6 = src
                 }
             }
 
@@ -834,7 +838,7 @@ exports.uploadPictureSubChain = async (req, res) => {
                 })
             }
 
-            return res.status(200).json({
+            return res.status(200).send({
                 message: 'uploaded successfully',
                 status: true,
                 data: {
@@ -846,7 +850,7 @@ exports.uploadPictureSubChain = async (req, res) => {
     }
     
     catch (err) {
-        console.log(err)
+        console.log(err.message)
         return res.status(500).json({
             message: err.message,
             status: false,

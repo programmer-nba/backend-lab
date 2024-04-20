@@ -11,7 +11,9 @@ const oauth2Client = new google.auth.OAuth2(
   CLIENT_SECRET,
   REDIRECT_URI
 );
+
 oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
+
 const drive = google.drive({
   version: "v3",
   auth: oauth2Client,
@@ -20,10 +22,9 @@ const drive = google.drive({
 async function uploadFileCreate(req, res, {i, reqFiles}) {
   const filePath = req[i].path;
 
-  
   let fileMetaData = {
     name: req.originalname,
-    parents: [process.env.GOOGLE_DRIVE_NBA_HOTEL],
+    parents: [process.env.GOOGLE_DRIVE_IMAGE_PRODUCT],
   };
   let media = {
     body: fs.createReadStream(filePath),
@@ -39,7 +40,7 @@ async function uploadFileCreate(req, res, {i, reqFiles}) {
     console.log(response.data.id);
     return response.data.id;
   } catch (error) {
-    res.status(500).send({message: "Internal Server Error"});
+    return res.status(500).send(error);
   }
 }
 
@@ -60,15 +61,10 @@ async function generatePublicUrl(res) {
     });
     console.log(result.data);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 }
 
-/**
- * Permanently delete a file, skipping the trash.
- *
- * @param {String} fileId ID of the file to delete.
- */
 async function deleteFile(fileId) {
 
   const res = await drive.files.delete({
