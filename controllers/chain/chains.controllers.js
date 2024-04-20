@@ -981,6 +981,34 @@ exports.getBottles = async (req, res) => {
     }
 }
 
+exports.getBottlesBySubChain = async (req, res) => {
+    const { subChain_id } = req.params
+    try {
+        let bottles = await Bottles.find( {subChain: subChain_id} )
+        if (! bottles) {
+            return res.status(404).json({
+                message: "ไม่พบขวด",
+                status: false,
+                data: null
+            })
+        }
+
+        return res.status(201).json({
+            message: `มีขวดทั้งหมด ${bottles.length}`,
+            status: true,
+            data: bottles
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message,
+            status: false,
+            data: null
+        })
+    }
+}
+
 exports.getBottle = async (req, res) => {
     const { id } = req.params
     try {

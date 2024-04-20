@@ -32,6 +32,7 @@ router.put("/sub-labparam/upload/:id", auth.all, chain.uploadPictureLabParam);
 router.post("/bottle/create", auth.all, chain.createBottle);
 router.put("/bottle/update/:id", auth.all, chain.updateBottle);
 router.get("/bottle/all", auth.all, chain.getBottles);
+router.get("/bottle/all/:subChain_id", auth.all, chain.getBottlesBySubChain);
 router.get("/bottle/one/:id", auth.all, chain.getBottle);
 router.delete("/bottle/:id", auth.all, chain.deleteBottle);
 
