@@ -69,8 +69,8 @@ exports.ApproveQuotation = async (req, res) => {
         quotation:updatedQuotation?._id,
         customer: {
           name: updatedQuotation?.subhead?.customer_company,
-          contract_name: "",
-          contract_tel: updatedQuotation?.subhead?.customer_tel,
+          contract_name: updatedQuotation?.subhead?.contract_name,
+          contract_tel: updatedQuotation?.subhead?.contract_tel || updatedQuotation?.subhead?.customer_tel,
           secret: secret,
           email: updatedQuotation?.subhead?.customer_email
         },

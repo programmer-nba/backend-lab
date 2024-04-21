@@ -5,6 +5,7 @@ const QuotationSchema = new mongoose.Schema({
         name: String,
         _id: String,
     },
+    base: { type: Boolean, default: false },
   subhead:{type:{
       customer_name: {type:String,required:false,default:""},
       customer_email: {type:String},
@@ -17,6 +18,8 @@ const QuotationSchema = new mongoose.Schema({
       document_date: {type:Date,required:false,default:new Date()},
       offerer: {type:String,required:false,default:""},
       offerer_tax_id: {type:String,required:false,default:""},
+      contract_name: String,
+      contract_tel: String
   },default:null},
   bodies: {type:[{
       duration: [{type:Date}],
@@ -26,6 +29,9 @@ const QuotationSchema = new mongoose.Schema({
             analysis: {type:String,required:false,default:""},
             total_amount_points: {type:Number,required:false,default:0},
             details: {type:[{
+                jobType: String,
+                jobSubType: String,
+                jobCode: String,
                 points: {type:[String],required:false,default:null},
                 frequency: {type:Number,required:false,default:0},
                 frequency_text: {type:String,required:false,default:""},

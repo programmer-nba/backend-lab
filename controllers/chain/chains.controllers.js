@@ -1,5 +1,6 @@
 const { Chain } = require('../../models/Chain/chain.models'); 
 const { SubChain } = require('../../models/Chain/subchain.models'); 
+const { Work } = require("../../models/Chain/work.models");
 const LabParam = require('../../models/Chain/labparam.models');
 const Bottles = require('../../models/Chain/bottles.model')
 const { ItemAnalysis } = require('../../models/item/analysis.item.models');
@@ -55,17 +56,29 @@ exports.createChain = async (req, res) => {
         })
         const code = await genCode(new Date())
 
+        const work = await Work.findOne( { 'quotation._id': quotation_id, work_no: work_code } )
+        if (!work) {
+            return res.status(404).json({
+                message: 'ไม่พบ JOB',
+                status: false,
+                data: null
+            })
+        }
+
         const data = {
             work: {
                 code: work_code,
-                _id: work_id
+                _id: work?._id
             },
+            jobType: work?.jobType,
+            jobSubType: work?.jobSubType,
+            jobCode: work?.jobCode,
             quotation: {
                 code: quotation_code,
                 _id: quotation_id
             },
             customer: work_customer,
-            location: work_location,
+            location: work?.location,
             map: map,
             code: code,
             subtitle: subtitle,
@@ -366,6 +379,9 @@ exports.createSubChain = async (req, res) => {
                 code: chain_code,
                 _id: chain_id
             },
+            jobType: chain?.jobType,
+            jobSubType: chain?.jobSubType,
+            jobCode: chain?.jobCode,
             date: date || new Date(),
             date_string: date_string || "",
             day: day || new Date(date)?.getDay(),
@@ -884,8 +900,8 @@ exports.createBottle = async (req, res) => {
             })
         }
         
-        const number = await Bottles.countDocuments({ subChain: subChain_id })
-        const bottle_tag = `${jobTag || 'NN'}${subChain.code}${number}`
+        //const number = await Bottles.countDocuments({ subChain: subChain_id })
+        const bottle_tag = `${subChain.jobCode || 'NN'}-${subChain.chain.code}`
 
         const new_bottle = new Bottles({
             subChain: subChain_id,
@@ -1237,6 +1253,7 @@ exports.updateLabParam = async (req, res) => {
         bottle_status,
         ref,
         base,
+        max,
         result,
         result_status,
         status_code,
@@ -1267,6 +1284,7 @@ exports.updateLabParam = async (req, res) => {
         labParam.bottle_status = bottle_status || labParam.bottle_status
         labParam.ref = ref || labParam.ref
         labParam.base = base || labParam.base
+        labParam.max = max || labParam.max
         labParam.result = result || labParam.result
         labParam.result_status = result_status || labParam.result_status
         labParam.status = 

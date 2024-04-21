@@ -21,6 +21,9 @@ const WorkSchema = new mongoose.Schema({
         analysis: {type:String,required:false,default:""},
         total_amount_points: {type:Number,required:false,default:0},
         details: {type:[{ // sub chain
+            jobType: String,
+            jobSubType: String,
+            jobCode: String,
             points: {type:[String],required:false,default:null},
             //จำนวนรอบ
             chaincount: {type:Number,required:false,default:0},

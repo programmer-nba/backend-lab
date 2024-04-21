@@ -6,6 +6,9 @@ const chainSchema = new mongoose.Schema(
       code: String,
       _id: String
     },
+    jobType: String,
+    jobSubType: String,
+    jobCode: String,
     quotation: {
       code: String,
       _id: String

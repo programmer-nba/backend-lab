@@ -23,6 +23,7 @@ const labParamSchema = new Schema (
         unit: String,
         ref: String, // ref of lawyer
         base: {type: Number, default: null}, // base of analysis
+        max: Number,
         result: {type: Number, default: null}, // result of analysis
         result_status: Boolean,
         status: [

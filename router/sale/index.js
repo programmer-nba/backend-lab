@@ -17,4 +17,5 @@ router.get("/GetEmployee/:nuumber", employee.GetEmployee)
 
 //ส่งเเจ้งเตือนผ่าน gmail
 router.post("/SendGmail",employee.SendGmail)
+router.post("/sendmail-nofile",employee.SendGmailNofile)
 module.exports = router;

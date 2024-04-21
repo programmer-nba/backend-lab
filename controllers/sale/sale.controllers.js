@@ -390,6 +390,52 @@ exports.SendGmail = async (req, res) => {
   }
 };
 
+exports.SendGmailNofile = async (req, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "kiekoong.dev@gmail.com",
+        pass: "hibu nxfd sdvf igvo",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+      const { to, subject, text, qt_id } = req.body;
+      if (!to) {
+        return res
+          .status(400)
+          .send({ status: false, message: "ไม่ได้กำหนดผู้รับอีเมล" });
+      }
+      
+      const mailOptions = {
+        from: "kiekoong1@gmail.com",
+        to,
+        subject,
+        text,
+        html: `
+          <h1>${subject}</h1>
+          <p>${text}</p>
+        `,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.error("Error sending email:", error);
+          res.status(500).send({ status: false, message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
+        } else {
+          console.log("ส่งอีเมลสำเร็จ: " + info.response);
+          res.status(200).send({ status: true, message: "ส่งอีเมล์สำเร็จ" });
+        }
+      });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send({ status: false, message: "เกิดข้อผิดพลาดในการดำเนินการ" });
+  }
+};
+
 //------------------------------------------------------//
 
 async function Salenumber(date) {

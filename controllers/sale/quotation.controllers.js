@@ -34,7 +34,10 @@ exports.Quotation = async (req, res) => {
         name: req.body.creator.name,
         _id: req.body.creator._id
       },
+      base: req.body.base,
       subhead: {
+        contract_name: req.body.subhead.contract_name,
+        contract_tel: req.body.subhead.contract_tel,
         customer_name: req.body.subhead.customer_name,
         customer_company: req.body.subhead.customer_company,
         customer_address: req.body.subhead.customer_address,
