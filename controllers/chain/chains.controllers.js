@@ -56,7 +56,7 @@ exports.createChain = async (req, res) => {
         })
         const code = await genCode(new Date())
 
-        const work = await Work.findOne( { 'quotation._id': quotation_id, work_no: work_code } )
+        const work = await Work.findOne( { work_no: work_code } )
         if (!work) {
             return res.status(404).json({
                 message: 'ไม่พบ JOB',
