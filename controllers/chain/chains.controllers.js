@@ -4,6 +4,7 @@ const LabParam = require('../../models/Chain/labparam.models');
 const Bottles = require('../../models/Chain/bottles.model')
 const { ItemAnalysis } = require('../../models/item/analysis.item.models');
 const multer = require("multer");
+
 const storage = multer.diskStorage({ 
     filename: function (req, file, cb) {
         cb(null, Date.now() + "-" + file.originalname);
@@ -686,15 +687,21 @@ exports.scanToCollect = async (req, res) => {
     const { id, secret } = req.params
     const { rider_name, rider_code } = req.body
     try {
-        let subChains = await SubChain.find( { 'chain._id' : id, 'customer.secret' : secret } )
-        if (!subChains) {
+        let subChain = await SubChain.findById( id )
+        if (!subChain) {
             return res.status(404).json({
                 message: 'not found',
                 status: false,
                 data: null
             })
-        } else if (subChains.length < 1) {
-            return res.send(subChains)
+        }
+
+        if (subChain.customer.secret !== secret) {
+            return res.status(404).json({
+                message: 'รหัส secret ไม่ถูกต้อง',
+                status: false,
+                data: `correct secret is ${subChain.customer.secret}`
+            })
         }
 
         const new_status = {
@@ -703,9 +710,9 @@ exports.scanToCollect = async (req, res) => {
             updatedAt: new Date(),
             updatedBy: `${rider_name} ${rider_code}`
         }
-        subChains[subChains.length-1].status = [...subChains[subChains.length-1].status, new_status]
+        subChain.status = [...subChain.status, new_status]
 
-        const saved = await subChains[subChains.length-1].save()
+        const saved = await subChain.save()
         if(!saved) {
             return res.status(500).json({
                 message: 'can not saved',

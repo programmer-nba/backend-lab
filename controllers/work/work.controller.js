@@ -6,6 +6,10 @@ const { google } = require("googleapis");
 const { default: axios } = require("axios");
 const req = require("express/lib/request.js");
 const { Work } = require("../../models/Chain/work.models");
+const { Chain } = require('../../models/Chain/chain.models'); 
+const { SubChain } = require('../../models/Chain/subchain.models'); 
+const LabParam = require('../../models/Chain/labparam.models');
+const Bottles = require('../../models/Chain/bottles.model')
 
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
@@ -64,19 +68,46 @@ exports.getWorkById = async (req, res) => {
 exports.deleteWork = async (req, res) => {
   try {
     const id = req.params.id;
-    const work = await Work.findByIdAndDelete(id);
+    const work = await Work.findById(id);
     if (!work) {
       return res
         .status(404)
         .send({ status: false, message: "ไม่พบข้อมูล Work" });
-    } else {
-      return res
-        .status(200)
-        .send({ status: true, message: "ลบข้อมุล Work สำเร็จ" });
     }
+
+    const work_code = work.work_no
+    await Work.deleteOne( { _id: id } ).exec();
+
+    const chains = await Chain.find({ 'work.code' : work_code }).exec();
+    console.log(chains.length)
+
+    if (chains.length > 0) {
+      const chainIds = chains.map(chain => chain._id);
+      console.log(chainIds)
+      await Chain.deleteMany({ '_id': { $in: chainIds } }).exec();
+
+      const subChains = await SubChain.find( { 'chain._id' : { $in: chainIds } } )
+      if (subChains.length > 0) {
+        const subChains_id = subChains.map(sub => sub._id)
+        const deleted_subChains = await SubChain.deleteMany({ 'chain._id': { $in: chainIds } }).exec();
+        console.log(`${deleted_subChains.deletedCount} subchains removed.`);
+
+        const deleted_subBottles = await Bottles.deleteMany({ 'subChain': { $in: subChains_id } }).exec();
+        console.log(`${deleted_subBottles.deletedCount} bottles removed.`);
+
+        const deleted_Params = await LabParam.deleteMany({ 'subChain._id': { $in: subChains_id } }).exec();
+        console.log(`${deleted_Params.deletedCount} params removed.`);
+      }
+    }
+
+    return res
+      .status(200)
+      .send({ status: true, message: "ลบข้อมูล Work สำเร็จ" });
+    
   } catch (err) {
+    console.log(err)
     return res
       .status(500)
-      .send({ status: false, message: "มีบางอย่างผิดพลาด" });
+      .send({ status: false, message: "มีบางอย่างผิดพลาด"});
   }
 };
