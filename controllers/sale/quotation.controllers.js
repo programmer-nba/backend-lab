@@ -55,17 +55,14 @@ exports.Quotation = async (req, res) => {
       payment_term: req.body.payment_term,
       signature: req.body.signature,
       status: {
-        name: "new",
-        text: "รออนุมัติ",
+        name: "draft",
+        text: "แบบร่าง",
         sender: {
           name: req.body.creator.name,
           code: ""
         }
       },
     });
-
-    
-
 
     const add = await data.save();
     if (add) {

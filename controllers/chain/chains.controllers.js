@@ -370,7 +370,7 @@ exports.createSubChain = async (req, res) => {
             })
         }
 
-        const code = `${period || chain.chaincount+1}/${chain.frequency}`
+        const code = `${chain.code}/${month}`
         const point = chain_point.join(',')
         const data = {
             code: code,
@@ -418,7 +418,7 @@ exports.createSubChain = async (req, res) => {
         }
 
         const new_params = chain.params.map( p => {
-            const index = chain.params.findIndex(i => i === p)
+            //const index = chain.params.findIndex(i => i === p)
             const param = 
                 {
                     subChain: {
@@ -434,12 +434,13 @@ exports.createSubChain = async (req, res) => {
                     bottle_type: p.bottle_type || "-",
                     jobType: p.jobType,
                     bottle_qr: "-",
-                    bottle_tag: `${index+1}-${p.name}-${saved_subChain.code}`,
+                    bottle_tag: `${p.name}-${saved_subChain.code}`,
                     bottle_status: false,
                     name: p.name,
                     method: p.method,
                     ref: p.ref || '-',
                     base: p.base,
+                    max: p.max,
                     result: null,
                     result_status: false,
                     status: {
@@ -901,7 +902,7 @@ exports.createBottle = async (req, res) => {
         }
         
         //const number = await Bottles.countDocuments({ subChain: subChain_id })
-        const bottle_tag = `${subChain.jobCode || 'NN'}-${subChain.chain.code}`
+        const bottle_tag = `${jobTag || subChain.jobCode}-${subChain.chain.code}-${params.length}`
 
         const new_bottle = new Bottles({
             subChain: subChain_id,
@@ -939,7 +940,7 @@ exports.createBottle = async (req, res) => {
 exports.updateBottle = async (req, res) => {
     const {
         params,
-        bottle_status
+        bottle_status,
     } = req.body
     const { id } = req.params
     try {
@@ -953,8 +954,21 @@ exports.updateBottle = async (req, res) => {
             })
         }
 
+        const subChain = await SubChain.findById( bottle.subChain._id )
+        if (!subChain) {
+            return res.status(404).json({
+                message: "ไม่พบไอดี subchain",
+                status: false,
+                data: null
+            })
+        }
+        
+        //const number = await Bottles.countDocuments({ subChain: subChain_id })
+        const bottle_tag = `${jobTag || subChain.jobCode}-${subChain.chain.code}-${params.length}`
+
         bottle.bottle_status = bottle_status || bottle.bottle_status
         bottle.params = params || bottle.params
+        bottle.code = bottle_tag || bottle.code
 
         const updated_bottle = await bottle.save()
         if (!updated_bottle) {
@@ -1544,12 +1558,21 @@ exports.uploadPictureLabParam = async (req, res) => {
 
 async function genCode(date) {
     const sal = await Chain.find();
-    let jobnumber = null;
+    let lastDoc = sal[0]
+
+    if (sal.length > 0) {
+        lastDoc = sal[sal.length-1]
+    } else {
+        lastDoc = sal[0]
+    }
+    
+    const lastDocCode = lastDoc.code.slice(-4);
+    const incremented = (parseInt(lastDocCode) + 1).toString();
 
     const currentYear = new Date().getFullYear();
     const yearOffset = currentYear - 1957;
 
-    let num = sal.length + 1; // Increment based on the number of existing quotations
+    let num = incremented // Increment based on the number of existing quotations
 
     // Format the date as YYMM
     const formattedDate = dayjs(date).year(yearOffset).format("YYMM");
@@ -1557,7 +1580,7 @@ async function genCode(date) {
     // Pad the number with leading zeros if necessary
     const paddedNum = String(num).padStart(4, "0");
 
-    jobnumber = `CH${formattedDate}${paddedNum}`;
+    const jobnumber = `CH${formattedDate}${paddedNum}`;
 
     return jobnumber;
 }
