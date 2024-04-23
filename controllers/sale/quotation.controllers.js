@@ -199,7 +199,15 @@ exports.edit = async (req, res) => {
     }
     const result = await Quotation.findByIdAndUpdate(
       id,
-      { $set: req.body },
+      { 
+        $set: req.body,
+        $push: {
+          status: {
+            name: req.body.status_name,
+            text: req.body.status_text
+          }
+        }
+      },
       { new: true }
     );
     if (result) {
