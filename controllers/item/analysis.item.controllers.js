@@ -7,7 +7,8 @@ exports.create = async (req, res) => {
         bottle_type: req.body.bottle_type,
         jobType: req.body.jobType,
         methods: req.body.methods,
-        tag: req.body.tag
+        tag: req.body.tag,
+        employee: req.body.employee,
       })
       const result = await item.save();
       return res.status(200).send({ status: true, message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", data: result});

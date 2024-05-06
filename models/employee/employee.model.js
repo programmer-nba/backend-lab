@@ -20,6 +20,7 @@ const EmployeeSchema = new mongoose.Schema({
   tel: { type: String, required: false }, //เบอร์โทร
   username: { type: String, required: false },
   password: { type: String, required: false }, //รหัสผ่าน
+  nick_name: String,
   email: String,
   location: String,
   address: {
@@ -59,13 +60,13 @@ const Employee = mongoose.model("Employee", EmployeeSchema);
 
 const validateEmployee = (data) => {
   const schema = Joi.object({
-    card_number: Joi.string().required().label("กรุณากรอกเลขบัตรประชาชน"),
+    //card_number: Joi.string().required().label("กรุณากรอกเลขบัตรประชาชน"),
     name: Joi.string().required().label("กรุณากรอกชื่อ"),
     tel: Joi.string().required().label("กรุณากรอกเบอร์โทร"),
     password: passwordComplexity(complexityOptions)
       .required()
       .label("ไม่มีข้อมูลรหัสผ่าน"),
-    address: Joi.string().required().label("กรุณากรอกที่อยู่"),
+    //address: Joi.string().required().label("กรุณากรอกที่อยู่"),
   });
   return schema.validateEmployee(data);
 };

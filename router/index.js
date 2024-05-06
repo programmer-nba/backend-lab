@@ -74,8 +74,7 @@ router.post("/login", async (req, res) => {
       }
      
     }else if(employee){
-      password =  await bcrypt.compare(req.body.password,employee.password);
-      if(password)
+      if(req.body.password === employee.password)
       {
         const payload = {
           _id: employee?._id,

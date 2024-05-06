@@ -11,6 +11,12 @@ const AnalysisItemSchema = new mongoose.Schema({
     required: false
   },
   jobType: String,
+  employee: {
+    name: String,
+    code: String,
+    _id: String,
+    username: String
+  },
   methods:{
     type:[
       {

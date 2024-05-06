@@ -49,31 +49,20 @@ exports.create = async (req, res) => {
           .send({ status: false, message: "username นี้มีคนใช้แล้ว" });
       }
       const employee_number = await Employeenumber();
-      const salt = await bcrypt.genSalt(Number(process.env.SALT));
-      const hashPassword = await bcrypt.hash(req.body.password, salt);
+      //const salt = await bcrypt.genSalt(Number(process.env.SALT));
+      //const hashPassword = await bcrypt.hash(req.body.password, salt);
 
       const employee = new Employee({
         employee_number: employee_number,
         profile_image: profile_image,
-        card_number: req.body.card_number,
         email: req.body.email,
-        address: {
-          house_number: req.body.house_number,
-          moo_number: req.body.moo_number,
-          soi: req.body.soi,
-          name_road: req.body.name_road,
-          tumbol: req.body.tumbol,
-          district: req.body.district,
-          province: req.body.province,
-          zip_code: req.body.zip_code,
-        },
-        location: req.body.location,
         employee_position: req.body.employee_position,
         employee_sub_department: req.body.employee_sub_department,
         name: req.body.name,
+        nick_name: req.body.nick_name,
         tel: req.body.tel,
         username: req.body.username,
-        password: hashPassword,
+        password: req.body.password,
       });
       const add = await employee.save();
       return res.status(200).send({
@@ -109,13 +98,6 @@ exports.EditEmployee = async (req, res) => {
         const employee = await Employee.findByIdAndUpdate(id, {
           ...req.body,
           profile_image: profile_image,
-          "address.moo_number": req.body.moo_number,
-          "address.soi": req.body.soi,
-          "address.name_road": req.body.name_road,
-          "address.tumbol": req.body.tumbol,
-          "address.district": req.body.district,
-          "address.province": req.body.province,
-          "address.zip_code": req.body.zip_code,
         });
         if (employee) {
           if (employee) {
@@ -131,11 +113,11 @@ exports.EditEmployee = async (req, res) => {
           }
         }
       } else {
-        const salt = await bcrypt.genSalt(Number(process.env.SALT));
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
+        //const salt = await bcrypt.genSalt(Number(process.env.SALT));
+        //const hashPassword = await bcrypt.hash(req.body.password, salt);
         const employee = await Employee.findByIdAndUpdate(id, {
           ...req.body,
-          password: hashPassword,
+          password: req.body.password,
         });
         if (employee) {
           return res
