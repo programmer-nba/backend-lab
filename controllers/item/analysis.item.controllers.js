@@ -5,10 +5,14 @@ exports.create = async (req, res) => {
       const item = new ItemAnalysis({
         name: req.body.name,
         bottle_type: req.body.bottle_type,
-        jobType: req.body.jobType,
-        methods: req.body.methods,
+        //jobType: req.body.jobType,
+        //methods: req.body.methods,
+        method: req.body.method,
         tag: req.body.tag,
-        employee: req.body.employee,
+        unit: req.body.unit,
+        analysis_by: req.body.analysis_by,
+        active: req.body.active
+        //employee: req.body.employee,
       })
       const result = await item.save();
       return res.status(200).send({ status: true, message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", data: result});
@@ -32,9 +36,11 @@ exports.EditItem = async (req, res) => {
     const data = {
       name: req.body.name,
       bottle_type: req.body.bottle_type,
-      methods: req.body.methods,
-      jobType: req.body.jobType,
-      tag: req.body.tag
+      method: req.body.method,
+      tag: req.body.tag,
+      unit: req.body.unit,
+      analysis_by: req.body.analysis_by,
+      active: req.body.active
     }
     const item = await ItemAnalysis.findByIdAndUpdate(id, data,{new:true});
     return res.status(200).send({ status: true, message: "แก้ไขวิธีการวิเคราะห์สำเร็จ", data: item});
