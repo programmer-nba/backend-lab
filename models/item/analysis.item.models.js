@@ -9,10 +9,9 @@ const AnalysisItemSchema = new mongoose.Schema({
   bottle_type:{
     type: String,
     default: 'ขวดพลาสติก ขวดแก้ว',
-    enum: ["ขวดแก้ว", "ขวดพลาสติก", "ขวดพลาสติก ขวดแก้ว"]
   },
   active: { type: Boolean, default: true },
-  jobType: String,
+  job_type: String,
   employee: {
     name: String,
     code: String,
@@ -22,7 +21,6 @@ const AnalysisItemSchema = new mongoose.Schema({
   analysis_by: {
     type: String,
     default: "SPJ",
-    enum: ["SPJ", "Outsource"]
   },
   method: {
     type: String,

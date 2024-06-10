@@ -5,7 +5,7 @@ exports.create = async (req, res) => {
       const item = new ItemAnalysis({
         name: req.body.name,
         bottle_type: req.body.bottle_type,
-        //jobType: req.body.jobType,
+        job_type: req.body.job_type,
         //methods: req.body.methods,
         method: req.body.method,
         tag: req.body.tag,
@@ -16,6 +16,18 @@ exports.create = async (req, res) => {
       })
       const result = await item.save();
       return res.status(200).send({ status: true, message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", data: result});
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: err.message });
+  }
+};
+
+exports.creates = async (req, res) => {
+  const { data } = req.body
+  try {
+      const items = await ItemAnalysis.insertMany(data)
+      return res.status(200).send({ status: true, message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", data: items});
   } catch (err) {
     return res
       .status(500)
@@ -34,6 +46,7 @@ exports.EditItem = async (req, res) => {
     }
 
     const data = {
+      job_type: req.body.job_type,
       name: req.body.name,
       bottle_type: req.body.bottle_type,
       method: req.body.method,
