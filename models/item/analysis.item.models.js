@@ -1,63 +1,27 @@
 const mongoose = require("mongoose");
 
-const AnalysisItemSchema = new mongoose.Schema({
-  name:{
-    type: String, 
-    default: ""
+const analysisItemSchema = new mongoose.Schema(
+  {
+    name:{ type: String, default: "" },
+    tag: String,
+    bottle_type:{ type: String, default: 'ขวดพลาสติก ขวดแก้ว' },
+    active: { type: Boolean, default: true },
+    job_type: String,
+    analysis_by: { type: String, default: "SPJ" },
+    method: { type: String, default: "" },
+    unit: { type: String, default: "" },
+    price: { type: Number, default: 0 },
+    employee: {
+      name: String,
+      code: String,
+      _id: String,
+      username: String
+    }
   },
-  tag: String,
-  bottle_type:{
-    type: String,
-    default: 'ขวดพลาสติก ขวดแก้ว',
-  },
-  active: { type: Boolean, default: true },
-  job_type: String,
-  employee: {
-    name: String,
-    code: String,
-    _id: String,
-    username: String
-  },
-  analysis_by: {
-    type: String,
-    default: "SPJ",
-  },
-  method: {
-    type: String,
-    default: ""
-  },
-  unit: {
-    type: String,
-    default: ""
-  },
-  methods:{
-    type:[
-      {
-        method:{
-          type: String, 
-          required: false
-        },
-        cost:{
-          type: Number, 
-          required: false
-        },
-        unit:{
-          type: String, 
-          required: false
-        },
-        base:{
-          type: Number, 
-          required: false
-        },
-        ref:{
-          type: String, 
-          required: false
-        }
-      }
-    ],
-  },
-});
+  {
+    timestamps: true
+  }
+)
 
-const ItemAnalysis = mongoose.model("ItemAnalysis", AnalysisItemSchema);
-
-module.exports = { ItemAnalysis };
+const ItemAnalysis = mongoose.model("ItemAnalysis", analysisItemSchema)
+module.exports = { ItemAnalysis }
