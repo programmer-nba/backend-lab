@@ -34,7 +34,7 @@ exports.createItem = async (req, res) => {
     }
     return res.status(200).json({ 
       status: true, 
-      message: "เพิ่มวิธีการวิเคราะห์สำเร็จ", 
+      message: "เพิ่มพารามิเตอร์สำเร็จ", 
       data: result
     })
   } catch (err) {
