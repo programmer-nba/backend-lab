@@ -60,7 +60,8 @@ exports.Quotation = async (req, res) => {
         sender: {
           name: req.body.creator.name,
           code: ""
-        }
+        },
+        createdAt: new Date()
       },
     });
 
@@ -85,6 +86,40 @@ exports.Quotation = async (req, res) => {
     });
   }
 };
+
+exports.updateQuotationStatus = async (req, res) => {
+  const { id } = req.params
+  const { status_name, status_text } = req.body
+  try {
+    const quotation = await Quotation.findByIdAndUpdate(id, 
+    {
+      $push: {
+        status: {
+          name: status_name,
+          text: status_text,
+          createdAt: new Date()
+        }
+      }
+    }, { new : true })
+    if (!quotation) {
+      return res.status(404).json({
+        message: "not found"
+      })
+    }
+
+    return res.status(201).json({
+      message: "success",
+      status: true,
+      data: quotation
+    })
+  }
+  catch(err) {
+    console.log(err)
+    return res.status(500).json({
+      message: err.message
+    })
+  }
+}
 
 exports.QuotationById = async (req, res) => {
   try {
