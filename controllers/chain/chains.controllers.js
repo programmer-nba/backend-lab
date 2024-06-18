@@ -45,11 +45,9 @@ exports.createChain = async (req, res) => {
                 name: ref_param?.name || param.name,
                 method: param.method,
                 amount: param.amount,
-                jobType: ref_param?.jobType,
+                job_type: ref_param?.job_type,
                 bottle_type: ref_param?.bottle_type,
                 tag: ref_param?.tag,
-                ref: ref_param?.methods[0]?.ref,
-                base: ref_param?.methods[0]?.base,
                 unit: ref_param?.unit || param.unit
             }
             return result
@@ -1296,8 +1294,8 @@ exports.updateLabParam = async (req, res) => {
         labParam.bottle_tag = bottle_tag || labParam.bottle_tag
         labParam.bottle_qr = bottle_qr || labParam.bottle_qr
         labParam.bottle_status = bottle_status || labParam.bottle_status
-        labParam.ref = ref || labParam.ref
-        labParam.base = base || labParam.base
+        //labParam.ref = ref || labParam.ref
+        //labParam.base = base || labParam.base
         labParam.max = max || labParam.max
         labParam.result = result || labParam.result
         labParam.result_status = result_status || labParam.result_status

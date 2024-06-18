@@ -45,8 +45,8 @@ const WorkSchema = new mongoose.Schema({
             amount_point: {type:Number,required:false,default:0},
             params: {type:[{ //ขวด
                 ref_id: String,
-                ref: String,
-                jobType: String,
+                //ref: String,
+                job_type: String,
                 name: {type:String,required:false,default:""},
                 bottle_type: String,
                 method: {type:String,required:false,default:""},
@@ -58,7 +58,7 @@ const WorkSchema = new mongoose.Schema({
                 unit: String,
                 total_price: {type:Number,required:false,default:0},
                 discount: {type:Number,required:false,default:0},
-                cost: {type:Number,required:false,default:0}
+                price: {type:Number,required:false,default:0}
             }],required:false,default:null},
         }],required:false,default:null},
     }],required:false,default:null},

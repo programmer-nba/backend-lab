@@ -14,16 +14,16 @@ const labParamSchema = new Schema (
             name: String
         },
         bottle_type: String,
-        jobType: String,
+        job_type: String,
         bottle_qr: String,
         bottle_tag: String, // bottle tag or code
         bottle_status: Boolean,
         name: String, // parameter name
         method: String, // parameter method
         unit: String,
-        ref: String, // ref of lawyer
-        base: {type: Number, default: null}, // base of analysis
-        max: Number,
+        //ref: String, // ref of lawyer
+        //base: {type: Number, default: null}, // base of analysis
+        //max: Number,
         result: {type: Number, default: null}, // result of analysis
         result_status: Boolean,
         status: [

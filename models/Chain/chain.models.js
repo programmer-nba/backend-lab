@@ -49,10 +49,10 @@ const chainSchema = new mongoose.Schema(
         tag: String,
         method: String,
         amount: Number,
-        base: Number,
+        //base: Number,
         unit: String,
-        jobType: String,
-        ref: String,
+        job_type: String,
+        //ref: String,
         bottle_type: String
       }
     ],
