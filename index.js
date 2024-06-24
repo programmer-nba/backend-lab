@@ -14,6 +14,8 @@ app.use(cors());
 
 const prefix = "/LAB";
 
+app.use(prefix + "/", require("./router/item/tool_router"));
+
 app.use(prefix + "/", require("./router/index"));
 
 //เเอดมิน
