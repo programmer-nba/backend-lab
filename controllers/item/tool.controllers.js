@@ -284,8 +284,15 @@ exports.updateToolLog = async (req, res) => {
 }
 
 exports.getToolLogs = async (req, res) => {
+    const { tool_id } = req.query
     try {
-        const toolLogs = await ToolLog.find()
+        let toolLogs = []
+
+        if ( tool_id ) {
+            toolLogs = await ToolLog.find({ tool: tool_id })
+        } else {
+            toolLogs = await ToolLog.find()
+        }
 
         return res.status(200).json({
             message: `have ${toolLogs.length} logs`,

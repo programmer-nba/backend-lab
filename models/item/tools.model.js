@@ -15,7 +15,7 @@ const toolSchema = new mongoose.Schema(
         certificate_status : { type: String, require: true },
         components: { type: Array, default: [] },
         avaliable: { type: Boolean, default: true },
-        current_holder: { type: String, require: true, default: "คลัง" },
+        //current_holder: { type: String, require: true, default: "คลัง" },
     },
     {
         timestamps: true
