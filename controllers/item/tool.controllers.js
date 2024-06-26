@@ -61,6 +61,11 @@ exports.createTools = async (req, res) => {
     const { tools } = req.body
 
     try {
+        if (!tools || !tools?.length) {
+            return res.status(400).json({
+                message: "need tools an array"
+            })
+        }
         const items = tools.map(tool => {
             const name = `${tool.type || ""} ${tool.brand || ""} ${tool.generation || ""}`
             const newTool = {
