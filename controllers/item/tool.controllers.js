@@ -57,6 +57,50 @@ exports.createTool = async (req, res) => {
     }
 }
 
+exports.createTools = async (req, res) => {
+    const { tools } = req.body
+
+    try {
+        const items = tools.map(tool => {
+            const name = `${tool.type || ""} ${tool.brand || ""} ${tool.generation || ""}`
+            const newTool = {
+                name: name,
+                type: tool.type,
+                brand: tool.brand,
+                generation: tool.generation,
+                serial_no: tool.serial_no,
+                standard: tool.standard,
+                calibration: tool.calibration,
+                calibration_next: tool.calibration_next,
+                calibration_status: tool.calibration_status,
+                register_status: tool.register_status,
+                certificate_status: tool.certificate_status,
+                components: tool.components,
+            }
+            return newTool
+        })
+
+        const tool = await Tool.insertMany(items)
+        if (!tool) {
+            return res.status(500).json({
+                message: "can not create tool"
+            })
+        }
+
+        return res.status(200).json({
+            message: "create tool success" + " added" + tool.length +"items",
+            status: true,
+            data: tool
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message
+        })
+    }
+}
+
 exports.updateTool = async (req, res) => {
     const {
         type,

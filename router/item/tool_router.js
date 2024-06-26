@@ -4,6 +4,7 @@ const AuthAdmin = require('../../lib/auth-admin')
 const AuthEmployee = require('../../lib/auth-employee')
 
 // tool
+router.post("/tools", Tool.createTools)
 router.post("/tool", Tool.createTool)
 router.put("/tool/:id", Tool.updateTool)
 router.get("/tools", Tool.getTools)
