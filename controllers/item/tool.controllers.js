@@ -121,7 +121,8 @@ exports.updateTool = async (req, res) => {
         components,
         avaliable,
         current_holder,
-        detail
+        detail,
+        holder_id
     } = req.body
 
     const { id } = req.params
@@ -149,16 +150,19 @@ exports.updateTool = async (req, res) => {
                 certificate_status: certificate_status,
                 components: components,
                 avaliable: avaliable,
-                current_holder: current_holder
+                current_holder: current_holder,
+                holder_id: holder_id
             }
         }, { new: true })
 
-        if (current_holder) {
+        if (current_holder && holder_id) {
             const data = {
                 tool: tool._id || id,
                 old_holder: existTool.current_holder,
+                old_holder_id: existTool.holder_id,
                 current_holder: tool.current_holder,
-                detail: detail || 'เบิกอุปกรณ์',
+                current_holder_id: tool.holder_id,
+                detail: detail || 'เบิก/คืน อุปกรณ์',
             }
             const toolLog = await createToolLog(data)
             if (!toolLog) {
@@ -256,7 +260,9 @@ const createToolLog = async (data) => {
     const {
         tool,
         old_holder,
+        old_holder_id,
         current_holder,
+        current_holder_id,
         detail,
     } = data
 
@@ -268,7 +274,9 @@ const createToolLog = async (data) => {
         const newToolLog = {
             tool: tool,
             old_holder: old_holder,
+            old_holder_id: old_holder_id,
             current_holder: current_holder,
+            current_holder_id: current_holder_id,
             detail: detail,
             date: date,
             time: time
@@ -291,7 +299,9 @@ exports.updateToolLog = async (req, res) => {
     const {
         tool,
         old_holder,
+        old_holder_id,
         current_holder,
+        current_holder_id,
         detail,
     } = req.body
 
@@ -306,7 +316,9 @@ exports.updateToolLog = async (req, res) => {
             $set: {
                 tool: tool,
                 old_holder: old_holder,
+                old_holder_id: old_holder_id,
                 current_holder: current_holder,
+                current_holder_id: current_holder_id,
                 detail: detail,
                 date: date,
                 time: time
