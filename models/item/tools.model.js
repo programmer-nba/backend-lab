@@ -102,4 +102,15 @@ const toolLogSchema = new mongoose.Schema(
 )
 const ToolLog = mongoose.model("ToolLog", toolLogSchema);
 
-module.exports = { Tool, ToolLog, ToolType, ToolBrand, ToolStandard, ToolCalibrateStatus, ToolRegisterStatus, ToolCertificateStatus };
+const toolPictureSchema = new mongoose.Schema(
+    {
+        tool_id: { type: mongoose.Schema.Types.ObjectId, require: true, ref: "Tool" },
+        img: { type: String, require: true },
+    },
+    {
+        timestamps: true
+    }
+)
+const ToolPicture = mongoose.model("ToolPicture", toolPictureSchema);
+
+module.exports = { Tool, ToolLog, ToolPicture, ToolType, ToolBrand, ToolStandard, ToolCalibrateStatus, ToolRegisterStatus, ToolCertificateStatus };

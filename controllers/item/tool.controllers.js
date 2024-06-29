@@ -1,4 +1,4 @@
-const { Tool, ToolLog, ToolType, ToolBrand, ToolStandard, ToolCalibrateStatus, ToolRegisterStatus, ToolCertificateStatus } = require("../../models/item/tools.model")
+const { Tool, ToolPicture, ToolLog, ToolType, ToolBrand, ToolStandard, ToolCalibrateStatus, ToolRegisterStatus, ToolCertificateStatus } = require("../../models/item/tools.model")
 const dayjs = require('dayjs')
 const buddhistEra = require("dayjs/plugin/buddhistEra")
 dayjs.extend(buddhistEra)
@@ -957,6 +957,64 @@ exports.deleteToolCertificateStatus = async (req, res) => {
         return res.status(200).json({
             message: `success`,
             status: true,
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message
+        })
+    }
+}
+
+// picture
+exports.createToolPicture = async (req, res) => {
+    const {
+        tool_id,
+        img
+    } = req.body
+
+    try {
+        const newToolPicture = {
+            tool_id: tool_id,
+            img: img,
+        }
+
+        const toolPicture = await ToolPicture.create(newToolPicture)
+        if (!toolPicture) {
+            return res.status(500).json({
+                message: "can not create tool picture"
+            })
+        }
+
+        return res.status(200).json({
+            message: "create tool picture success",
+            status: true,
+            data: toolPicture
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message
+        })
+    }
+}
+
+exports.getToolPicture = async (req, res) => {
+    const { tool_id } = req.params
+    try {
+        const toolPicture = await ToolPicture.findOne({ tool_id: tool_id })
+        if (!toolPicture) {
+            return res.status(404).json({
+                message: "not found"
+            })
+        }
+
+        return res.status(200).json({
+            message: "success",
+            status: true,
+            data: toolPicture
         })
     }
     catch (err) {

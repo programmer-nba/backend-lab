@@ -11,6 +11,10 @@ router.get("/tools", Tool.getTools)
 router.get("/tool/:id", Tool.getTool)
 router.delete("/tool/:id", Tool.deleteTool)
 
+// tool picture
+router.post("/tool-picture", Tool.createToolPicture)
+router.get("/tool-picture/:tool_id", Tool.getToolPicture)
+
 // tool log
 router.put("/tool-log/:id", Tool.updateToolLog)
 router.get("/tool-logs", Tool.getToolLogs)
