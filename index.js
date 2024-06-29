@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const connection = require("./config/db");
 connection();
+const path = require('path');
 
 app.use(bodyParser.json({ limit: "50mb", type: "application/json" }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,6 +14,11 @@ app.use(express.json());
 app.use(cors());
 
 const prefix = "/LAB";
+
+const fileRoutes = require('./router/file/fileRoutes');
+app.use(prefix + '/', fileRoutes);
+
+app.use('/LAB/', express.static(path.join(__dirname, 'uploads')));
 
 app.use(prefix + "/", require("./router/item/tool_router"));
 
