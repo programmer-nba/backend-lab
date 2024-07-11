@@ -13,7 +13,7 @@ const quotationNewSchema = new Schema(
         code: { type: String, default: "" },
         customer: { type: Object, require: true },
         sampling_location: { type: String, require: true },
-        chains: { type: Array, default: [] },
+        //chains: { type: Array, default: [] },
         offer_name: { type: Object, default: { name: "", _id: "", tel: "" } },
 
         total_price: { type: Number, default: 0 },

@@ -25,7 +25,6 @@ exports.createChain = async(req, res) => {
         report_no,
         measure_time,
         params,
-        sampling_date,
         sampling_point
     } = req.body
     try {
@@ -40,7 +39,7 @@ exports.createChain = async(req, res) => {
             report_no: report_no,
             measure_time: measure_time,
             params: params,
-            sampling_point: sampling_point
+            sampling_point: sampling_point,
         }
         const chain = await ChainNew.create(newData)
         if (!chain) {
@@ -93,10 +92,15 @@ exports.updateChain = async(req, res) => {
                 report_no: report_no,
                 measure_time: measure_time,
                 params: params,
-                active: active
+                active: active,
+                sampling_date: sampling_date,
+                sampling_point: sampling_point
             },
             $push: {
-                status: 
+                status: {
+                    name: status,
+                    updatedAt: new Date()
+                }
             }
         }, { new: true })
         if (!chain) {
