@@ -25,6 +25,8 @@ exports.createChain = async(req, res) => {
         report_no,
         measure_time,
         params,
+        sampling_date,
+        sampling_point
     } = req.body
     try {
         const dateCode = dateFormatTH(new Date())
@@ -38,6 +40,7 @@ exports.createChain = async(req, res) => {
             report_no: report_no,
             measure_time: measure_time,
             params: params,
+            sampling_point: sampling_point
         }
         const chain = await ChainNew.create(newData)
         if (!chain) {
@@ -64,7 +67,11 @@ exports.updateChain = async(req, res) => {
         report_no,
         measure_time,
         params,
-        code
+        code,
+        sampling_date,
+        sampling_point,
+        status,
+        active
     } = req.body
     const { id } = req.params
     try {
@@ -85,10 +92,11 @@ exports.updateChain = async(req, res) => {
                 control_by: control_by,
                 report_no: report_no,
                 measure_time: measure_time,
-                params: params
+                params: params,
+                active: active
             },
             $push: {
-                
+                status: 
             }
         }, { new: true })
         if (!chain) {
