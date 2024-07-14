@@ -232,16 +232,11 @@ exports.edit = async (req, res) => {
         .status(404)
         .send({ status: false, message: "ไม่พบข้อมูลใบเสนอราคา" });
     }
+    req.body.status = null
     const result = await Quotation.findByIdAndUpdate(
       id,
       { 
-        $set: req.body,
-        $push: {
-          status: {
-            name: req.body.status_name,
-            text: req.body.status_text
-          }
-        }
+        $set: {...req.body}
       },
       { new: true }
     );

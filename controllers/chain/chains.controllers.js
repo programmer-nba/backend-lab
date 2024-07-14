@@ -1564,7 +1564,7 @@ async function genCode(date) {
         lastDoc = sal[0]
     }
     
-    const lastDocCode = lastDoc.code.slice(-4);
+    const lastDocCode = lastDoc ? lastDoc.code.slice(-4) : '0001';
     const incremented = (parseInt(lastDocCode) + 1).toString();
 
     const currentYear = new Date().getFullYear();

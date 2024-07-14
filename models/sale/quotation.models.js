@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const QuotationSchema = new mongoose.Schema({
-  creator: {
-    name: String,
-    _id: String,
-  },
+  creator: {  type: Object, default: { name: "", _id: ""} },
   base: { type: Boolean, default: false },
   subhead: {
     type: {
