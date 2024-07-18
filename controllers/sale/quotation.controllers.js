@@ -57,10 +57,7 @@ exports.Quotation = async (req, res) => {
       status: {
         name: "draft",
         text: "แบบร่าง",
-        sender: {
-          name: req.body.creator.name,
-          code: ""
-        },
+        sender: req.body.creator._id,
         createdAt: new Date()
       },
     });
@@ -89,7 +86,7 @@ exports.Quotation = async (req, res) => {
 
 exports.updateQuotationStatus = async (req, res) => {
   const { id } = req.params
-  const { status_name, status_text } = req.body
+  const { status_name, status_text, sender } = req.body
   try {
     const quotation = await Quotation.findByIdAndUpdate(id, 
     {
@@ -97,6 +94,7 @@ exports.updateQuotationStatus = async (req, res) => {
         status: {
           name: status_name,
           text: status_text,
+          sender: sender,
           createdAt: new Date()
         }
       }
@@ -236,7 +234,18 @@ exports.edit = async (req, res) => {
     const result = await Quotation.findByIdAndUpdate(
       id,
       { 
-        $set: {...req.body}
+        $set: {
+          ...req.body,
+          status: quotation.status && quotation.status.length ? [...quotation.status] 
+            : [
+              {
+                name: "draft",
+                text: "แบบร่าง",
+                sender: req.body.sender,
+                createdAt: new Date()
+              }
+            ]
+        }
       },
       { new: true }
     );
