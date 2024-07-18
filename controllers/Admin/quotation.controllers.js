@@ -30,13 +30,6 @@ exports.ApproveQuotation = async (req, res) => {
     const id = req.params.id;
 
     const quotation = await Quotation.findById(id);
-    /* const chackStatus = quotation.status.some((item) => item.text === "อนุมัติ");
-    if (chackStatus) {
-      return res.status(400).send({
-        message: "รายการนี้ได้ดำเนินการไปแล้ว",
-        status: false,
-      });
-    } */
 
     let token = req.headers["auth-token"];
     token = token.replace(/^Bearer\s+/, "");
@@ -50,8 +43,8 @@ exports.ApproveQuotation = async (req, res) => {
     }
 
     quotation.status.push({
-      name: "Approve" ,
-      text: "อนุมัติ",
+      name: "confirm" ,
+      text: "ลูกค้ายืนยัน",
       sender:{
         name:decoded.name,
         code:decoded._id
@@ -80,12 +73,12 @@ exports.ApproveQuotation = async (req, res) => {
         status: "กำลังดำเนินการ",
         chain:[],
       });
-      const savedWork = await newWork.save();
+      await newWork.save();
     }
 
     return res.status(200).send({
       status: true,
-      message: "อนุมัติสำเร็จ",
+      message: "ยืนยันสำเร็จ",
       data: updatedQuotation,
     });
 
@@ -101,13 +94,14 @@ exports.RejectQuotation = async (req, res) => {
 
     if (updateStatus) {
       updateStatus.status.push({
-        name: "ไม่อนุมัติ",
-        timestamps: dayjs(Date.now()).format(""),
+        name: "cancle",
+        text: "ลูกค้ายกเลิก",
+        createdAt: new Date(),
       });
       updateStatus.save();
       return res.status(200).send({
         status: true,
-        message: "ไม่อนุมัติ สำเร็จ",
+        message: "success!",
         data: updateStatus,
       });
     } else {
@@ -119,7 +113,7 @@ exports.RejectQuotation = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .send({ message: "มีบางอย่างผิดพลาด", status: false });
+      .send({ message: error.message, status: false });
   }
 };
 
