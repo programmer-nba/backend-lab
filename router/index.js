@@ -60,6 +60,7 @@ router.post("/login", async (req, res) => {
           username: sale?.sale_username,
           name: sale?.sale_name,
           row: "sale",
+          position: sale?.employee_sub_department,
         }
         const token = jwt.sign(payload, process.env.JWTPRIVATEKEY, { expiresIn: "90d" });
         return res.status(200).send({
@@ -68,6 +69,7 @@ router.post("/login", async (req, res) => {
           message: "เข้าสู่ระบบสำเร็จ",
           result: payload,
           row: "sale",  
+          position: sale?.employee_sub_department
         });
       }else{
         return res.status(400).send({status:false,message:"รหัสผ่านไม่ถูกต้อง"});
@@ -81,6 +83,7 @@ router.post("/login", async (req, res) => {
           username: employee?.employee_username,
           name: employee?.name,
           row: employee?.employee_position,
+          position: employee?.employee_sub_department
         }
         const token = jwt.sign(payload, process.env.JWTPRIVATEKEY, { expiresIn: "90d" });
         return res.status(200).send({
@@ -89,6 +92,7 @@ router.post("/login", async (req, res) => {
           message: "เข้าสู่ระบบสำเร็จ",
           result: payload,
           row: "employee",  
+          position: employee?.employee_sub_department
         });
       }
       else{
