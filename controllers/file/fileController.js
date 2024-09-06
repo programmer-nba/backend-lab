@@ -21,7 +21,7 @@ const handleFileUpload = (req, res) => {
     fs.rename(tempPath, targetPath, err => {
         if (err) return res.status(500).json({ message: 'File move failed', error: err });
 
-        res.status(200).json({ message: 'File uploaded successfully', file: req.file });
+        return res.status(200).json({ message: 'File uploaded successfully', file: req.file, data: path.basename(targetPath), status: true });
     });
 };
 
@@ -31,7 +31,7 @@ const getFileList = (req, res) => {
     fs.readdir(uploadsDir, (err, files) => {
         if (err) return res.status(500).json({ message: 'Unable to read files', error: err });
 
-        res.status(200).json({ files });
+        return res.status(200).json({ files });
     });
 };
 

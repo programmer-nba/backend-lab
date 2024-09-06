@@ -16,6 +16,7 @@ router.post("/tool-picture", Tool.createToolPicture)
 router.get("/tool-picture/:tool_id", Tool.getToolPicture)
 
 // tool log
+router.post("/tool-log", Tool.insertToolLog)
 router.put("/tool-log/:id", Tool.updateToolLog)
 router.get("/tool-logs", Tool.getToolLogs)
 router.delete("/tool-log/:id", Tool.deleteToolLog)

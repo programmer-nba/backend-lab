@@ -122,7 +122,8 @@ exports.updateTool = async (req, res) => {
         avaliable,
         current_holder,
         detail,
-        holder_id
+        holder_id,
+        status
     } = req.body
 
     const { id } = req.params
@@ -151,7 +152,8 @@ exports.updateTool = async (req, res) => {
                 components: components,
                 avaliable: avaliable,
                 current_holder: current_holder,
-                holder_id: holder_id
+                holder_id: holder_id,
+                status: status
             }
         }, { new: true })
 
@@ -162,7 +164,7 @@ exports.updateTool = async (req, res) => {
                 old_holder_id: existTool.holder_id,
                 current_holder: tool.current_holder,
                 current_holder_id: tool.holder_id,
-                detail: detail || 'เบิก/คืน อุปกรณ์',
+                detail: detail || status || 'เบิก/คืน อุปกรณ์',
             }
             const toolLog = await createToolLog(data)
             if (!toolLog) {
@@ -292,6 +294,51 @@ const createToolLog = async (data) => {
     catch (err) {
         console.log(err)
         return false
+    }
+}
+
+exports.insertToolLog = async (req, res) => {
+    const {
+        tool,
+        old_holder,
+        old_holder_id,
+        detail,
+        img
+    } = req.body
+
+    try {
+        const curDate = new Date()
+        const date = dayjs(curDate).format('DD/MM/BBBB')
+        const time = dayjs(curDate).format('HH:mm')
+
+        const newToolLog = {
+            tool: tool,
+            old_holder: old_holder,
+            old_holder_id: old_holder_id,
+            detail: detail,
+            date: date,
+            time: time,
+            img: img
+        }
+
+        const toolLog = await ToolLog.create(newToolLog)
+        if (!toolLog) {
+            return res.status(400).json({
+                message: "can not create tool log"
+            })
+        }
+
+        return res.status(200).json({
+            message: "insert tool log success",
+            status: true,
+            data: toolLog
+        })
+    }
+    catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: err.message
+        })
     }
 }
 

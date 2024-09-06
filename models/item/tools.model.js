@@ -17,6 +17,7 @@ const toolSchema = new mongoose.Schema(
         avaliable: { type: Boolean, default: true },
         current_holder: { type: String, require: true, default: "คลัง" },
         holder_id: { type: String, require: true, default: null },
+        status: { type: Number, require: true, default: 1 },
     },
     {
         timestamps: true
@@ -90,11 +91,12 @@ const toolLogSchema = new mongoose.Schema(
         tool: { type: mongoose.Schema.Types.ObjectId, require: true, ref: "Tool" },
         old_holder: { type: String, require: true },
         old_holder_id: { type: String, require: true },
-        current_holder: { type: String, require: true },
-        current_holder_id: { type: String, require: true },
+        current_holder: { type: String, default: "-" },
+        current_holder_id: { type: String, default: null },
         detail: { type: String, require: true },
         date: { type: String, require: true },
         time: { type: String, require: true },
+        img: { type: String, default: null },
     },
     {
         timestamps: true
