@@ -308,8 +308,8 @@ exports.insertToolLog = async (req, res) => {
 
     try {
         const curDate = new Date()
-        const date = dayjs(curDate).format('DD/MM/BBBB')
-        const time = dayjs(curDate).format('HH:mm')
+        const date = dayjs(curDate).locale('th').format('DD/MM/BBBB')
+        const time = dayjs(curDate).locale('th').format('HH:mm')
 
         const newToolLog = {
             tool: tool,
