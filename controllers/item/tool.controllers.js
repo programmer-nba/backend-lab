@@ -1051,7 +1051,7 @@ exports.createToolPicture = async (req, res) => {
 exports.getToolPicture = async (req, res) => {
     const { tool_id } = req.params
     try {
-        const toolPicture = await ToolPicture.findOne({ tool_id: tool_id })
+        const toolPicture = await ToolPicture.find({ tool_id: tool_id }).sort({ createdAt: -1 })
         if (!toolPicture) {
             return res.status(404).json({
                 message: "not found"
@@ -1061,7 +1061,7 @@ exports.getToolPicture = async (req, res) => {
         return res.status(200).json({
             message: "success",
             status: true,
-            data: toolPicture
+            data: toolPicture[0]
         })
     }
     catch (err) {
