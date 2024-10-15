@@ -43,6 +43,7 @@ exports.Quotation = async (req, res) => {
         customer_address: req.body.subhead.customer_address,
         customer_tel: req.body.subhead.customer_tel,
         customer_fax: req.body.subhead.customer_fax,
+        customer_tax_id: req.body.subhead.customer_tax_id,
         sample_location: req.body.subhead.sample_location,
         document_no: await Quotationnumber(),
         document_date: req.body.subhead.document_date,

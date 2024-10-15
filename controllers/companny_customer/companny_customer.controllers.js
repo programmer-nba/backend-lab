@@ -24,10 +24,10 @@ const {
 exports.create = async (req, res) => {
   try {
     
-    await new CompanyCustomer({
+    const com = await new CompanyCustomer({
       ...req.body,
     }).save();
-    res.status(201).send({ message: "เพิ่มข้อมูลบริษัทสำเร็จ", status: true });
+    res.status(201).send({ message: "เพิ่มข้อมูลบริษัทสำเร็จ", status: true, data: com });
   } catch (err) {
     return res
       .status(500)

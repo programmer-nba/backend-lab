@@ -18,6 +18,7 @@ const QuotationSchema = new mongoose.Schema({
       offerer_tax_id: { type: String, required: false, default: "" },
       contract_name: String,
       contract_tel: String,
+      customer_tax_id: String,
     },
     default: null,
   },
